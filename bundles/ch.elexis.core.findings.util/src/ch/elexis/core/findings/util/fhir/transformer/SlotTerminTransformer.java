@@ -11,25 +11,32 @@ import org.osgi.service.component.annotations.Component;
 
 import ca.uhn.fhir.model.api.Include;
 import ca.uhn.fhir.rest.api.SummaryEnum;
+import ch.elexis.core.fhir.mapper.r4.IAppointmentSlotAttributeMapper;
 import ch.elexis.core.findings.util.fhir.IFhirTransformer;
-import ch.elexis.core.findings.util.fhir.transformer.mapper.IAppointmentSlotAttributeMapper;
 import ch.elexis.core.model.IAppointment;
 import ch.elexis.core.services.IAppointmentService;
 import ch.elexis.core.services.IModelService;
 import ch.elexis.core.services.holder.AppointmentHistoryServiceHolder;
+import jakarta.annotation.PostConstruct;
+import jakarta.enterprise.context.Dependent;
+import jakarta.inject.Inject;
 
+@Dependent
 @Component(property = IFhirTransformer.TRANSFORMERID + "=Slot.IAppointment")
 public class SlotTerminTransformer implements IFhirTransformer<Slot, IAppointment> {
 
+	@Inject
 	@org.osgi.service.component.annotations.Reference(target = "(" + IModelService.SERVICEMODELNAME
 			+ "=ch.elexis.core.model)")
-	private IModelService coreModelService;
+	IModelService coreModelService;
 
+	@Inject
 	@org.osgi.service.component.annotations.Reference
-	private IAppointmentService appointmentService;
+	IAppointmentService appointmentService;
 
 	private IAppointmentSlotAttributeMapper attributeMapper;
 
+	@PostConstruct
 	@Activate
 	private void activate() {
 		attributeMapper = new IAppointmentSlotAttributeMapper(appointmentService);
@@ -38,7 +45,7 @@ public class SlotTerminTransformer implements IFhirTransformer<Slot, IAppointmen
 	@Override
 	public Optional<Slot> getFhirObject(IAppointment localObject, SummaryEnum summaryEnum, Set<Include> includes) {
 		Slot slot = new Slot();
-		attributeMapper.elexisToFhir(localObject, slot, summaryEnum, includes);
+		attributeMapper.elexisToFhir(localObject, slot, summaryEnum);
 		return Optional.of(slot);
 	}
 

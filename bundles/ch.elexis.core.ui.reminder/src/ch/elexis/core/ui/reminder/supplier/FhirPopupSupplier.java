@@ -26,7 +26,7 @@ public class FhirPopupSupplier implements Supplier<List<IReminder>> {
 	public List<IReminder> get() {
 		long start = System.currentTimeMillis();
 		IQuery<IBaseBundle> query = FhirModelServiceHolder.get()
-				.getQuery("Task?code=http://www.elexis.info/task/visibility|popup&status"
+				.getFhirQuery("Task?code=http://www.elexis.info/task/visibility|popup&status"
 						+ (showCompleted ? "" : ":not") + "=COMPLETED");
 		
 		query.count(limit);

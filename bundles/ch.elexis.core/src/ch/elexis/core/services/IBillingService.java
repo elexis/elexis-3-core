@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import org.eclipse.core.runtime.IStatus;
 
+import ch.elexis.core.model.IArticle;
 import ch.elexis.core.model.IBillable;
 import ch.elexis.core.model.IBilled;
 import ch.elexis.core.model.IBillingSystemFactor;

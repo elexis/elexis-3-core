@@ -11,7 +11,6 @@
  *******************************************************************************/
 package ch.elexis.core.importer.div.importers;
 
-import org.apache.commons.lang3.StringUtils;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -20,12 +19,14 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
+
 import com.healthmarketscience.jackcess.Column;
 import com.healthmarketscience.jackcess.Database;
 import com.healthmarketscience.jackcess.DatabaseBuilder;
 import com.healthmarketscience.jackcess.Table;
 
-import ch.rgw.tools.JdbcLink;
+import ch.rgw.tools.IJdbcLink;
 
 /**
  * Simple conversions from mdb databases
@@ -74,7 +75,7 @@ public class AccessWrapper {
 	 * @see The name in destination may be prefixed using
 	 * setPrefixForImportedTableNames
 	 */
-	public int convertTable(String name, JdbcLink dest) throws IOException, SQLException {
+	public int convertTable(String name, IJdbcLink dest) throws IOException, SQLException {
 		Table table = db.getTable(name);
 		String insertName = ImportPrefix + name;
 		List<? extends Column> cols = table.getColumns();

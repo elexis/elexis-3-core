@@ -10,9 +10,9 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Text;
 
+import ch.elexis.core.rcp.utils.OsgiServiceUtil;
 import ch.elexis.core.services.IVirtualFilesystemService;
 import ch.elexis.core.services.IVirtualFilesystemService.IVirtualFilesystemHandle;
-import ch.elexis.core.utils.OsgiServiceUtil;
 
 public class RunContextTextWithDefaultValue extends Text {
 

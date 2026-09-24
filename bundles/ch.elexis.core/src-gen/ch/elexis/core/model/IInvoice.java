@@ -129,7 +129,7 @@ public interface IInvoice extends Identifiable, Deleteable, WithExtInfo {
 	 * @return the value of the '<em>Coverage</em>' reference.
 	 * @see #setCoverage(ICoverage)
 	 * @see ch.elexis.core.model.ModelPackage#getIInvoice_Coverage()
-	 * @model
+	 * @model annotation="http://elexis.info/jpa/entity/attribute/mapping attributeName='fall'"
 	 * @generated
 	 */
 	ICoverage getCoverage();

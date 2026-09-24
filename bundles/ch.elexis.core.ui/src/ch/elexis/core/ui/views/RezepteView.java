@@ -171,6 +171,16 @@ public class RezepteView extends ViewPart implements IRefreshable {
 		}
 	}
 
+	@Optional
+	@Inject
+	void reloadRecipe(@UIEventTopic(ElexisEventTopics.EVENT_RELOAD) Class<?> clazz) {
+		if (IRecipe.class.equals(clazz)) {
+			if (tv != null && tv.getControl() != null && !tv.getControl().isDisposed()) {
+				refresh();
+			}
+		}
+	}
+
 	@Override
 	public void createPartControl(final Composite parent) {
 		setTitleImage(Images.IMG_VIEW_RECIPES.getImage());

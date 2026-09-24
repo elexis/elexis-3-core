@@ -31,8 +31,8 @@ import ch.elexis.core.lock.types.LockResponse;
 import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.services.IElexisServerService.ConnectionStatus;
 import ch.elexis.core.services.holder.ContextServiceHolder;
-import ch.elexis.core.services.holder.ElexisServerServiceHolder;
 import ch.elexis.core.services.holder.StoreToStringServiceHolder;
+import ch.elexis.core.services.rcp.holder.ElexisServerServiceHolder;
 import ch.elexis.data.PersistentObject;
 
 public class LockStatusDialog extends TitleAreaDialog {

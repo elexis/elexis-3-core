@@ -10,6 +10,7 @@ import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.IMandator;
 import ch.elexis.core.model.IOrder;
 import ch.elexis.core.model.IOrderEntry;
+import ch.elexis.core.model.IOutputLog;
 import ch.elexis.core.model.IStock;
 import ch.elexis.core.model.IStockEntry;
 
@@ -42,6 +43,25 @@ public interface IOrderService {
 	 * @since 3.6 return null on invalid order amount
 	 */
 	public @Nullable IOrderEntry addRefillForStockEntryToOrder(IStockEntry ise, IOrder order);
+
+	/**
+	 * Synchronizes the mediorder order with the actual order placed with the
+	 * supplier. This is used when items are replaced, as is the case with Regiomed,
+	 * for example.
+	 * 
+	 * @param entry           the order entry, already carrying the new article
+	 * @param previousArticle the article that was previously in this post
+	 */
+	public void syncMediorderArticleReplacement(IOrderEntry entry, IArticle previousArticle);
+
+	/**
+	 * Follow an amount change done on an order entry, e.g. because the supplier can
+	 * only deliver a part of the requested quantity.
+	 *
+	 * @param entry          the order entry, already carrying the new amount
+	 * @param previousAmount the amount the entry carried before
+	 */
+	public void syncMediorderAmount(IOrderEntry entry, int previousAmount);
 
 	/**
 	 * Calculate the number of consumed articles (billables) on a given date.
@@ -139,4 +159,71 @@ public interface IOrderService {
 	 */
 	boolean containsSupplier(IOrder order, IContact supplier);
 
+	/**
+	 * Retrieves a list of all currently open orders.
+	 * 
+	 * @return list of open {@link IOrder} objects
+	 */
+	List<IOrder> getOpenOrders();
+
+	/**
+	 * Retrieves a list of completed orders.
+	 * 
+	 * @param showAllYears if true, returns orders from all years. If false, limits
+	 *                     the result to the last 2 years.
+	 * @return list of completed {@link IOrder} objects
+	 */
+	List<IOrder> getCompletedOrders(boolean showAllYears);
+
+	/**
+	 * Saves a partial delivery for a specific order entry and updates the stock.
+	 * 
+	 * @param entry           the order entry to update
+	 * @param partialDelivery the amount that was delivered
+	 */
+	void saveSingleDelivery(IOrderEntry entry, int partialDelivery);
+
+	/**
+	 * Iterates over the provided list of entries and saves all pending deliveries.
+	 * 
+	 * @param entries list of order entries to process
+	 */
+	void saveAllDeliveries(List<IOrderEntry> entries);
+
+	/**
+	 * Adds a list of articles to an existing order. If an article is already
+	 * present, its quantity is increased.
+	 * 
+	 * @param actOrder        the active order to add items to
+	 * @param articlesToOrder list of articles to add
+	 * @param mandator        the active mandator to determine the default stock, or
+	 *                        null
+	 * @return the updated {@link IOrder}
+	 */
+	IOrder addItemsToExistingOrder(IOrder actOrder, List<IArticle> articlesToOrder, @Nullable IMandator mandator);
+
+	/**
+	 * Retrieves the output log entry associated with a specific order.
+	 * 
+	 * @param order the order to fetch the log for
+	 * @return the {@link IOutputLog} entry, or null if none exists
+	 */
+	IOutputLog getOrderLogEntry(IOrder order);
+
+	/**
+	 * Updates the current stock for a given article based on a delivery.
+	 * 
+	 * @param stock       the stock to update
+	 * @param entry       the order entry containing the article
+	 * @param amountToAdd the quantity to add to the stock
+	 */
+	void updateStockEntry(IStock stock, IOrderEntry entry, int amountToAdd);
+
+	/**
+	 * Checks if all entries within an order have the state DONE.
+	 * 
+	 * @param order the order to check
+	 * @return true if completely delivered, false otherwise
+	 */
+	boolean isOrderCompletelyDelivered(IOrder order);
 }

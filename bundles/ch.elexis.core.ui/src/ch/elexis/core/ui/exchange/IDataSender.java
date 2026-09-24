@@ -12,6 +12,10 @@
 
 package ch.elexis.core.ui.exchange;
 
+import java.util.Collections;
+import java.util.List;
+
+import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.ui.exchange.elements.XChangeElement;
 import ch.elexis.data.PersistentObject;
@@ -64,4 +68,11 @@ public interface IDataSender {
 	 */
 	public boolean canHandle(Identifiable identifiable);
 
+	/**
+	 * Returns the list of suppliers (contacts) configured for this DataSender.
+	 * * @return a list of {@link IContact} objects, or an empty list if none are configured.
+	 */
+	default List<IContact> getSupplier() {
+		return Collections.emptyList();
+	}
 }

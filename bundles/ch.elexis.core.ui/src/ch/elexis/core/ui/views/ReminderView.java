@@ -69,6 +69,7 @@ import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.events.Heartbeat.HeartListener;
 import ch.elexis.core.data.service.LocalLockServiceHolder;
 import ch.elexis.core.data.util.NoPoUtil;
+import ch.elexis.core.events.MessageEvent;
 import ch.elexis.core.lock.types.LockResponse;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.IReminder;
@@ -180,7 +181,8 @@ public class ReminderView extends ViewPart implements IRefreshable, HeartListene
 								sb.append(r.getSubject() + StringUtils.LF);
 								sb.append(r.getMessage() + "\n\n"); //$NON-NLS-1$
 							}
-							SWTHelper.alert(Messages.ReminderView_importantRemindersCaption, sb.toString());
+							MessageEvent.fireInformation(Messages.ReminderView_importantRemindersCaption, sb.toString(),
+									false);
 						}
 					}
 				});
@@ -208,7 +210,8 @@ public class ReminderView extends ViewPart implements IRefreshable, HeartListene
 
 	public ReminderView() {
 		qbe = new Query<>(Reminder.class, null, null, Reminder.TABLENAME, new String[] { Reminder.FLD_DUE,
-				Reminder.FLD_PRIORITY, Reminder.FLD_ACTION_TYPE, Reminder.FLD_CREATOR, Reminder.FLD_KONTAKT_ID });
+				Reminder.FLD_PRIORITY, Reminder.FLD_ACTION_TYPE, Reminder.FLD_CREATOR, Reminder.FLD_KONTAKT_ID,
+				Reminder.FLD_SUBJECT, Reminder.FLD_MESSAGE, Reminder.FLD_VISIBILITY, Reminder.FLD_STATUS });
 	}
 
 	@Override

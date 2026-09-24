@@ -1,11 +1,14 @@
 package ch.elexis.core.ui.mediorder;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -28,10 +31,12 @@ import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 import org.eclipse.e4.ui.services.EMenuService;
 import org.eclipse.e4.ui.workbench.modeling.EPartService;
 import org.eclipse.e4.ui.workbench.modeling.ESelectionService;
+import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.layout.TableColumnLayout;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
+import org.eclipse.jface.viewers.ColumnPixelData;
 import org.eclipse.jface.viewers.ColumnWeightData;
 import org.eclipse.jface.viewers.ComboBoxCellEditor;
 import org.eclipse.jface.viewers.DoubleClickEvent;
@@ -44,17 +49,23 @@ import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.SWTError;
+import org.eclipse.swt.browser.Browser;
+import org.eclipse.swt.browser.LocationListener;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.custom.StackLayout;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.layout.RowLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
@@ -65,31 +76,51 @@ import org.osgi.service.prefs.BackingStoreException;
 import org.osgi.service.prefs.Preferences;
 import org.slf4j.LoggerFactory;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import com.google.i18n.phonenumbers.NumberParseException;
+import com.google.i18n.phonenumbers.PhoneNumberUtil;
+import com.google.i18n.phonenumbers.Phonenumber;
+
 import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.l10n.Messages;
+import ch.elexis.core.mediorder.MediorderBlobId;
 import ch.elexis.core.mediorder.MediorderEntryState;
 import ch.elexis.core.mediorder.MediorderUtil;
 import ch.elexis.core.model.IArticle;
+import ch.elexis.core.model.IBlob;
 import ch.elexis.core.model.IOrderEntry;
 import ch.elexis.core.model.IPatient;
+import ch.elexis.core.model.IPerson;
 import ch.elexis.core.model.IPrescription;
 import ch.elexis.core.model.IStock;
 import ch.elexis.core.model.IStockEntry;
+import ch.elexis.core.model.builder.IContactBuilder;
 import ch.elexis.core.model.prescription.EntryType;
+import ch.elexis.core.services.ICodeElementService;
 import ch.elexis.core.services.IConfigService;
+import ch.elexis.core.services.IContactService;
 import ch.elexis.core.services.IContextService;
 import ch.elexis.core.services.IMedicationService;
 import ch.elexis.core.services.IModelService;
 import ch.elexis.core.services.IOrderService;
+import ch.elexis.core.services.IQuery;
+import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.elexis.core.services.IStickerService;
 import ch.elexis.core.services.IStockService;
 import ch.elexis.core.services.IStoreToStringService;
 import ch.elexis.core.services.ITextReplacementService;
+import ch.elexis.core.types.Gender;
 import ch.elexis.core.ui.constants.ExtensionPointConstantsUi;
+import ch.elexis.core.ui.e4.dialog.IContactSelectorDialog;
 import ch.elexis.core.ui.e4.dnd.GenericObjectDropTarget;
 import ch.elexis.core.ui.e4.parts.IRefreshablePart;
 import ch.elexis.core.ui.e4.util.CoreUiUtil;
 import ch.elexis.core.ui.icons.Images;
+import ch.elexis.core.ui.mediorder.internal.MediorderHistoryBuilder;
+import ch.elexis.core.ui.mediorder.internal.MediorderHistoryLinkListener;
+import ch.elexis.core.ui.mediorder.internal.MediorderHistoryRenderer;
 import ch.elexis.core.ui.views.contribution.IViewContribution;
 import jakarta.annotation.PostConstruct;
 import jakarta.inject.Inject;
@@ -131,21 +162,49 @@ public class MediorderPart implements IRefreshablePart {
 	IConfigService configService;
 
 	@Inject
+	IContactService contactService;
+
+	@Inject
+	ICodeElementService codeElementService;
+
+	@Inject
 	ITextReplacementService textReplacementService;
+
+	public enum MediorderActiveView {
+		DETAILS, HISTORY
+	}
+
+	private MediorderActiveView mediorderActiveView = MediorderActiveView.DETAILS;
+
+	private SashForm mainSashForm;
+	private SashForm orderSashForm;
 
 	private TableViewer tableViewer;
 	private TableViewer tableViewerDetails;
 	private TableViewer tableViewerHistory;
+	private TableViewer tableViewerImportedPatients;
+	private TableViewer tableViewerImportedArticles;
+
+	private Browser historyBrowser;
+	private MediorderHistoryRenderer historyRenderer;
+	private MediorderHistoryBuilder historyBuilder;
 
 	private Composite cDetails_table;
 	private Composite cHistory_table;
+	private Composite cHistory_timeline;
+	private Composite cPatientorder_area;
+	private Composite cPatientError_table;
+	private Composite cPatientList;
 	private StackLayout stackLayout;
+	private StackLayout topStackLayout;
 	private Composite viewComposite;
+	private Composite topViewComposite;
 
 	private StockComparator stockComparator;
 	private MedicationComparator medicationComparator;
 	private MedicationHistoryComparator medicationHistoryComparator;
 	private final DateTimeFormatter dateFormatter;
+	private final DateTimeFormatter timeFormatter;
 
 	private MediorderStockFilter searchFilter;
 	private MediorderHistoryFilter orderHistoryFilter;
@@ -154,19 +213,71 @@ public class MediorderPart implements IRefreshablePart {
 
 	public Map<IStock, Integer> imageStockStates = new HashMap<IStock, Integer>();
 	private List<IStock> filteredStocks = new ArrayList<>();
-	private List<Integer> currentFilterValue;
+	private List<Integer> currentFilterValue = List.of();
 	private boolean filterActive = false;
 	private boolean isDetailsViewActive = true;
 
 	private Preferences preferences = InstanceScope.INSTANCE.getNode("ch.elexis.core.ui.mediorder");
 
+	private IPatient importedPatient, selectedImportedPatient;
+	private Button btnUseSelected, btnSelectNewPatient, btnNewPatient, btnError, btnOpen, btnReady, btnFinished;
+	private final List<Button> filterButtons = new ArrayList<>();
+	private Label txtImportName, txtImportFirstName, txtImportDob, txtImportSex, txtImportStreet, txtImportPostalCode,
+			txtImportCity, txtImportEmail, txtImportMobile;
+	private Label txtExistingName, txtExistingFirstName, txtExistingDob, txtExistingSex, txtExistingStreet,
+			txtExistingPostalCode, txtExistingCity, txtExistingPostalEmail, txtExistingPostalMobile;
+
+	private boolean activePatient = false;
+
+	private List<IPatient> importedPatients;
+	private TableViewer tableViewerPatientError;
+
+
 	private static final String CURRENT_FILTER_VALUE = "currentFilterValues";
 	private static final String IS_FILTER_ACTIVE = "isFilterActive";
 	private static final String LAST_ACTIVE_TABLEVIEWER = "lastActiveView";
 	private static final String ONLY_NUMBER_REGEX = "\\d*";
-	
+
+	private static final String FILTER_STATES_KEY = "mediorder.filterStates"; //$NON-NLS-1$
+
+	private static final List<Integer> FILTER_OPEN = List.of(2, 3);
+	private static final List<Integer> FILTER_READY = List.of(1);
+	private static final List<Integer> FILTER_FINISHED = List.of(4);
+
+	private static final String LABEL_FILTER_OPEN = "Offen";
+	private static final String LABEL_FILTER_READY = "Bereit";
+	private static final String LABEL_FILTER_FINISHED = "Abgeschlossen";
+	private static final String LABEL_FILTER_ERROR = "Fehlerhaft (%d)";
+
+	public static class PatientImportData {
+		public IPatient patient;
+		public String street;
+		public String postalCode;
+		public String city;
+		public String email;
+		public String mobile;
+		public String blobId;
+		public Map<String, Integer> articleGtinsWithAmount = new HashMap<>();
+	}
+
+	public static class ImportedArticleRow {
+		public final String gtin;
+		public final int amount;
+		public final IArticle article;
+
+		public ImportedArticleRow(String gtin, int amount, IArticle article) {
+			this.gtin = gtin;
+			this.amount = amount;
+			this.article = article;
+		}
+	}
+
+	private List<PatientImportData> importedPatientDataList = new ArrayList<>();
+	private PatientImportData selectedImportedPatientData;
+
 	public MediorderPart() {
 		dateFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+		timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
 		selectedDetailStock = new WritableValue<>();
 	}
 
@@ -192,25 +303,63 @@ public class MediorderPart implements IRefreshablePart {
 		});
 	}
 
+	public void setActivePatient(boolean activePatient) {
+		this.activePatient = activePatient;
+	}
+
 	@Inject
 	@Optional
 	public void reload(@UIEventTopic(ElexisEventTopics.EVENT_RELOAD) Class<?> clazz) {
-		if (IStock.class.equals(clazz)) {
+		if (IStock.class.equals(clazz) || IStockEntry.class.equals(clazz)) {
 			refresh();
 		}
 	}
 
 	@Override
 	public void refresh(Map<Object, Object> filterParameters) {
+		refreshStockTable();
+
+		getImportedPatients();
+		refreshImportedPatientsTable();
+	}
+
+	private void refreshStockTable() {
 		Object firstElement = tableViewer.getStructuredSelection().getFirstElement();
-		List<IStock> stocks = filterActive ? MediorderPartUtil.calculateFilteredStocks(currentFilterValue)
+		List<IStock> stocks = isStockFilterApplied() ? MediorderPartUtil.calculateFilteredStocks(currentFilterValue)
 				: getStocksExcludingAwaitingRequests();
-		stocks.forEach(stock -> MediorderPartUtil.updateStockImageState(imageStockStates, (IStock) stock));
+		stocks.forEach(stock -> MediorderPartUtil.updateStockImageState(imageStockStates, stock));
 		tableViewer.setInput(stocks);
 		if (tableViewer.contains(firstElement)) {
 			tableViewer.setSelection(new StructuredSelection(firstElement));
 		}
 		tableViewer.refresh(true);
+		updateHistoryTimeline(selectedDetailStock.getValue());
+	}
+
+	private boolean isStockFilterApplied() {
+		return filterActive && currentFilterValue != null && !currentFilterValue.isEmpty();
+	}
+
+	private void showImportErrorView(boolean show) {
+		btnError.setSelection(show);
+		if (show) {
+			filterButtons.forEach(button -> button.setSelection(false));
+			updateFilter(List.of(), false);
+
+			topStackLayout.topControl = cPatientError_table;
+			getImportedPatients();
+			refreshImportedPatientsTable();
+			orderSashForm.setWeights(new int[] { 100, 0 });
+			viewComposite.setVisible(false);
+			showHistoryTimeline(false);
+		} else {
+			topStackLayout.topControl = cPatientList;
+			viewComposite.setVisible(true);
+			orderSashForm.setWeights(new int[] { 50, 50 });
+			showHistoryTimeline(isDetailsViewActive);
+			refreshStockTable();
+		}
+		topViewComposite.layout();
 	}
 
 	@PostConstruct
@@ -221,27 +370,40 @@ public class MediorderPart implements IRefreshablePart {
 		medicationComparator = new MedicationComparator();
 		medicationHistoryComparator = new MedicationHistoryComparator();
 
-		createSearchBar(parent);
+		Composite filterComposite = new Composite(parent, SWT.NONE);
+		filterComposite.setLayout(new RowLayout(SWT.HORIZONTAL));
+		filterComposite.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 
-		SashForm sashForm = new SashForm(parent, SWT.VERTICAL);
-		sashForm.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-		sashForm.setSashWidth(5);
-		createPatientorderListViewer(extensionRegistry, sashForm);
+		getImportedPatients();
 
-		viewComposite = new Composite(sashForm, SWT.NONE);
-		stackLayout = new StackLayout();
-		viewComposite.setLayout(stackLayout);
+		btnError = new Button(filterComposite, SWT.TOGGLE);
+		updateErrorButtonText();
+		btnError.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				showImportErrorView(btnError.getSelection());
+			}
+		});
 
-		createPatientorderDetailViewer(viewComposite);
-		createPatientorderHistory(viewComposite);
+		btnOpen = createFilterButton(filterComposite, LABEL_FILTER_OPEN, FILTER_OPEN);
+		btnReady = createFilterButton(filterComposite, LABEL_FILTER_READY, FILTER_READY);
+		btnFinished = createFilterButton(filterComposite, LABEL_FILTER_FINISHED, FILTER_FINISHED);
 
-		stackLayout.topControl = cDetails_table;
-		viewComposite.layout();
+		mainSashForm = new SashForm(parent, SWT.VERTICAL);
+		mainSashForm.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		mainSashForm.setSashWidth(10);
+
+		createPatientorderArea(mainSashForm, extensionRegistry);
+		createPatientorderTimeline(mainSashForm);
+
+		mainSashForm.setWeights(new int[] { 65, 35 });
 		addDragAndDrop();
 
 		menuService.registerContextMenu(tableViewer.getTable(), "ch.elexis.core.ui.mediorder.popupmenu.viewer"); //$NON-NLS-1$
 		menuService.registerContextMenu(tableViewerDetails.getTable(),
 				"ch.elexis.core.ui.mediorder.popupmenu.viewerdetails"); //$NON-NLS-1$
+		menuService.registerContextMenu(tableViewerImportedPatients.getTable(),
+				"ch.elexis.core.ui.mediorder.popupmenu.viewerimportedpatients"); //$NON-NLS-1$
 
 		tableViewer.setInput(getStocksExcludingAwaitingRequests());
 		applySavedFilter();
@@ -250,12 +412,99 @@ public class MediorderPart implements IRefreshablePart {
 		selectedDetailStock.addChangeListener(ev -> selectionService.setSelection(selectedDetailStock.getValue()));
 	}
 
-	public boolean toggleViews() {
-		isDetailsViewActive = !isDetailsViewActive;
-		stackLayout.topControl = isDetailsViewActive ? cDetails_table : cHistory_table;
+	private void createPatientorderArea(Composite parent, IExtensionRegistry extensionRegistry) {
+		cPatientorder_area = new Composite(parent, SWT.BORDER);
+		GridLayout glOrder = new GridLayout(1, false);
+		glOrder.marginWidth = 2;
+		glOrder.marginHeight = 2;
+		cPatientorder_area.setLayout(glOrder);
+
+		orderSashForm = new SashForm(cPatientorder_area, SWT.VERTICAL);
+		orderSashForm.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		orderSashForm.setSashWidth(5);
+
+		topViewComposite = new Composite(orderSashForm, SWT.NONE);
+		topStackLayout = new StackLayout();
+		topViewComposite.setLayout(topStackLayout);
+		createPatientorderListViewer(extensionRegistry, topViewComposite);
+		createPatientErrorViewer(topViewComposite);
+
+		topStackLayout.topControl = cPatientList;
+		topViewComposite.layout();
+
+		viewComposite = new Composite(orderSashForm, SWT.NONE);
+		stackLayout = new StackLayout();
+		viewComposite.setLayout(stackLayout);
+
+		createPatientorderDetailViewer(viewComposite);
+		createPatientorderHistory(viewComposite);
+
+		stackLayout.topControl = cDetails_table;
 		viewComposite.layout();
+
+		orderSashForm.setWeights(new int[] { 50, 50 });
+	}
+
+	private void createPatientorderTimeline(Composite parent) {
+		cHistory_timeline = new Composite(parent, SWT.NONE);
+		GridLayout glTimeline = new GridLayout(1, false);
+		glTimeline.marginWidth = 2;
+		glTimeline.marginHeight = 0;
+		cHistory_timeline.setLayout(glTimeline);
+
+		setCompositeTitle(cHistory_timeline, Messages.Mediorder_history_timeline);
+
+		Label separator = new Label(cHistory_timeline, SWT.SEPARATOR | SWT.HORIZONTAL);
+		separator.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false));
+
+		historyRenderer = new MediorderHistoryRenderer();
+		historyBuilder = new MediorderHistoryBuilder(coreModelService, orderService, codeElementService, contextService,
+				dateFormatter, timeFormatter);
+		try {
+			historyBrowser = new Browser(cHistory_timeline, SWT.NONE);
+			historyBrowser.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+			historyBrowser.addLocationListener(
+					LocationListener.changingAdapter(new MediorderHistoryLinkListener(historyBuilder)::handleHistoryLink));
+		} catch (SWTError e) {
+			LoggerFactory.getLogger(getClass()).error("Failed to create the browser widget for the history.", e);
+			historyBrowser = null;
+		}
+
+		selectedDetailStock.addChangeListener(sel -> updateHistoryTimeline(selectedDetailStock.getValue()));
+	}
+
+	private void showHistoryTimeline(boolean show) {
+		if (cHistory_timeline == null || cHistory_timeline.isDisposed()) {
+			return;
+		}
+		mainSashForm.setMaximizedControl(show ? null : cPatientorder_area);
+	}
+
+	private Button createFilterButton(Composite parent, String text, List<Integer> states) {
+		Button button = new Button(parent, SWT.TOGGLE);
+		button.setText(text);
+		button.setData(FILTER_STATES_KEY, states);
+		button.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				applyStockFilter(button, states);
+			}
+		});
+		filterButtons.add(button);
+		return button;
+	}
+
+	public MediorderActiveView toggleViews(MediorderActiveView view) {
+		mediorderActiveView = (mediorderActiveView == view) ? MediorderActiveView.DETAILS : view;
+		stackLayout.topControl = switch (mediorderActiveView) {
+		case DETAILS -> cDetails_table;
+		case HISTORY -> cHistory_table;
+		};
+		isDetailsViewActive = mediorderActiveView == MediorderActiveView.DETAILS;
+		viewComposite.layout();
+		showHistoryTimeline(isDetailsViewActive);
 		saveFilterStatus();
-		return isDetailsViewActive;
+		return mediorderActiveView;
 	}
 
 	private void createSearchBar(Composite parent) {
@@ -275,12 +524,18 @@ public class MediorderPart implements IRefreshablePart {
 	}
 
 	private void createPatientorderListViewer(IExtensionRegistry extensionRegistry, Composite parent) {
-		Composite cStockTable = new Composite(parent, SWT.NONE);
-		cStockTable.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		TableColumnLayout tcLayout = new TableColumnLayout();
-		cStockTable.setLayout(tcLayout);
+		cPatientList = new Composite(parent, SWT.NONE);
+		cPatientList.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		cPatientList.setLayout(new GridLayout(1, false));
 
-		tableViewer = new TableViewer(cStockTable, SWT.FULL_SELECTION | SWT.MULTI | SWT.NONE);
+		createSearchBar(cPatientList);
+
+		Composite tableComposite = new Composite(cPatientList, SWT.NONE);
+		tableComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		TableColumnLayout tcLayout = new TableColumnLayout();
+		tableComposite.setLayout(tcLayout);
+
+		tableViewer = new TableViewer(tableComposite, SWT.FULL_SELECTION | SWT.MULTI | SWT.NONE);
 		Table table = tableViewer.getTable();
 		table.setHeaderVisible(true);
 		tableViewer.setContentProvider(ArrayContentProvider.getInstance());
@@ -291,7 +546,12 @@ public class MediorderPart implements IRefreshablePart {
 
 		tableViewer.addSelectionChangedListener(event -> {
 			IStructuredSelection selection = tableViewer.getStructuredSelection();
-			selectedDetailStock.setValue((IStock) selection.getFirstElement());
+			IStock stock = (IStock) selection.getFirstElement();
+			selectedDetailStock.setValue(stock);
+
+			if (activePatient) {
+				contextService.setActivePatient(stock.getOwner().asIPatient());
+			}
 		});
 
 		// order status
@@ -320,7 +580,7 @@ public class MediorderPart implements IRefreshablePart {
 		});
 
 		TableColumn tblclmntvcOrderState = tvcOrderState.getColumn();
-		tcLayout.setColumnData(tblclmntvcOrderState, new ColumnWeightData(0, 20, true));
+		tcLayout.setColumnData(tblclmntvcOrderState, new ColumnPixelData(22, false));
 		tblclmntvcOrderState.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -339,7 +599,7 @@ public class MediorderPart implements IRefreshablePart {
 			}
 		});
 		TableColumn tblclmntvcPatientNumber = tvcPatientNumber.getColumn();
-		tcLayout.setColumnData(tblclmntvcPatientNumber, new ColumnWeightData(10, 70, true));
+		tcLayout.setColumnData(tblclmntvcPatientNumber, new ColumnPixelData(120, true));
 		tblclmntvcPatientNumber.setText(Messages.Core_Patient_Number);
 		tblclmntvcPatientNumber.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -354,7 +614,7 @@ public class MediorderPart implements IRefreshablePart {
 		tvcPatientLastName
 				.setLabelProvider(ColumnLabelProvider.createTextProvider(e -> ((IStock) e).getOwner().getLastName()));
 		TableColumn tblclmntvcPatientLastName = tvcPatientLastName.getColumn();
-		tcLayout.setColumnData(tblclmntvcPatientLastName, new ColumnWeightData(30, 200, true));
+		tcLayout.setColumnData(tblclmntvcPatientLastName, new ColumnPixelData(200, true));
 		tblclmntvcPatientLastName.setText(Messages.Core_Name);
 		tblclmntvcPatientLastName.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -369,7 +629,7 @@ public class MediorderPart implements IRefreshablePart {
 		tvcPatientFirstName
 				.setLabelProvider(ColumnLabelProvider.createTextProvider(e -> ((IStock) e).getOwner().getFirstName()));
 		TableColumn tblclmntvcPatientFirstName = tvcPatientFirstName.getColumn();
-		tcLayout.setColumnData(tblclmntvcPatientFirstName, new ColumnWeightData(30, 200, true));
+		tcLayout.setColumnData(tblclmntvcPatientFirstName, new ColumnPixelData(200, true));
 		tblclmntvcPatientFirstName.setText(Messages.Core_Firstname);
 		tblclmntvcPatientFirstName.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -390,7 +650,7 @@ public class MediorderPart implements IRefreshablePart {
 			}
 		});
 		TableColumn tblclmntvcPatientBirthdate = tvcPatientBirthdate.getColumn();
-		tcLayout.setColumnData(tblclmntvcPatientBirthdate, new ColumnWeightData(10, 90, true));
+		tcLayout.setColumnData(tblclmntvcPatientBirthdate, new ColumnPixelData(170, true));
 		tblclmntvcPatientBirthdate.setText(Messages.Core_Enter_Birthdate);
 		tblclmntvcPatientBirthdate.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -400,7 +660,7 @@ public class MediorderPart implements IRefreshablePart {
 			}
 		});
 
-		cStockTable.setData("tableViewer", tableViewer);
+		cPatientList.setData("tableViewer", tableViewer);
 
 		IConfigurationElement[] configurationElementsFor = extensionRegistry
 				.getConfigurationElementsFor(ExtensionPointConstantsUi.VIEWCONTRIBUTION);
@@ -412,12 +672,653 @@ public class MediorderPart implements IRefreshablePart {
 			try {
 				IViewContribution contribution = (IViewContribution) e
 						.createExecutableExtension(ExtensionPointConstantsUi.VIEWCONTRIBUTION_CLASS);
-				contribution.initComposite(cStockTable);
+				contribution.initComposite(cPatientList);
 			} catch (CoreException e1) {
 				LoggerFactory.getLogger(getClass()).error("Error", e1);
 			}
 		});
 
+	}
+
+	private void getImportedPatients() {
+		if (importedPatients == null) {
+			importedPatients = new ArrayList<>();
+		} else {
+			importedPatients.clear();
+		}
+		if (importedPatientDataList == null) {
+			importedPatientDataList = new ArrayList<>();
+		} else {
+			importedPatientDataList.clear();
+		}
+
+		IQuery<IBlob> query = coreModelService.getQuery(IBlob.class);
+		query.and("id", COMPARATOR.LIKE, MediorderBlobId.UNASSIGNED_PREFIX + "%");
+		List<IBlob> results = query.execute();
+
+		for (IBlob blob : results) {
+			try {
+				PatientImportData data = parsePatientFromQuestionnaireResponse(blob.getStringContent());
+				if (data != null && data.patient != null) {
+					data.blobId = blob.getId();
+					importedPatients.add(data.patient);
+					importedPatientDataList.add(data);
+				}
+			} catch (Exception e) {
+				LoggerFactory.getLogger(getClass()).error("Fehler beim Parsen von Blob: " + blob.getId(), e);
+			}
+		}
+	}
+
+	private void getDuplicatePatients(IPatient patient) {
+		List<IPerson> duplicatePatients = contactService.findPersonFuzzy(patient.getDateOfBirth().toLocalDate(),
+				patient.getGender(), patient.getLastName(), patient.getFirstName(), 6, false);
+		List<IPatient> duplicatePatientsAsIPatient = duplicatePatients.stream().map(IPerson::asIPatient)
+				.filter(Objects::nonNull).collect(Collectors.toList());
+
+		tableViewerPatientError.setInput(duplicatePatientsAsIPatient);
+		tableViewerPatientError.refresh();
+		btnUseSelected.setEnabled(false);
+	}
+
+	private PatientImportData parsePatientFromQuestionnaireResponse(String json) throws Exception {
+		JsonObject root = JsonParser.parseString(json).getAsJsonObject();
+		JsonArray items = root.getAsJsonArray("item");
+
+		JsonArray patientItems = items.get(0).getAsJsonObject().getAsJsonArray("item");
+		Map<String, String> values = MediorderPartUtil.extractItemValues(patientItems);
+
+		IPatient patient = coreModelService.create(IPatient.class);
+		patient.setFirstName(values.get("Vorname"));
+		patient.setLastName(values.get("Nachname"));
+		patient.setGender("MALE".equals(values.get("Geschlecht")) ? Gender.MALE : Gender.FEMALE);
+		if (values.get("Geburtsdatum") != null) {
+			patient.setDateOfBirth(LocalDate.parse(values.get("Geburtsdatum")).atStartOfDay());
+		}
+
+		PatientImportData data = new PatientImportData();
+		data.patient = patient;
+		data.street = StringUtils.defaultString(values.get("Strasse"));
+		data.postalCode = StringUtils.defaultString(values.get("Postleitzahl"));
+		data.city = StringUtils.defaultString(values.get("Ort"));
+		data.email = StringUtils.defaultString(values.get("E-Mail"));
+		data.mobile = StringUtils.defaultString(values.get("Telefon"));
+
+		if (items.size() > 2) {
+			data.articleGtinsWithAmount.putAll(MediorderPartUtil.extractMedications(items));
+		}
+		return data;
+	}
+
+	private void createPatientErrorViewer(Composite parent) {
+		cPatientError_table = new Composite(parent, SWT.NONE);
+		cPatientError_table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		cPatientError_table.setLayout(new GridLayout(1, false));
+
+		SashForm sashForm = new SashForm(cPatientError_table, SWT.VERTICAL);
+		sashForm.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		sashForm.setSashWidth(1);
+
+		Composite importComposite = new Composite(sashForm, SWT.NONE);
+		importComposite.setLayout(new GridLayout(1, false));
+
+		Label lblImportList = new Label(importComposite, SWT.NONE);
+		lblImportList.setText("Importierte Patienten");
+		lblImportList.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false));
+		FontData fdImp = lblImportList.getFont().getFontData()[0];
+		lblImportList.setFont(
+				new Font(importComposite.getDisplay(), new FontData(fdImp.getName(), fdImp.getHeight(), SWT.BOLD)));
+
+		Composite importTableComposite = new Composite(importComposite, SWT.NONE);
+		importTableComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		TableColumnLayout tcLayoutImport = new TableColumnLayout();
+		importTableComposite.setLayout(tcLayoutImport);
+
+		tableViewerImportedPatients = new TableViewer(importTableComposite,
+				SWT.FULL_SELECTION | SWT.SINGLE | SWT.BORDER);
+		tableViewerImportedPatients.getTable().setHeaderVisible(true);
+		tableViewerImportedPatients.getTable().setLinesVisible(true);
+		tableViewerImportedPatients.setContentProvider(ArrayContentProvider.getInstance());
+
+		TableViewerColumn tvcImpName = new TableViewerColumn(tableViewerImportedPatients, SWT.NONE);
+		tvcImpName.getColumn().setText(Messages.Core_Name);
+		tcLayoutImport.setColumnData(tvcImpName.getColumn(), new ColumnWeightData(40, 80, true));
+		tvcImpName.setLabelProvider(ColumnLabelProvider.createTextProvider(e -> ((IPatient) e).getLastName()));
+
+		TableViewerColumn tvcImpFirstName = new TableViewerColumn(tableViewerImportedPatients, SWT.NONE);
+		tvcImpFirstName.getColumn().setText(Messages.Core_Firstname);
+		tcLayoutImport.setColumnData(tvcImpFirstName.getColumn(), new ColumnWeightData(40, 80, true));
+		tvcImpFirstName.setLabelProvider(ColumnLabelProvider.createTextProvider(e -> ((IPatient) e).getFirstName()));
+
+		TableViewerColumn tvcImpDateOfBirth = new TableViewerColumn(tableViewerImportedPatients, SWT.NONE);
+		tvcImpDateOfBirth.getColumn().setText(Messages.Core_Enter_Birthdate);
+		tcLayoutImport.setColumnData(tvcImpDateOfBirth.getColumn(), new ColumnWeightData(40, 80, true));
+		tvcImpDateOfBirth.setLabelProvider(
+				ColumnLabelProvider.createTextProvider(e -> ((IPatient) e).getDateOfBirth().format(dateFormatter)));
+
+		TableViewerColumn tvcImpSex = new TableViewerColumn(tableViewerImportedPatients, SWT.NONE);
+		tvcImpSex.getColumn().setText("Geschlecht");
+		tcLayoutImport.setColumnData(tvcImpSex.getColumn(), new ColumnWeightData(40, 80, true));
+		tvcImpSex.setLabelProvider(ColumnLabelProvider.createTextProvider(e -> {
+			return ((IPatient) e).getGender() == Gender.MALE ? "m" : "w";
+		}));
+
+		tableViewerImportedPatients.addSelectionChangedListener(event -> {
+			IStructuredSelection sel = tableViewerImportedPatients.getStructuredSelection();
+			if (!sel.isEmpty()) {
+				IPatient selected = (IPatient) sel.getFirstElement();
+				selectedImportedPatientData = importedPatientDataList.stream().filter(d -> d.patient == selected)
+						.findFirst().orElse(null);
+				importedPatient = selected;
+				selectedImportedPatient = selected;
+				btnNewPatient.setEnabled(true);
+				btnSelectNewPatient.setEnabled(true);
+				updateImportedPatientFields(selectedImportedPatientData);
+				updateImportedArticlesTable(selectedImportedPatientData);
+				getDuplicatePatients(selected);
+			} else {
+				btnNewPatient.setEnabled(true);
+				btnSelectNewPatient.setEnabled(false);
+				updateImportedArticlesTable(null);
+			}
+		});
+
+		tableViewerImportedPatients.setInput(importedPatients);
+
+		Composite similarComposite = new Composite(sashForm, SWT.NONE);
+		similarComposite.setLayout(new GridLayout(1, false));
+
+		Label lblSimilarList = new Label(similarComposite, SWT.NONE);
+		lblSimilarList.setText("Ähnliche Patienten");
+		lblSimilarList.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false));
+		FontData fdSim = lblSimilarList.getFont().getFontData()[0];
+		lblSimilarList.setFont(
+				new Font(similarComposite.getDisplay(), new FontData(fdSim.getName(), fdSim.getHeight(), SWT.BOLD)));
+
+		Composite similarTableComposite = new Composite(similarComposite, SWT.NONE);
+		similarTableComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		TableColumnLayout tcLayoutSimilar = new TableColumnLayout();
+		similarTableComposite.setLayout(tcLayoutSimilar);
+
+		tableViewerPatientError = new TableViewer(similarTableComposite, SWT.FULL_SELECTION | SWT.SINGLE | SWT.BORDER);
+		tableViewerPatientError.getTable().setHeaderVisible(true);
+		tableViewerPatientError.getTable().setLinesVisible(true);
+		// ColumnViewerToolTipSupport.enableFor(tableViewerPatientError);
+		tableViewerPatientError.setContentProvider(ArrayContentProvider.getInstance());
+
+		TableViewerColumn tvcName = new TableViewerColumn(tableViewerPatientError, SWT.NONE);
+		tvcName.getColumn().setText(Messages.Core_Name);
+		tcLayoutSimilar.setColumnData(tvcName.getColumn(), new ColumnWeightData(40, 80, true));
+		tvcName.setLabelProvider(ColumnLabelProvider.createTextProvider(e -> ((IPatient) e).getLastName()));
+
+		TableViewerColumn tvcFirstName = new TableViewerColumn(tableViewerPatientError, SWT.NONE);
+		tvcFirstName.getColumn().setText(Messages.Core_Firstname);
+		tcLayoutSimilar.setColumnData(tvcFirstName.getColumn(), new ColumnWeightData(40, 80, true));
+		tvcFirstName.setLabelProvider(ColumnLabelProvider.createTextProvider(e -> ((IPatient) e).getFirstName()));
+
+		TableViewerColumn tvcDob = new TableViewerColumn(tableViewerPatientError, SWT.NONE);
+		tvcDob.getColumn().setText(Messages.Core_Enter_Birthdate);
+		tcLayoutSimilar.setColumnData(tvcDob.getColumn(), new ColumnWeightData(40, 80, true));
+		tvcDob.setLabelProvider(ColumnLabelProvider.createTextProvider(
+				e -> ((IPatient) e).getDateOfBirth() != null ? ((IPatient) e).getDateOfBirth().format(dateFormatter)
+						: ""));
+
+		TableViewerColumn tvcSex = new TableViewerColumn(tableViewerPatientError, SWT.NONE);
+		tvcSex.getColumn().setText("Geschlecht");
+		tcLayoutSimilar.setColumnData(tvcSex.getColumn(), new ColumnWeightData(40, 80, true));
+		tvcSex.setLabelProvider(ColumnLabelProvider.createTextProvider(e -> {
+			return ((IPatient) e).getGender() == Gender.MALE ? "m" : "w";
+		}));
+
+		tableViewerPatientError.addSelectionChangedListener(event -> {
+			IStructuredSelection sel = tableViewerPatientError.getStructuredSelection();
+			if (!sel.isEmpty()) {
+				IPatient match = (IPatient) sel.getFirstElement();
+				updateDetailComparison(match);
+				btnNewPatient.setEnabled(false);
+				btnUseSelected.setEnabled(true);
+			} else {
+				btnUseSelected.setEnabled(false);
+			}
+		});
+
+		Composite detailComposite = new Composite(sashForm, SWT.NONE);
+		detailComposite.setLayout(new GridLayout(1, false));
+
+		Composite compareHeader = new Composite(detailComposite, SWT.NONE);
+		compareHeader.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false));
+		compareHeader.setLayout(new GridLayout(2, true));
+		FontData fdCol = compareHeader.getFont().getFontData()[0];
+		Font boldFont = new Font(compareHeader.getDisplay(),
+				new FontData(fdCol.getName(), fdCol.getHeight(), SWT.BOLD));
+
+		Label lblColImport = new Label(compareHeader, SWT.NONE);
+		lblColImport.setText("Importierter Patient");
+		lblColImport.setFont(boldFont);
+		lblColImport.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false));
+
+		Label lblColExisting = new Label(compareHeader, SWT.NONE);
+		lblColExisting.setText("Bestehender Patient");
+		lblColExisting.setFont(boldFont);
+		lblColExisting.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false));
+
+		Composite compareGrid = new Composite(detailComposite, SWT.NONE);
+		compareGrid.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		compareGrid.setLayout(new GridLayout(2, true));
+
+		Composite colImport = new Composite(compareGrid, SWT.BORDER);
+		colImport.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		colImport.setLayout(new GridLayout(2, false));
+
+		Composite colExisting = new Composite(compareGrid, SWT.BORDER);
+		colExisting.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		colExisting.setLayout(new GridLayout(2, false));
+
+		txtImportName = createDetailField(colImport, Messages.Core_Name,
+				selectedImportedPatient != null ? selectedImportedPatient.getLastName() : "");
+		txtImportFirstName = createDetailField(colImport, Messages.Core_Firstname,
+				selectedImportedPatient != null ? selectedImportedPatient.getFirstName() : "");
+		txtImportDob = createDetailField(colImport, Messages.Core_Enter_Birthdate, "");
+		txtImportSex = createDetailField(colImport, "Geschlecht", "");
+		txtImportStreet = createDetailField(colImport, Messages.AddressSearchView_Street, "");
+		txtImportPostalCode = createDetailField(colImport, Messages.AddressSearchView_Zip, "");
+		txtImportCity = createDetailField(colImport, Messages.AddressSearchView_City, "");
+		txtImportEmail = createDetailField(colImport, Messages.KontaktErfassenDialog_email, "");
+		txtImportMobile = createDetailField(colImport, Messages.Core_Phone, "");
+
+		txtExistingName = createDetailField(colExisting, Messages.Core_Name, "");
+		txtExistingFirstName = createDetailField(colExisting, Messages.Core_Firstname, "");
+		txtExistingDob = createDetailField(colExisting, Messages.Core_Enter_Birthdate, "");
+		txtExistingSex = createDetailField(colExisting, "Geschlecht", "");
+		txtExistingStreet = createDetailField(colExisting, Messages.AddressSearchView_Street, "");
+		txtExistingPostalCode = createDetailField(colExisting, Messages.AddressSearchView_Zip, "");
+		txtExistingCity = createDetailField(colExisting, Messages.AddressSearchView_City, "");
+		txtExistingPostalEmail = createDetailField(colExisting, Messages.KontaktErfassenDialog_email, "");
+		txtExistingPostalMobile = createDetailField(colExisting, Messages.Core_Phone, "");
+
+		Composite actionBar = new Composite(detailComposite, SWT.BORDER);
+		actionBar.setLayoutData(new GridData(SWT.FILL, SWT.BOTTOM, true, false));
+		actionBar.setLayout(new GridLayout(4, false));
+
+		Label lblHint = new Label(actionBar, SWT.NONE);
+		lblHint.setText("Ähnlichen Patienten wählen oder neuen erstellen.");
+		lblHint.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, false));
+
+		btnNewPatient = new Button(actionBar, SWT.PUSH);
+		btnNewPatient.setText("Neuen Patient erstellen");
+		btnNewPatient.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false));
+		btnNewPatient.setEnabled(false);
+		btnNewPatient.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				if (selectedImportedPatient == null || selectedImportedPatientData == null)
+					return;
+
+				IPatient patient = new IContactBuilder.PatientBuilder(coreModelService,
+						selectedImportedPatient.getFirstName(), selectedImportedPatient.getLastName(),
+						selectedImportedPatient.getDateOfBirth().toLocalDate(), selectedImportedPatient.getGender())
+						.build();
+				patient.setStreet(selectedImportedPatientData.street);
+				patient.setZip(selectedImportedPatientData.postalCode);
+				patient.setCity(selectedImportedPatientData.city);
+				patient.setEmail(selectedImportedPatientData.email);
+				patient.setMobile(selectedImportedPatientData.mobile);
+				coreModelService.save(patient);
+
+				relinkBlobToPatient(selectedImportedPatientData.blobId, patient);
+				IStock stock = storeArticlesInPatientStock(patient, selectedImportedPatientData.articleGtinsWithAmount);
+
+				importedPatient = null;
+				getImportedPatients();
+				finishPatientAssignment(stock);
+			}
+		});
+
+		btnUseSelected = new Button(actionBar, SWT.PUSH);
+		btnUseSelected.setText("Ausgewählten verwenden");
+		btnUseSelected.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false));
+		btnUseSelected.setEnabled(false);
+		btnUseSelected.addSelectionListener(new SelectionAdapter() {
+
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				IStructuredSelection sel = tableViewerPatientError.getStructuredSelection();
+				if (!sel.isEmpty()) {
+					IPatient patient = (IPatient) sel.getFirstElement();
+
+					relinkBlobToPatient(selectedImportedPatientData.blobId, patient);
+					IStock stock = storeArticlesInPatientStock(patient,
+							selectedImportedPatientData.articleGtinsWithAmount);
+
+					importedPatients.remove(selectedImportedPatient);
+					importedPatientDataList.remove(selectedImportedPatientData);
+
+					finishPatientAssignment(stock);
+				}
+			}
+		});
+
+		btnSelectNewPatient = new Button(actionBar, SWT.PUSH);
+		btnSelectNewPatient.setText("Patient suchen");
+		btnSelectNewPatient.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false));
+		btnSelectNewPatient.setEnabled(false);
+		btnSelectNewPatient.addSelectionListener(new SelectionAdapter() {
+
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				IContactSelectorDialog csd = new IContactSelectorDialog(parent.getShell(), coreModelService,
+						IPatient.class);
+				csd.setTitle("Kontakt auswählen");
+				csd.setMessage(String.format("Wählen Sie einen Patienten aus, welchem %s %s zugeordnet werden soll.",
+						selectedImportedPatient.getFirstName(), selectedImportedPatient.getLastName()));
+				int retVal = csd.open();
+				if (Dialog.OK == retVal) {
+					IPatient patient = csd.getSelectedContact().asIPatient();
+
+					relinkBlobToPatient(selectedImportedPatientData.blobId, patient);
+					IStock stock = storeArticlesInPatientStock(patient,
+							selectedImportedPatientData.articleGtinsWithAmount);
+
+					importedPatients.remove(selectedImportedPatient);
+					importedPatientDataList.remove(selectedImportedPatientData);
+
+					finishPatientAssignment(stock);
+				}
+			}
+		});
+		createImportedArticleViewer(sashForm);
+		sashForm.setWeights(new int[] { 20, 20, 25, 35 });
+	}
+
+	private void finishPatientAssignment(IStock stock) {
+		refreshImportedPatientsTable();
+		resetErrorSelection();
+		selectStockInDetailView(stock);
+	}
+
+	private void resetErrorSelection() {
+		selectedImportedPatient = null;
+		selectedImportedPatientData = null;
+		tableViewerPatientError.setInput(null);
+		tableViewerPatientError.refresh();
+		clearComparisonFields();
+		btnNewPatient.setEnabled(false);
+		btnUseSelected.setEnabled(false);
+		btnSelectNewPatient.setEnabled(false);
+	}
+
+	private void refreshImportedPatientsTable() {
+		tableViewerImportedPatients.setInput(importedPatients);
+		tableViewerImportedPatients.refresh();
+		updateErrorButtonText();
+	}
+
+	private void selectStockInDetailView(IStock stock) {
+		refresh();
+		selectedDetailStock.setValue(stock);
+		tableViewer.setSelection(new StructuredSelection(stock));
+	}
+
+	private void relinkBlobToPatient(String blobId, IPatient patient) {
+		if (blobId == null) {
+			return;
+		}
+		coreModelService.load(blobId, IBlob.class).ifPresent(oldBlob -> {
+			String originalContent = oldBlob.getStringContent();
+			LocalDate received = oldBlob.getDate() != null ? oldBlob.getDate() : LocalDate.now();
+			coreModelService.delete(oldBlob);
+
+			LocalDateTime receivedAt = LocalDateTime.of(received, LocalTime.now());
+
+			IBlob newBlob = coreModelService.create(IBlob.class);
+			newBlob.setId(MediorderBlobId.create(patient.getId(), receivedAt));
+			newBlob.setDate(received);
+			newBlob.setStringContent(originalContent);
+			coreModelService.save(newBlob);
+		});
+	}
+
+	private IStock storeArticlesInPatientStock(IPatient patient, Map<String, Integer> articleGtinsWithAmount) {
+		IStock stock = stockService.getOrCreatePatientStock(patient);
+		for (Map.Entry<String, Integer> entry : articleGtinsWithAmount.entrySet()) {
+			String gtin = entry.getKey();
+			int amount = entry.getValue();
+			try {
+				java.util.Optional<IArticle> article = codeElementService.findArticleByGtin(gtin);
+				if (article.isPresent()) {
+					IStockEntry stockEntry = stockService.storeArticleInStock(stock, article.get());
+					stockEntry.setCurrentStock(0);
+					stockEntry.setMinimumStock(amount);
+					stockEntry.setMaximumStock(amount);
+					coreModelService.save(stockEntry);
+				} else {
+					LoggerFactory.getLogger(getClass()).warn("Artikel mit GTIN {} nicht gefunden", gtin);
+				}
+			} catch (IllegalStateException e) {
+				LoggerFactory.getLogger(getClass()).error("Fehler beim Suchen des Artikels mit GTIN {}", gtin, e);
+			}
+		}
+		return stock;
+	}
+
+	private Label createDetailField(Composite parent, String labelText, String value) {
+		Label lbl = new Label(parent, SWT.NONE);
+		lbl.setText(labelText + ":");
+		lbl.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, false, false));
+
+		Label val = new Label(parent, SWT.WRAP);
+		val.setText(value);
+		val.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false));
+		return val;
+	}
+
+	private String formatDob(IPatient patient) {
+		return patient != null && patient.getDateOfBirth() != null ? patient.getDateOfBirth().format(dateFormatter)
+				: "";
+	}
+
+	private String formatGender(IPatient patient) {
+		return patient != null && patient.getGender() != null ? patient.getGender().toString() : "";
+	}
+
+	private void updateImportedPatientFields(PatientImportData data) {
+		if (data == null)
+			return;
+		IPatient patient = data.patient;
+
+		txtImportName.setText(StringUtils.defaultString(patient.getLastName()));
+		txtImportFirstName.setText(StringUtils.defaultString(patient.getFirstName()));
+		txtImportDob.setText(formatDob(patient));
+		txtImportSex.setText(formatGender(patient));
+		txtImportStreet.setText(data.street);
+		txtImportPostalCode.setText(data.postalCode);
+		txtImportCity.setText(data.city);
+		txtImportEmail.setText(data.email);
+		txtImportMobile.setText(data.mobile);
+
+		txtExistingName.setText("");
+		txtExistingFirstName.setText("");
+		txtExistingDob.setText("");
+		txtExistingSex.setText("");
+		txtExistingStreet.setText("");
+		txtExistingPostalCode.setText("");
+		txtExistingCity.setText("");
+		txtExistingPostalEmail.setText("");
+		txtExistingPostalMobile.setText("");
+
+		btnUseSelected.setEnabled(false);
+	}
+
+	private void updateDetailComparison(IPatient existing) {
+		if (importedPatient == null || existing == null)
+			return;
+
+		Color black = Display.getCurrent().getSystemColor(SWT.COLOR_BLACK);
+		Color red = Display.getCurrent().getSystemColor(SWT.COLOR_RED);
+
+		String importLastName = StringUtils.defaultString(importedPatient.getLastName());
+		String importFirstName = StringUtils.defaultString(importedPatient.getFirstName());
+		String importDob = formatDob(importedPatient);
+		String importSex = formatGender(importedPatient);
+		String importStreet = selectedImportedPatientData != null ? selectedImportedPatientData.street : "";
+		String importPostal = selectedImportedPatientData != null ? selectedImportedPatientData.postalCode : "";
+		String importCity = selectedImportedPatientData != null ? selectedImportedPatientData.city : "";
+		String importEmail = selectedImportedPatientData != null ? selectedImportedPatientData.email : "";
+		String importMobile = selectedImportedPatientData != null ? selectedImportedPatientData.mobile : "";
+
+		txtImportName.setText(importLastName);
+		txtImportFirstName.setText(importFirstName);
+		txtImportDob.setText(importDob);
+		txtImportSex.setText(importSex);
+
+		String existingLastName = StringUtils.defaultString(existing.getLastName());
+		String existingFirstName = StringUtils.defaultString(existing.getFirstName());
+		String existingDob = formatDob(existing);
+		String existingSex = formatGender(existing);
+		String existingStreet = StringUtils.defaultString(existing.getStreet());
+		String existingPostal = StringUtils.defaultString(existing.getZip());
+		String existingCity = StringUtils.defaultString(existing.getCity());
+		String existingEmail = StringUtils.defaultString(existing.getEmail());
+		String existingMobile = StringUtils.defaultString(existing.getMobile());
+
+		setCompareField(txtImportName, txtExistingName, importLastName, existingLastName, black, red);
+		setCompareField(txtImportFirstName, txtExistingFirstName, importFirstName, existingFirstName, black, red);
+		setCompareField(txtImportDob, txtExistingDob, importDob, existingDob, black, red);
+		setCompareField(txtImportSex, txtExistingSex, importSex, existingSex, black, red);
+		setCompareField(txtImportStreet, txtExistingStreet, importStreet, existingStreet, black, red);
+		setCompareField(txtImportPostalCode, txtExistingPostalCode, importPostal, existingPostal, black, red);
+		setCompareField(txtImportCity, txtExistingCity, importCity, existingCity, black, red);
+		setCompareField(txtImportEmail, txtExistingPostalEmail, importEmail, existingEmail, black, red);
+		setComparePhoneField(txtImportMobile, txtExistingPostalMobile, importMobile, existingMobile, black, red);
+	}
+
+	private void clearComparisonFields() {
+		txtImportName.setText("");
+		txtImportFirstName.setText("");
+		txtImportDob.setText("");
+		txtImportSex.setText("");
+		txtImportStreet.setText("");
+		txtImportPostalCode.setText("");
+		txtImportCity.setText("");
+		txtImportEmail.setText("");
+		txtImportMobile.setText("");
+
+		txtExistingName.setText("");
+		txtExistingFirstName.setText("");
+		txtExistingDob.setText("");
+		txtExistingSex.setText("");
+		txtExistingStreet.setText("");
+		txtExistingPostalCode.setText("");
+		txtExistingCity.setText("");
+		txtExistingPostalEmail.setText("");
+		txtExistingPostalMobile.setText("");
+
+		Color black = Display.getCurrent().getSystemColor(SWT.COLOR_BLACK);
+		txtImportName.setForeground(black);
+		txtImportFirstName.setForeground(black);
+		txtImportDob.setForeground(black);
+		txtImportSex.setForeground(black);
+		txtImportStreet.setForeground(black);
+		txtImportPostalCode.setForeground(black);
+		txtImportCity.setForeground(black);
+		txtImportEmail.setForeground(black);
+		txtImportMobile.setForeground(black);
+	}
+
+	private void updateErrorButtonText() {
+		if (btnError != null) {
+			btnError.setText(String.format(LABEL_FILTER_ERROR, importedPatients != null ? importedPatients.size() : 0));
+			btnError.requestLayout();
+		}
+	}
+
+	private void setCompareField(Label importLbl, Label existingLbl, String importVal, String existingVal, Color match,
+			Color diff) {
+		existingLbl.setText(existingVal != null ? existingVal : "");
+		boolean equal = Objects.equals(importVal, existingVal);
+		importLbl.setForeground(equal ? match : diff);
+		existingLbl.setForeground(equal ? match : diff);
+	}
+
+	private void setComparePhoneField(Label importLbl, Label existingLbl, String importVal, String existingVal,
+			Color match, Color diff) {
+		existingLbl.setText(existingVal != null ? existingVal : "");
+
+		String normalizedImport = normalizePhoneNumber(importVal);
+		String normalizedExisting = normalizePhoneNumber(existingVal);
+		boolean equal = Objects.equals(normalizedImport, normalizedExisting);
+
+		importLbl.setForeground(equal ? match : diff);
+		existingLbl.setForeground(equal ? match : diff);
+	}
+
+	private String normalizePhoneNumber(String value) {
+		if (value == null) {
+			return "";
+		}
+		try {
+			PhoneNumberUtil phoneUtil = PhoneNumberUtil.getInstance();
+			Phonenumber.PhoneNumber number = phoneUtil.parse(value, "CH");
+
+			return phoneUtil.format(number, PhoneNumberUtil.PhoneNumberFormat.NATIONAL).replaceAll("[^0-9]", "");
+		} catch (NumberParseException e) {
+			LoggerFactory.getLogger(getClass()).warn("Konnte Telefonnummer nicht parsen: {}", value, e);
+			return value.replaceAll("[^+0-9]", "");
+		}
+	}
+
+	private void createImportedArticleViewer(Composite parent) {
+		Composite cImportedArticles = new Composite(parent, SWT.NONE);
+		cImportedArticles.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		cImportedArticles.setLayout(new GridLayout(1, false));
+
+		setCompositeTitle(cImportedArticles, "Importierte Artikel");
+
+		Composite tableComposite = new Composite(cImportedArticles, SWT.NONE);
+		tableComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		TableColumnLayout tcLayout = new TableColumnLayout();
+		tableComposite.setLayout(tcLayout);
+
+		tableViewerImportedArticles = new TableViewer(tableComposite, SWT.FULL_SELECTION | SWT.MULTI);
+		Table table = tableViewerImportedArticles.getTable();
+		table.setHeaderVisible(true);
+		table.setLinesVisible(true);
+		tableViewerImportedArticles.setContentProvider(ArrayContentProvider.getInstance());
+
+		TableViewerColumn tvcArticle = new TableViewerColumn(tableViewerImportedArticles, SWT.NONE);
+		TableColumn tblclmnArticle = tvcArticle.getColumn();
+		tcLayout.setColumnData(tblclmnArticle, new ColumnWeightData(30, 400, true));
+		tblclmnArticle.setText(Messages.Core_Article);
+		tvcArticle.setLabelProvider(ColumnLabelProvider.createTextProvider(element -> {
+			ImportedArticleRow row = (ImportedArticleRow) element;
+			if (row.article != null) {
+				return row.article.getLabel();
+			}
+			return "GTIN " + row.gtin + " (nicht gefunden)"; //$NON-NLS-1$
+		}));
+
+		TableViewerColumn tvcAmount = new TableViewerColumn(tableViewerImportedArticles, SWT.NONE);
+		TableColumn tblclmnAmount = tvcAmount.getColumn();
+		tcLayout.setColumnData(tblclmnAmount, new ColumnWeightData(10, 80, true));
+		tblclmnAmount.setText(Messages.Core_Count);
+		tvcAmount.setLabelProvider(ColumnLabelProvider
+				.createTextProvider(element -> String.valueOf(((ImportedArticleRow) element).amount)));
+	}
+
+	private void updateImportedArticlesTable(PatientImportData data) {
+		if (tableViewerImportedArticles == null) {
+			return;
+		}
+		if (data == null) {
+			tableViewerImportedArticles.setInput(null);
+			return;
+		}
+		List<ImportedArticleRow> rows = data.articleGtinsWithAmount.entrySet().stream().map(entry -> {
+			IArticle article = codeElementService.findArticleByGtin(entry.getKey()).orElse(null);
+			return new ImportedArticleRow(entry.getKey(), entry.getValue(), article);
+		}).collect(Collectors.toList());
+		tableViewerImportedArticles.setInput(rows);
+		tableViewerImportedArticles.refresh();
 	}
 
 	private void createPatientorderDetailViewer(Composite parent) {
@@ -468,10 +1369,59 @@ public class MediorderPart implements IRefreshablePart {
 			}
 		});
 
-		// MediorderEntryState
+		// Medication type symbol
+		TableViewerColumn tvcMedicationTypeSymbol = new TableViewerColumn(tableViewerDetails, SWT.NONE);
+		TableColumn tblclmntvcMedicationTypeSymbol = tvcMedicationTypeSymbol.getColumn();
+		tcLayout_cDetails.setColumnData(tblclmntvcMedicationTypeSymbol, new ColumnPixelData(22, false));
+		tvcMedicationTypeSymbol.setLabelProvider(new ColumnLabelProvider() {
+			@Override
+			public String getText(Object element) {
+				return "";
+			}
+
+			@Override
+			public Image getImage(Object element) {
+				if (!(element instanceof IStockEntry entry)) {
+					return Images.IMG_EMPTY_TRANSPARENT.getImage();
+				}
+				IArticle stockArticle = entry.getArticle();
+				if (stockArticle == null || entry.getStock() == null || entry.getStock().getOwner() == null) {
+					return Images.IMG_EMPTY_TRANSPARENT.getImage();
+				}
+				IPatient patient = entry.getStock().getOwner().asIPatient();
+				if (patient == null) {
+					return Images.IMG_EMPTY_TRANSPARENT.getImage();
+				}
+
+				List<IPrescription> lMedication = patient.getMedication(Arrays.asList(EntryType.FIXED_MEDICATION,
+						EntryType.RESERVE_MEDICATION, EntryType.SYMPTOMATIC_MEDICATION));
+
+				for (IPrescription prescription : lMedication) {
+					IArticle mediArticle = prescription.getArticle();
+					if (mediArticle == null) {
+						continue;
+					}
+
+					if (stockArticle.getId().equals(mediArticle.getId())) {
+						switch (prescription.getEntryType()) {
+						case FIXED_MEDICATION:
+							return Images.IMG_FIX_MEDI.getImage();
+						case RESERVE_MEDICATION:
+							return Images.IMG_RESERVE_MEDI.getImage();
+						case SYMPTOMATIC_MEDICATION:
+							return Images.IMG_SYMPTOM_MEDI.getImage();
+						default:
+							return Images.IMG_EMPTY_TRANSPARENT.getImage();
+						}
+					}
+				}
+				return Images.IMG_EMPTY_TRANSPARENT.getImage();
+			}
+		});
+
 		TableViewerColumn tvcMediorderEntryState = new TableViewerColumn(tableViewerDetails, SWT.NONE);
 		TableColumn tblclmntvcMedicationOrdered = tvcMediorderEntryState.getColumn();
-		tcLayout_cDetails.setColumnData(tblclmntvcMedicationOrdered, new ColumnWeightData(10, 120, true));
+		tcLayout_cDetails.setColumnData(tblclmntvcMedicationOrdered, new ColumnPixelData(120, true));
 		tblclmntvcMedicationOrdered.setText(Messages.Mediorder_Order_status);
 		tblclmntvcMedicationOrdered.setImage(Images.IMG_PERSPECTIVE_ORDERS.getImage());
 		tblclmntvcMedicationOrdered.setToolTipText(Messages.Mediorder_Order_status_Tooltip);
@@ -483,9 +1433,10 @@ public class MediorderPart implements IRefreshablePart {
 		tvcMedication.setLabelProvider(
 				ColumnLabelProvider.createTextProvider(e -> ((IStockEntry) e).getArticle().getLabel()));
 		TableColumn tblclmntvcMedication = tvcMedication.getColumn();
-		tcLayout_cDetails.setColumnData(tblclmntvcMedication, new ColumnWeightData(30, 400, true));
+		tcLayout_cDetails.setColumnData(tblclmntvcMedication, new ColumnPixelData(400, true));
 		tblclmntvcMedication.setText(Messages.Core_Article);
 		tblclmntvcMedication.addSelectionListener(new SelectionAdapter() {
+
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				medicationComparator.setColumn(0);
@@ -508,7 +1459,7 @@ public class MediorderPart implements IRefreshablePart {
 			return "";
 		}));
 		TableColumn tblclmntvcMedicationDosage = tvcMedicationDosage.getColumn();
-		tcLayout_cDetails.setColumnData(tblclmntvcMedicationDosage, new ColumnWeightData(10, 70, true));
+		tcLayout_cDetails.setColumnData(tblclmntvcMedicationDosage, new ColumnPixelData(70, true));
 		tblclmntvcMedicationDosage.setText(Messages.Core_Dosage);
 
 		// medication no days consumption per dosage
@@ -516,7 +1467,7 @@ public class MediorderPart implements IRefreshablePart {
 		tvcMediorderEntryOutreach.setLabelProvider(
 				ColumnLabelProvider.createTextProvider(MediorderPartUtil::createMediorderEntryOutreachLabel));
 		TableColumn tblclmntvcMedicationAmountDay = tvcMediorderEntryOutreach.getColumn();
-		tcLayout_cDetails.setColumnData(tblclmntvcMedicationAmountDay, new ColumnWeightData(10, 100, true));
+		tcLayout_cDetails.setColumnData(tblclmntvcMedicationAmountDay, new ColumnPixelData(100, true));
 		tblclmntvcMedicationAmountDay.setText(Messages.Mediorder_sufficient_for);
 
 		// medication designated amount for ordering
@@ -548,8 +1499,10 @@ public class MediorderPart implements IRefreshablePart {
 				String amount = (String) value;
 				if (StringUtils.isNotBlank(amount)) {
 					IStockEntry entry = (IStockEntry) element;
+					int previous = entry.getMinimumStock();
 					entry.setMinimumStock(Integer.parseInt(amount));
 					coreModelService.save(entry);
+					logAmountChange(entry, Messages.Mediorder_requested, previous, entry.getMinimumStock());
 					tableViewerDetails.refresh(true);
 					removeStockEntry(entry);
 					MediorderPartUtil.updateStockImageState(imageStockStates, entry.getStock());
@@ -559,7 +1512,7 @@ public class MediorderPart implements IRefreshablePart {
 
 		});
 		TableColumn tblclmntvcMedicationAmount = tvcMedicationAmount.getColumn();
-		tcLayout_cDetails.setColumnData(tblclmntvcMedicationAmount, new ColumnWeightData(10, 110, true));
+		tcLayout_cDetails.setColumnData(tblclmntvcMedicationAmount, new ColumnPixelData(110, true));
 		tblclmntvcMedicationAmount.setText(Messages.Mediorder_requested);
 		tblclmntvcMedicationAmount.setImage(Images.IMG_ACHTUNG.getImage());
 		tblclmntvcMedicationAmount.setToolTipText(Messages.Mediorder_requested_Tooltip);
@@ -593,8 +1546,10 @@ public class MediorderPart implements IRefreshablePart {
 				String amount = (String) value;
 				if (StringUtils.isNotBlank(amount)) {
 					IStockEntry entry = (IStockEntry) element;
+					int previous = entry.getMaximumStock();
 					entry.setMaximumStock(Integer.parseInt(amount));
 					coreModelService.save(entry);
+					logAmountChange(entry, Messages.Mediorder_approved, previous, entry.getMaximumStock());
 					tableViewerDetails.refresh(true);
 					removeStockEntry(entry);
 					MediorderPartUtil.updateStockImageState(imageStockStates, entry.getStock());
@@ -603,7 +1558,7 @@ public class MediorderPart implements IRefreshablePart {
 
 		});
 		TableColumn tblclmntvcMedicationClearance = tvcMedicationClearance.getColumn();
-		tcLayout_cDetails.setColumnData(tblclmntvcMedicationClearance, new ColumnWeightData(10, 110, true));
+		tcLayout_cDetails.setColumnData(tblclmntvcMedicationClearance, new ColumnPixelData(110, true));
 		tblclmntvcMedicationClearance.setImage(Images.IMG_TICK.getImage());
 		tblclmntvcMedicationClearance.setText(Messages.Mediorder_approved);
 		tblclmntvcMedicationClearance.setToolTipText(Messages.Mediorder_approved_Tooltip);
@@ -611,7 +1566,7 @@ public class MediorderPart implements IRefreshablePart {
 		// use from default stock
 		TableViewerColumn tvcArticleFromDefaultStock = new TableViewerColumn(tableViewerDetails, SWT.NONE);
 		TableColumn tblclmntvcArticleFromDefaultStock = tvcArticleFromDefaultStock.getColumn();
-		tcLayout_cDetails.setColumnData(tblclmntvcArticleFromDefaultStock, new ColumnWeightData(0, 70, true));
+		tcLayout_cDetails.setColumnData(tblclmntvcArticleFromDefaultStock, new ColumnPixelData(70, true));
 		tblclmntvcArticleFromDefaultStock.setText(Messages.Mediorder_from_stock);
 		tblclmntvcArticleFromDefaultStock.setToolTipText(Messages.Mediorder_from_stock_Tooltip);
 		tvcArticleFromDefaultStock.setLabelProvider(ColumnLabelProvider.createTextProvider(element -> {
@@ -645,8 +1600,10 @@ public class MediorderPart implements IRefreshablePart {
 				if (defaultStockEntry == null) {
 					return;
 				}
+				int previous = entry.getCurrentStock();
 				MediorderPartUtil.useFromDefaultStock(entry, defaultStockEntry, (int) value, stockService,
 						coreModelService, contextService);
+				logAmountChange(entry, Messages.Mediorder_from_stock, previous, entry.getCurrentStock());
 				MediorderPartUtil.updateStockImageState(imageStockStates, entry.getStock());
 				tableViewerDetails.refresh();
 				tableViewer.refresh();
@@ -655,7 +1612,7 @@ public class MediorderPart implements IRefreshablePart {
 
 		TableViewerColumn tvcOrderDate = new TableViewerColumn(tableViewerDetails, SWT.NONE);
 		TableColumn tblclmntvcOrderDate = tvcOrderDate.getColumn();
-		tcLayout_cDetails.setColumnData(tblclmntvcOrderDate, new ColumnWeightData(10, 80, true));
+		tcLayout_cDetails.setColumnData(tblclmntvcOrderDate, new ColumnPixelData(90, true));
 		tblclmntvcOrderDate.setText(Messages.Mediorder_order_date);
 		tblclmntvcOrderDate.setToolTipText(Messages.Mediorder_order_date_Tooltip);
 		tvcOrderDate.setLabelProvider(ColumnLabelProvider.createTextProvider(element -> {
@@ -755,12 +1712,19 @@ public class MediorderPart implements IRefreshablePart {
 		});
 	}
 
+	private void updateHistoryTimeline(IStock stock) {
+		if (historyBrowser == null || historyBrowser.isDisposed() || historyRenderer == null) {
+			return;
+		}
+		historyBrowser.setText(historyRenderer.renderSections(historyBuilder.buildSections(stock)));
+	}
+
 	private TextCellEditor createTextCellEditor() {
 		TextCellEditor editor = new TextCellEditor(tableViewerDetails.getTable());
 		((Text) editor.getControl()).addVerifyListener(e -> e.doit = e.text.matches(ONLY_NUMBER_REGEX));
 		return editor;
 	}
-	
+
 	/**
 	 * IArticle drag and drop<br>
 	 * Drag to tableViewer - add to to patient currently in context<br>
@@ -891,7 +1855,10 @@ public class MediorderPart implements IRefreshablePart {
 		}
 
 		IStockEntry stockEntry = stockService.findStockEntryForArticleInStock(stock, article);
+		boolean isNewArticle = stockEntry == null;
+		int previousMinimum = 0;
 		if (stockEntry != null) {
+			previousMinimum = stockEntry.getMinimumStock();
 			int value = stockEntry.getMinimumStock() + 1;
 			stockEntry.setMinimumStock(value);
 			value = stockEntry.getMaximumStock() + 1;
@@ -903,13 +1870,23 @@ public class MediorderPart implements IRefreshablePart {
 			stockEntry.setMaximumStock(1);
 		}
 		coreModelService.save(stockEntry);
+		if (isNewArticle) {
+			if (stock.getOwner() != null) {
+				IPatient patient = stock.getOwner().asIPatient();
+				if (patient != null) {
+					orderService.getHistoryService().logMediorderArticleAdded(patient, article);
+				}
+			}
+		} else {
+			logAmountChange(stockEntry, Messages.Mediorder_requested, previousMinimum, stockEntry.getMinimumStock());
+		}
 		MediorderPartUtil.updateStockImageState(imageStockStates, stock);
 	}
 
 	/**
 	 * Retrieves a list of patient stocks that do not only have stockEntries with
 	 * the status {@link MediorderEntryState#AWAITING_REQUEST}
-	 * 
+	 *
 	 * @return
 	 */
 	private List<IStock> getStocksExcludingAwaitingRequests() {
@@ -917,6 +1894,28 @@ public class MediorderPart implements IRefreshablePart {
 				.filter(stock -> stock.getStockEntries().stream().anyMatch(
 						entry -> !MediorderEntryState.AWAITING_REQUEST.equals(MediorderUtil.determineState(entry))))
 				.toList();
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<IPatient> getSelectedImportedPatients() {
+		return tableViewerImportedPatients.getStructuredSelection().toList();
+	}
+
+	public void deleteImportedPatient(IPatient patient) {
+		PatientImportData data = importedPatientDataList.stream().filter(d -> d.patient == patient).findFirst()
+				.orElse(null);
+		if (data == null) {
+			return;
+		}
+		if (data.blobId != null) {
+			coreModelService.load(data.blobId, IBlob.class).ifPresent(coreModelService::delete);
+		}
+		importedPatients.remove(patient);
+		importedPatientDataList.remove(data);
+		if (selectedImportedPatient == patient) {
+			resetErrorSelection();
+		}
+		refreshImportedPatientsTable();
 	}
 
 	@SuppressWarnings("unchecked")
@@ -933,9 +1932,20 @@ public class MediorderPart implements IRefreshablePart {
 		return selectedDetailStock.getValue();
 	}
 
+	private void logAmountChange(IStockEntry entry, String amountLabel, int oldValue, int newValue) {
+		if (oldValue == newValue || entry.getStock() == null || entry.getStock().getOwner() == null) {
+			return;
+		}
+		IPatient patient = entry.getStock().getOwner().asIPatient();
+		if (patient != null) {
+			orderService.getHistoryService().logMediorderAmountChanged(patient, entry.getArticle(), amountLabel,
+					oldValue, newValue);
+		}
+	}
+
 	public void removeStockEntry(IStockEntry entry) {
 		if (entry.getMaximumStock() == 0 && entry.getMinimumStock() == 0) {
-			MediorderPartUtil.removeStockEntry(entry, coreModelService, contextService, stockService);
+			MediorderPartUtil.removeStockEntry(entry, coreModelService, contextService, stockService, orderService);
 			refresh();
 		}
 	}
@@ -952,12 +1962,11 @@ public class MediorderPart implements IRefreshablePart {
 	}
 
 	public void saveFilterStatus() {
-		String filterValue = (currentFilterValue == null || currentFilterValue.isEmpty()) ? ""
+		String filterValue = (currentFilterValue == null || currentFilterValue.isEmpty()) ? StringUtils.EMPTY
 				: currentFilterValue.stream().map(String::valueOf).collect(Collectors.joining(","));
-		boolean isFilterActive = filterValue.isEmpty() ? false : filterActive;
 
 		preferences.put(CURRENT_FILTER_VALUE, filterValue);
-		preferences.putBoolean(IS_FILTER_ACTIVE, isFilterActive);
+		preferences.putBoolean(IS_FILTER_ACTIVE, isStockFilterApplied());
 		preferences.putBoolean(LAST_ACTIVE_TABLEVIEWER, isDetailsViewActive);
 
 		try {
@@ -967,23 +1976,63 @@ public class MediorderPart implements IRefreshablePart {
 		}
 	}
 
-	public void applySavedFilter() {
-		filterActive = preferences.getBoolean(IS_FILTER_ACTIVE, false);
+	private void updateFilter(List<Integer> values, boolean active) {
+		this.currentFilterValue = (values != null) ? values : List.of();
+		this.filterActive = active && !this.currentFilterValue.isEmpty();
+		saveFilterStatus();
+	}
 
-		String filterValue = preferences.get(CURRENT_FILTER_VALUE, "");
-		if (!filterValue.isEmpty() && filterActive) {
+	@SuppressWarnings("unchecked")
+	private void restoreFilterButtonSelection() {
+		filterButtons.forEach(button -> {
+			List<Integer> states = (List<Integer>) button.getData(FILTER_STATES_KEY);
+			button.setSelection(isStockFilterApplied() && containsSameStates(states, currentFilterValue));
+		});
+	}
+
+	private static boolean containsSameStates(List<Integer> states, List<Integer> other) {
+		if (states == null || other == null) {
+			return false;
+		}
+		return new HashSet<>(states).equals(new HashSet<>(other));
+	}
+
+	public void applySavedFilter() {
+		boolean savedFilterActive = preferences.getBoolean(IS_FILTER_ACTIVE, false);
+		String filterValue = preferences.get(CURRENT_FILTER_VALUE, StringUtils.EMPTY);
+
+		if (savedFilterActive && !filterValue.isEmpty()) {
 			currentFilterValue = Arrays.stream(filterValue.split(",")).map(Integer::parseInt)
 					.collect(Collectors.toList());
+			filterActive = true;
+		} else {
+			currentFilterValue = List.of();
+			filterActive = false;
 		}
 
-		stackLayout.topControl = preferences.getBoolean(LAST_ACTIVE_TABLEVIEWER, true) ? cDetails_table
-				: cHistory_table;
+		restoreFilterButtonSelection();
+
+		isDetailsViewActive = preferences.getBoolean(LAST_ACTIVE_TABLEVIEWER, true);
+		mediorderActiveView = isDetailsViewActive ? MediorderActiveView.DETAILS : MediorderActiveView.HISTORY;
+		stackLayout.topControl = isDetailsViewActive ? cDetails_table : cHistory_table;
 		viewComposite.layout();
+		showHistoryTimeline(isDetailsViewActive);
+	}
+
+	private void applyStockFilter(Button source, List<Integer> states) {
+		filterButtons.stream().filter(button -> button != source).forEach(button -> button.setSelection(false));
+
+		if (btnError.getSelection()) {
+			showImportErrorView(false);
+		}
+
+		boolean selected = source.getSelection();
+		updateFilter(selected ? states : List.of(), selected);
+		refreshStockTable();
 	}
 
 	public void setFilterActive(boolean active) {
-		this.filterActive = active;
-		saveFilterStatus();
+		updateFilter(currentFilterValue, active);
 	}
 
 	public boolean isFilterActive() {
@@ -999,8 +2048,7 @@ public class MediorderPart implements IRefreshablePart {
 	}
 
 	public void setCurrentFilterValue(List<Integer> value) {
-		this.currentFilterValue = value;
-		saveFilterStatus();
+		updateFilter(value, filterActive);
 	}
 
 	public List<Integer> getCurrentFilterValue() {

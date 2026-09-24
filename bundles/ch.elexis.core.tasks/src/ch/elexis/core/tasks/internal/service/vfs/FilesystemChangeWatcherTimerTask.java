@@ -92,7 +92,7 @@ public class FilesystemChangeWatcherTimerTask extends TimerTask {
 				Map<String, Serializable> result = Collections.singletonMap(
 						IIdentifiedRunnable.ReturnParameter.FAILED_TASK_EXCEPTION_MESSAGE, e.getMessage());
 				((TaskServiceImpl) taskService).updateCreateSingleLatestTaskResult(taskDescriptorId, TaskState.FAILED,
-						TaskTriggerType.CRON, result);
+						TaskTriggerType.FILESYSTEM_CHANGE, result);
 			}
 		}
 

@@ -298,16 +298,8 @@ public class TypedArticle extends AbstractIdDeleteModelAdapter<ch.elexis.core.jp
 					billed.setFactor(1.0);
 					billed.setNetPrice(billable.getPurchasePrice());
 					Money sellingPrice = billable.getSellingPrice();
-
-					int vkPreis = sellingPrice != null ? sellingPrice.getCents() : 0;
-					double pkgSize = Math.abs(billable.getPackageSize());
-					double vkUnits = billable.getSellingSize();
-					if ((pkgSize > 0.0) && (vkUnits > 0.0) && (pkgSize != vkUnits)) {
-						billed.setPoints((int) Math.round(vkUnits * (vkPreis / pkgSize)));
-					} else {
-						billed.setPoints((int) Math.round(vkPreis));
-					}
-
+					int vkPreis = sellingPrice.getCents();
+					billed.setPoints(Math.round(vkPreis));
 				}
 
 				@Override

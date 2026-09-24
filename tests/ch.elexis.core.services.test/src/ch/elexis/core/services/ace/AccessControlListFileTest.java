@@ -18,7 +18,7 @@ import ch.elexis.core.ac.ACEAccessBitMap;
 import ch.elexis.core.ac.AccessControlList;
 import ch.elexis.core.ac.AccessControlListUtil;
 import ch.elexis.core.model.IOrganization;
-import ch.elexis.core.utils.OsgiServiceUtil;
+import ch.elexis.core.rcp.utils.OsgiServiceUtil;
 
 public class AccessControlListFileTest {
 

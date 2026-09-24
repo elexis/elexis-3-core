@@ -183,7 +183,7 @@ public class GeneralConfigurationComposite extends AbstractTaskDescriptorConfigu
 		if (taskDescriptor != null) {
 			txtReferenceId.setText(
 					taskDescriptor.getReferenceId() != null ? taskDescriptor.getReferenceId() : StringUtils.EMPTY);
-			String ownerId = taskDescriptor.getOwner() != null ? taskDescriptor.getOwner().getId() : StringUtils.EMPTY;
+			String ownerId = taskDescriptor.getOwner() != null ? taskDescriptor.getOwner() : StringUtils.EMPTY;
 			txtOwnerId.setText(ownerId);
 			txtRunner.setText(taskDescriptor.getRunner());
 			cvNotificationType.setSelection(new StructuredSelection(taskDescriptor.getOwnerNotification()));
@@ -219,7 +219,7 @@ public class GeneralConfigurationComposite extends AbstractTaskDescriptorConfigu
 			Object[] result = listDialog.getResult();
 			if (result != null && result.length >= 1) {
 				IUser selection = (IUser) result[0];
-				taskDescriptor.setOwner(selection);
+				taskDescriptor.setOwner(selection.getId());
 				setSelection(taskDescriptor);
 			}
 		}

@@ -3,6 +3,7 @@ package ch.elexis.core.services;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Stream;
 
 import ch.elexis.core.common.ElexisEventTopics;
@@ -18,32 +19,13 @@ import ch.elexis.core.model.Identifiable;
  * @author thomas
  *
  */
-public interface IModelService {
+public interface IModelService extends ICompositeModelService {
 
 	public final String SERVICEMODELNAME = "service.model.name";
 
 	public final String EANNOTATION_ENTITY_ATTRIBUTE_MAPPING = "http://elexis.info/jpa/entity/attribute/mapping";
 
 	public final Object EANNOTATION_ENTITY_ATTRIBUTE_MAPPING_NAME = "attributeName";
-
-	/**
-	 * Create a new transient model instance of type clazz.
-	 *
-	 * @param clazz
-	 * @return
-	 */
-	public <T> T create(Class<T> clazz) throws AccessControlException;
-
-	/**
-	 * Load a model object of type clazz by the id. Deleted entries are not loaded.
-	 *
-	 * @param id
-	 * @param clazz
-	 * @return
-	 */
-	public default <T> Optional<T> load(String id, Class<T> clazz) {
-		return load(id, clazz, false);
-	}
 
 	/**
 	 * Try to cast the {@link Identifiable} to the given class. Use this with
@@ -111,7 +93,8 @@ public interface IModelService {
 	 * @param includeDeleted
 	 * @return
 	 */
-	public default <T> Optional<T> load(String id, Class<T> clazz, boolean includeDeleted) throws AccessControlException {
+	public default <T> Optional<T> load(String id, Class<T> clazz, boolean includeDeleted)
+			throws AccessControlException {
 		return load(id, clazz, includeDeleted, true);
 	}
 
@@ -128,15 +111,25 @@ public interface IModelService {
 	 * @param refreshCache
 	 * @return
 	 */
-	public <T> Optional<T> load(String id, Class<T> clazz, boolean includeDeleted, boolean refreshCache)  throws AccessControlException;
+	public <T> Optional<T> load(String id, Class<T> clazz, boolean includeDeleted, boolean refreshCache)
+			throws AccessControlException;
 
 	/**
-	 * Save the model object.
+	 * Load a model object of type clazz by the id. If Deleted entries should be
+	 * loaded can be specified with the includeDeleted parameter. If the entity
+	 * should be refreshed from the db can be specified with the refreshCache
+	 * parameter.
 	 *
-	 * @param object
-	 * @throws IllegalStateException
+	 * @param <T>
+	 * @param id
+	 * @param clazz
+	 * @param includeDeleted
+	 * @param refreshCache
+	 * @param eagerLoadAttributes name of attributes to perform eager loading on
+	 * @return
 	 */
-	public void save(Identifiable identifiable) throws AccessControlException;
+	public <T> Optional<T> load(String id, Class<T> clazz, boolean includeDeleted, boolean refreshCache,
+			Set<String> eagerLoadAttributes) throws AccessControlException;
 
 	/**
 	 * Update {@link Identifiable#getLastupdate()} to current
@@ -144,14 +137,6 @@ public interface IModelService {
 	 * @param identifiable
 	 */
 	public void touch(Identifiable identifiable);
-
-	/**
-	 * Save the model objects.
-	 *
-	 * @param objects
-	 * @throws IllegalStateException
-	 */
-	public void save(List<? extends Identifiable> identifiables) throws AccessControlException;
 
 	/**
 	 * Remove the {@link Identifiable} from the database.
@@ -268,19 +253,6 @@ public interface IModelService {
 	 */
 	public <R, T> INamedQuery<R> getNamedQueryByName(Class<R> returnValueclazz, Class<T> definitionClazz,
 			boolean refreshCache, String queryName);
-
-	/**
-	 * Convenience method setting deleted property and save the {@link Deleteable}.
-	 *
-	 * @param deletable
-	 */
-	public void delete(Deleteable deletable) throws AccessControlException;
-
-	/**
-	 * @see #delete(Deleteable)
-	 * @param deletables
-	 */
-	public void delete(List<? extends Deleteable> deletables) throws AccessControlException;
 
 	/**
 	 * Post an asynchronous event using the OSGi event admin. The event including
@@ -429,6 +401,14 @@ public interface IModelService {
 	 * @return
 	 */
 	public <T> long getHighestLastUpdate(Class<T> clazz);
+
+	/**
+	 * Returns the lastUpdate for a specific entity. Ignores deleted value.
+	 * 
+	 * @return the lastUpdate value for the given entity, or -1 if not loadable.
+	 * @since 3.13
+	 */
+	public <T extends Identifiable> long getLastUpdate(Class<T> clazz, String id);
 
 	/**
 	 * Set a list of {@link ElexisEventTopics} to be blocked. These events will not

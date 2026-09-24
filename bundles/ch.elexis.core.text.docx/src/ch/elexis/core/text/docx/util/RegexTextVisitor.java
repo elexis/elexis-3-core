@@ -96,7 +96,7 @@ public class RegexTextVisitor extends TraversalUtilVisitor<Text> {
 						LoggerFactory.getLogger(getClass()).error("Error repacing [" + replaced + "]", e);
 					}
 				}
-				cursor = TextUtil.replaceText(cursor, replaced, 1 << 14, styleInfo);
+				cursor = TextUtil.replaceText(cursor, replaced, 1 << 14, styleInfo, currentDocument);
 			}
 	}
 

@@ -3,8 +3,6 @@ package ch.elexis.core.jpa.entities;
 import java.beans.Transient;
 import java.time.LocalDateTime;
 
-import org.eclipse.persistence.annotations.Cache;
-
 import ch.elexis.core.jpa.entities.converter.BooleanCharacterConverterSafe;
 import ch.elexis.core.jpa.entities.converter.TimeMillisConverter;
 import ch.elexis.core.jpa.entities.listener.EntityWithIdListener;
@@ -20,12 +18,13 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 
 @Entity
 @EntityListeners(EntityWithIdListener.class)
 @Table(name = "TASK")
-@Cache(expiry = 15000)
+@NamedQuery(name = "Task.runnableId.system", query = "SELECT t FROM Task t LEFT JOIN t.taskDescriptor td WHERE td.runnableId = :runnableId AND td.system = :system ORDER BY t.createdAt DESC")
 public class Task extends AbstractEntityWithId implements EntityWithId, EntityWithDeleted {
 
 	// Transparently updated by the EntityListener

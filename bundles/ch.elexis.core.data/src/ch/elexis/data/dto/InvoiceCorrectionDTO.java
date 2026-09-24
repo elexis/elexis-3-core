@@ -6,7 +6,9 @@ import java.util.List;
 import org.apache.commons.lang3.StringUtils;
 
 import ch.elexis.core.data.interfaces.IFall;
+import ch.elexis.core.data.util.NoPoUtil;
 import ch.elexis.core.exceptions.ElexisException;
+import ch.elexis.core.model.IInvoice;
 import ch.elexis.core.model.InvoiceState;
 import ch.elexis.data.Fall;
 import ch.elexis.data.Konsultation;
@@ -32,6 +34,8 @@ public class InvoiceCorrectionDTO {
 
 	private boolean openNewInvoice = false;
 
+	private IInvoice invoice;
+
 	public InvoiceCorrectionDTO() {
 		this.id = null;
 		this.fallDTO = null;
@@ -51,6 +55,7 @@ public class InvoiceCorrectionDTO {
 		cache.clear();
 		correctionHistory.clear();
 		this.id = rechnung.getId();
+		this.invoice = NoPoUtil.loadAsIdentifiable(rechnung, IInvoice.class).get();
 		this.invoiceNumber = rechnung.getNr();
 		this.bemerkung = rechnung.getBemerkung();
 		Fall fall = rechnung.getFall();
@@ -193,5 +198,9 @@ public class InvoiceCorrectionDTO {
 
 	public boolean isOpenNewInvoice() {
 		return openNewInvoice;
+	}
+
+	public IInvoice getInvoice() {
+		return invoice;
 	}
 }

@@ -3,6 +3,6 @@
    <service>
       <provide interface="ch.elexis.core.services.IReferenceDataImporterService"/>
    </service>
-   <reference bind="setReferenceDataImporter" cardinality="0..n" interface="ch.elexis.core.interfaces.IReferenceDataImporter" name="ReferenceDataImporter" policy="dynamic" policy-option="greedy" unbind="unsetReferenceDataImporter"/>
+   <reference bind="setReferenceDataImporter" cardinality="0..n" interface="ch.elexis.core.interfaces.IReferenceDataImporter" name="ReferenceDataImporter" policy-option="greedy" unbind="unsetReferenceDataImporter"/>
    <implementation class="ch.elexis.core.services.ReferenceDataImporterService"/>
 </scr:component>

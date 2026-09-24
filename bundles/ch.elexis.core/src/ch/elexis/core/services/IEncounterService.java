@@ -159,4 +159,28 @@ public interface IEncounterService {
 	 * @return
 	 */
 	public boolean canDelete(IEncounter element);
+
+	/**
+	 * Get the billing {@link IDiagnosis} objects for the provided {@link IPatient}.
+	 * 
+	 * The {@link IDiagnosis} object will be used as default for new
+	 * {@link IEncounter}s of the {@link IPatient}.
+	 * 
+	 * 
+	 * @param patient
+	 * @return
+	 */
+	public List<IDiagnosis> getBillingDiagnosis(IPatient patient);
+
+	/**
+	 * Set the billing {@link IDiagnosis} objects for the provided {@link IPatient}.
+	 * Changes are not persisted.
+	 * 
+	 * The {@link IDiagnosis} object will be used as default for new
+	 * {@link IEncounter}s of the {@link IPatient}.
+	 * 
+	 * @param billingDiagnosis
+	 * @param patient
+	 */
+	public void setBillingDiagnosis(List<IDiagnosis> billingDiagnosis, IPatient patient);
 }

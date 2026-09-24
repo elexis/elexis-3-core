@@ -109,7 +109,6 @@
         <setEntry value="ch.elexis.core.coding@default:default"/>
         <setEntry value="ch.elexis.core.findings@default:default"/>
         <setEntry value="ch.elexis.core.l10n@default:default"/>
-        <setEntry value="ch.elexis.core.logback.rocketchat@default:false"/>
         <setEntry value="ch.elexis.core.logging.default_configuration@default:false"/>
         <setEntry value="ch.elexis.core.test.logging@default:false"/>
         <setEntry value="ch.elexis.core@default:default"/>

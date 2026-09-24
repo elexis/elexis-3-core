@@ -16,7 +16,7 @@
             class="ch.elexis.core.data.propertyTester.ACETester"
             id="ch.elexis.commands.propertyTester.ACETester"
             namespace="ch.elexis.commands.propertyTester"
-            properties="ACE"
+            properties="ACE,ROLE"
             type="java.lang.Object">
       </propertyTester>
       <propertyTester

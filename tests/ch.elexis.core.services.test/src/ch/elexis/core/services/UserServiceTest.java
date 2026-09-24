@@ -9,7 +9,7 @@ import org.junit.Test;
 
 import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.IUser;
-import ch.elexis.core.utils.OsgiServiceUtil;
+import ch.elexis.core.rcp.utils.OsgiServiceUtil;
 
 public class UserServiceTest extends AbstractServiceTest {
 

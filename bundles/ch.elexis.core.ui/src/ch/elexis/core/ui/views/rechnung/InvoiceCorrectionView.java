@@ -96,6 +96,7 @@ import ch.elexis.core.model.IBilled;
 import ch.elexis.core.model.IDiagnosis;
 import ch.elexis.core.model.IEncounter;
 import ch.elexis.core.model.IInvoice;
+import ch.elexis.core.model.IInvoiceBillRecordInfo;
 import ch.elexis.core.model.IUser;
 import ch.elexis.core.services.IContextService;
 import ch.elexis.core.ui.UiDesk;
@@ -1067,7 +1068,30 @@ public class InvoiceCorrectionView extends ViewPart implements IUnlockable {
 				default:
 					return StringUtils.EMPTY;
 				}
+			}
 
+			@Override
+			public Color getBackground(Object element) {
+				LeistungDTO leistungDTO = (LeistungDTO) element;
+				java.util.Optional<IInvoiceBillRecordInfo> invoiceBillRecordInfo = leistungDTO
+						.getInvoiceBillRecordInfo(invoiceCorrectionDTO.getInvoice());
+				if (invoiceBillRecordInfo.isPresent()
+						&& StringUtils.isNotBlank(invoiceBillRecordInfo.get().getInfo())) {
+					return CoreUiUtil.getColorForString("FFDDDD");
+				}
+				return super.getBackground(element);
+			}
+
+			@Override
+			public String getToolTipText(Object element) {
+				LeistungDTO leistungDTO = (LeistungDTO) element;
+				java.util.Optional<IInvoiceBillRecordInfo> invoiceBillRecordInfo = leistungDTO
+						.getInvoiceBillRecordInfo(invoiceCorrectionDTO.getInvoice());
+				if (invoiceBillRecordInfo.isPresent()
+						&& StringUtils.isNotBlank(invoiceBillRecordInfo.get().getInfo())) {
+					return invoiceBillRecordInfo.get().getInfo();
+				}
+				return super.getToolTipText(element);
 			}
 		}
 

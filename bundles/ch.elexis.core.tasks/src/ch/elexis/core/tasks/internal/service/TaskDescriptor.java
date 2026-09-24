@@ -13,11 +13,8 @@ import com.cronutils.parser.CronParser;
 import com.google.gson.Gson;
 
 import ch.elexis.core.jpa.model.adapter.AbstractIdDeleteModelAdapter;
-import ch.elexis.core.jpa.model.adapter.AbstractIdModelAdapter;
-import ch.elexis.core.model.IUser;
 import ch.elexis.core.model.IXid;
 import ch.elexis.core.model.Identifiable;
-import ch.elexis.core.tasks.internal.model.service.CoreModelServiceHolder;
 import ch.elexis.core.tasks.model.ITaskDescriptor;
 import ch.elexis.core.tasks.model.OwnerTaskNotification;
 import ch.elexis.core.tasks.model.TaskTriggerType;
@@ -51,18 +48,13 @@ public class TaskDescriptor extends AbstractIdDeleteModelAdapter<ch.elexis.core.
 	}
 
 	@Override
-	public IUser getOwner() {
-		return CoreModelServiceHolder.get().adapt(getEntity().getOwner(), IUser.class).orElse(null);
+	public String getOwner() {
+		return getEntity().getOwner();
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
-	public void setOwner(IUser value) {
-		if (value != null && value instanceof AbstractIdModelAdapter<?>) {
-			getEntity().setOwner(((AbstractIdModelAdapter<ch.elexis.core.jpa.entities.User>) value).getEntity());
-		} else {
-			getEntity().setOwner(null);
-		}
+	public void setOwner(String owner) {
+		getEntity().setOwner(owner);
 	}
 
 	@Override

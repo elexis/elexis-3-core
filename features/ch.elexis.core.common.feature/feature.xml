@@ -2,7 +2,7 @@
 <feature
       id="ch.elexis.core.common.feature"
       label="Elexis OpenSource Common Bundles Feature"
-      version="3.13.0.qualifier"
+      version="3.14.0.qualifier"
       provider-name="elexis.info">
 
    <description>
@@ -48,7 +48,7 @@
       <import plugin="bcprov"/>
       <import plugin="org.junit"/>
       <import plugin="org.apache-extras.beanshell.bsh"/>
-      <import feature="ch.elexis.core.persistence.feature" version="3.13.0.qualifier"/>
+      <import feature="ch.elexis.core.persistence.feature" version="3.14.0.qualifier"/>
       <import plugin="org.glassfish.jersey.ext.jersey-proxy-client"/>
    </requires>
 
@@ -174,6 +174,22 @@
 
    <plugin
          id="ch.elexis.core.fhir.model"
+         version="0.0.0"/>
+
+   <plugin
+         id="ch.rgw.utility.legacy"
+         version="0.0.0"/>
+
+   <plugin
+         id="ch.elexis.core.rcp"
+         version="0.0.0"/>
+
+   <plugin
+         id="ch.elexis.core.cdi"
+         version="0.0.0"/>
+
+   <plugin
+         id="ch.elexis.core.services.rcp"
          version="0.0.0"/>
 
 </feature>

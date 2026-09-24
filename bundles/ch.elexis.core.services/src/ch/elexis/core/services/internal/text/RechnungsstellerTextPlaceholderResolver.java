@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
 import org.osgi.service.component.annotations.Component;
 
+import ch.elexis.core.cdi.PortableServiceLoader;
 import ch.elexis.core.interfaces.ILocalizedEnum;
 import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.IMandator;
@@ -16,10 +17,11 @@ import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.model.format.AddressFormatUtil;
 import ch.elexis.core.model.format.PersonFormatUtil;
 import ch.elexis.core.services.IContext;
-import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.text.ITextPlaceholderResolver;
 import ch.elexis.core.text.PlaceholderAttribute;
+import jakarta.enterprise.context.Dependent;
 
+@Dependent
 @Component
 public class RechnungsstellerTextPlaceholderResolver implements ITextPlaceholderResolver {
 
@@ -63,7 +65,7 @@ public class RechnungsstellerTextPlaceholderResolver implements ITextPlaceholder
 		case Anrede:
 			if (iContact.isPerson()) {
 				return PersonFormatUtil
-						.getSalutation(CoreModelServiceHolder.get().load(iContact.getId(), IPerson.class).get());
+						.getSalutation(PortableServiceLoader.getCoreModelService().load(iContact.getId(), IPerson.class).get());
 			} else {
 				return StringUtils.EMPTY;
 			}

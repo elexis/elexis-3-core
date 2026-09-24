@@ -5,6 +5,7 @@ import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.widgets.Text;
 
+import ch.elexis.core.model.format.FormatValidator;
 import ch.elexis.core.ui.UiDesk;
 
 public class EmailValidationModifyListener implements ModifyListener {

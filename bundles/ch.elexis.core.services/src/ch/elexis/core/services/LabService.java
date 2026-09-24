@@ -18,8 +18,6 @@ import org.slf4j.LoggerFactory;
 import bsh.EvalError;
 import bsh.Interpreter;
 import ch.elexis.core.constants.TextContainerConstants;
-import ch.elexis.core.jpa.entities.LabOrder;
-import ch.elexis.core.jpa.entities.LabResult;
 import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.ILabItem;
 import ch.elexis.core.model.ILabMapping;
@@ -32,14 +30,19 @@ import ch.elexis.core.types.LabItemTyp;
 import ch.rgw.tools.Result;
 import ch.rgw.tools.StringTool;
 import ch.rgw.tools.TimeTool;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 
+@ApplicationScoped
 @Component
 public class LabService implements ILabService {
 
+	@Inject
 	@Reference(target = "(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.model)")
-	private IModelService modelService;
+	IModelService modelService;
 
 	private Logger log = LoggerFactory.getLogger(getClass());
+	private static final String VERSIONID = "VERSION";
 
 	@Override
 	public Result<String> evaluate(ILabResult labResult) {
@@ -215,6 +218,36 @@ public class LabService implements ILabService {
 		}
 
 		return results;
+	}
+
+
+
+	@Override
+	public synchronized String getNextOrderId() {
+		Optional<ILabOrder> version = modelService.load(VERSIONID, ILabOrder.class);
+		if (version.isEmpty()) {
+			log.warn("Could not load VERSION record from laborder table, returning -1");
+			return "-1";
+		}
+		String orderId = version.get().getOrderId();
+		String nextOrderId = "-1";
+		if (orderId != null && !orderId.isEmpty()) {
+			int intNextOrderId = Integer.parseInt(orderId) + 1;
+			// make sure it is still free
+			while (hasOrderWithId(Integer.toString(intNextOrderId))) {
+				intNextOrderId++;
+			}
+			nextOrderId = Integer.toString(intNextOrderId);
+		}
+		version.get().setOrderId(nextOrderId);
+		modelService.save(version.get());
+		return nextOrderId;
+	}
+
+	private boolean hasOrderWithId(String orderId) {
+		IQuery<ILabOrder> query = modelService.getQuery(ILabOrder.class);
+		query.and(ModelPackage.Literals.ILAB_ORDER__ORDER_ID, COMPARATOR.EQUALS, orderId);
+		return query.executeSingleResult().isPresent();
 	}
 
 }

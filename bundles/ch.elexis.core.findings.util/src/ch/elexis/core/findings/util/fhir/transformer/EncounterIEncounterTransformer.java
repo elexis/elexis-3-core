@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 
 import ca.uhn.fhir.model.api.Include;
 import ca.uhn.fhir.rest.api.SummaryEnum;
+import ch.elexis.core.fhir.mapper.r4.IEncounterEncounterAttributeMapper;
 import ch.elexis.core.findings.IEncounter;
 import ch.elexis.core.findings.IFindingsService;
 import ch.elexis.core.findings.migration.IMigratorService;
@@ -20,35 +21,48 @@ import ch.elexis.core.findings.util.fhir.transformer.helper.AbstractHelper;
 import ch.elexis.core.findings.util.fhir.transformer.helper.FhirUtil;
 import ch.elexis.core.findings.util.fhir.transformer.helper.FindingsContentHelper;
 import ch.elexis.core.findings.util.fhir.transformer.helper.IEncounterHelper;
-import ch.elexis.core.findings.util.fhir.transformer.mapper.IEncounterEncounterAttributeMapper;
 import ch.elexis.core.model.IMandator;
 import ch.elexis.core.model.IPatient;
+import ch.elexis.core.services.IEncounterService;
 import ch.elexis.core.services.IModelService;
+import jakarta.annotation.PostConstruct;
+import jakarta.enterprise.context.Dependent;
+import jakarta.inject.Inject;
 
+@Dependent
 @Component
 public class EncounterIEncounterTransformer implements IFhirTransformer<Encounter, IEncounter> {
 
+	@Inject
 	@Reference(target = "(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.model)")
-	private IModelService coreModelService;
+	IModelService coreModelService;
 
+	@Inject
 	@Reference(target = "(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.findings.model)")
-	private IModelService findingsModelService;
+	IModelService findingsModelService;
+
+	@Inject
+	@Reference
+	IFindingsService findingsService;
+
+	@Inject
+	@Reference
+	private IEncounterService encounterService;
 
 	@Reference
-	private IFindingsService findingsService;
-
-	@Reference
-	private IMigratorService migratorService;
+	IMigratorService migratorService;
 
 	private FindingsContentHelper contentHelper;
-	private IEncounterHelper encounterHelper;
 	private IEncounterEncounterAttributeMapper attributeMapper;
 
+	private IEncounterHelper encounterHelper;
+
+	@PostConstruct
 	@Activate
 	public void activate() {
 		contentHelper = new FindingsContentHelper();
 		encounterHelper = new IEncounterHelper(coreModelService, findingsModelService);
-		attributeMapper = new IEncounterEncounterAttributeMapper();
+		attributeMapper = new IEncounterEncounterAttributeMapper(encounterService);
 	}
 
 	@Override

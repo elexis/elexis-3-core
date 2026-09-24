@@ -129,6 +129,7 @@ public class Messages {
 
 	public static String Core_Error = ch.elexis.core.l10n.Messages.Core_Error;
 	public static String BriefAuswahlLoadButtonText = ch.elexis.core.l10n.Messages.BriefAuswahlLoadButtonText;
+	public static String BriefAuswahlLoadMoreButtonText = ch.elexis.core.l10n.Messages.BriefAuswahlLoadMoreButtonText;
 
 	public static String BriefAuswahlNewSubjectHeading = ch.elexis.core.l10n.Messages.BriefAuswahlNewSubjectHeading;
 	public static String BriefAuswahlNewSubjectText = ch.elexis.core.l10n.Messages.BriefAuswahlNewSubjectText;
@@ -619,6 +620,11 @@ public class Messages {
 	public static String OrderManagement_Button_Book = ch.elexis.core.l10n.Messages.OrderManagement_Button_Book;
 	public static String OrderManagement_SelectSupplier_Title = ch.elexis.core.l10n.Messages.OrderManagement_SelectSupplier_Title;
 	public static String OrderManagement_SelectSupplier_Message = ch.elexis.core.l10n.Messages.OrderManagement_SelectSupplier_Message;
+	public static String OrderManagement_ChangeSupplier_Message = ch.elexis.core.l10n.Messages.OrderManagement_ChangeSupplier_Message;
+	public static String OrderManagement_SelectStock_Title = ch.elexis.core.l10n.Messages.OrderManagement_SelectStock_Title;
+	public static String OrderManagement_ChangeStock_Message = ch.elexis.core.l10n.Messages.OrderManagement_ChangeStock_Message;
+	public static String OrderManagement_Action_ChangeSupplier = ch.elexis.core.l10n.Messages.OrderManagement_Action_ChangeSupplier;
+	public static String OrderManagement_Action_ChangeStock = ch.elexis.core.l10n.Messages.OrderManagement_Action_ChangeStock;
 	public static String OrderManagement_Button_MissingSupplier = ch.elexis.core.l10n.Messages.OrderManagement_Button_MissingSupplier;
 	public static String OrderManagement_CreatedLabel = ch.elexis.core.l10n.Messages.OrderManagement_CreatedLabel;
 	public static String OrderManagement_DispatchedLabel = ch.elexis.core.l10n.Messages.OrderManagement_DispatchedLabel;
@@ -669,4 +675,11 @@ public class Messages {
 	public static String ReminderView_statusMenu = ch.elexis.core.l10n.Messages.ReminderView_statusMenu;
 	public static String OmnivoreView_editActionCaption = ch.elexis.core.l10n.Messages.OmnivoreView_editActionCaption;
 	public static String OrderManagement_FullyDelivered = ch.elexis.core.l10n.Messages.OrderManagement_FullyDelivered;
+	public static String BestellView_OrderSentWithPluginTitle = ch.elexis.core.l10n.Messages.BestellView_OrderSentWithPluginTitle;
+	public static String BestellView_OrderSentWithPluginBody = ch.elexis.core.l10n.Messages.BestellView_OrderSentWithPluginBody;
+	public static String OrderManagement_DeleteOrder = ch.elexis.core.l10n.Messages.OrderManagement_DeleteOrder;
+	public static String OrderManagement_DeleteOrder_Title = ch.elexis.core.l10n.Messages.OrderManagement_DeleteOrder_Title;
+	public static String OrderManagement_DeleteOrder_Message = ch.elexis.core.l10n.Messages.OrderManagement_DeleteOrder_Message;
+	protected static String BestellView_ArticleNotFoundTitle = ch.elexis.core.l10n.Messages.BestellView_ArticleNotFoundTitle;
+	protected static String BestellView_ArticleNotFoundMessage = ch.elexis.core.l10n.Messages.BestellView_ArticleNotFoundMessage;
 }

@@ -3,42 +3,46 @@ package ch.elexis.core.findings.util.fhir.transformer;
 import java.util.Optional;
 import java.util.Set;
 
-import org.hl7.fhir.r4.model.ChargeItem;
 import org.hl7.fhir.r4.model.Invoice;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 
 import ca.uhn.fhir.model.api.Include;
 import ca.uhn.fhir.rest.api.SummaryEnum;
+import ch.elexis.core.fhir.mapper.r4.IInvoiceInvoiceAttributeMapper;
 import ch.elexis.core.findings.util.fhir.IFhirTransformer;
 import ch.elexis.core.findings.util.fhir.transformer.helper.FhirUtil;
-import ch.elexis.core.findings.util.fhir.transformer.mapper.IInvoiceInvoiceAttributeMapper;
-import ch.elexis.core.model.IBilled;
 import ch.elexis.core.model.IInvoice;
 import ch.elexis.core.services.IModelService;
+import jakarta.annotation.PostConstruct;
+import jakarta.enterprise.context.Dependent;
+import jakarta.inject.Inject;
 
+@Dependent
 @Component
 public class InvoiceIInvoiceTransformer implements IFhirTransformer<Invoice, IInvoice> {
 
+	@Inject
 	@org.osgi.service.component.annotations.Reference(target = "(" + IModelService.SERVICEMODELNAME
 			+ "=ch.elexis.core.model)")
-	private IModelService coreModelService;
+	IModelService coreModelService;
 
-	@org.osgi.service.component.annotations.Reference(target = "(" + IFhirTransformer.TRANSFORMERID
-			+ "=ChargeItem.IBilled)")
-	private IFhirTransformer<ChargeItem, IBilled> chargeItemTransformer;
+	@Inject
+	@org.osgi.service.component.annotations.Reference
+	ChargeItemIBilledTransformer chargeItemTransformer;
 
 	private IInvoiceInvoiceAttributeMapper attributeMapper;
 
+	@PostConstruct
 	@Activate
 	private void activate() {
-		attributeMapper = new IInvoiceInvoiceAttributeMapper(chargeItemTransformer);
+		attributeMapper = new IInvoiceInvoiceAttributeMapper();
 	}
 
 	@Override
 	public Optional<Invoice> getFhirObject(IInvoice localObject, SummaryEnum summaryEnum, Set<Include> includes) {
 		Invoice invoice = new Invoice();
-		attributeMapper.elexisToFhir(localObject, invoice, summaryEnum, includes);
+		attributeMapper.elexisToFhir(localObject, invoice, summaryEnum);
 		return Optional.of(invoice);
 	}
 

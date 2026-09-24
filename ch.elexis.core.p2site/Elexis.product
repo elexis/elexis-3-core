@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?pde version="3.5"?>
 
-<product name="Elexis OpenSource" uid="Elexis3" id="ch.elexis.core.application.product" application="ch.elexis.core.application.ElexisApp" version="3.13.0.qualifier" type="features" includeLaunchers="true" autoIncludeRequirements="true">
+<product name="Elexis OpenSource" uid="Elexis3" id="ch.elexis.core.application.product" application="ch.elexis.core.application.ElexisApp" version="3.14.0.qualifier" type="features" includeLaunchers="true" autoIncludeRequirements="true">
 
    <aboutInfo>
       <image path="rsc/elexislogo2.png"/>
       <text>
-         Elexis 3.13 - www.elexis.info
-         Copyright 2005-2025 G. Weirich und Elexis-Team
+         Elexis 3.14 - www.elexis.info
+         Copyright 2005-2027 G. Weirich und Elexis-Team
       </text>
    </aboutInfo>
 

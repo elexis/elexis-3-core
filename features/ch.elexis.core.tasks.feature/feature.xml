@@ -2,7 +2,7 @@
 <feature
       id="ch.elexis.core.tasks.feature"
       label="Task Service"
-      version="3.13.0.qualifier"
+      version="3.14.0.qualifier"
       provider-name="ch.elexis">
 
    <description url="http://www.example.com/description">
@@ -19,16 +19,14 @@
 
    <plugin
          id="ch.elexis.core.tasks"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
+         version="0.0.0"/>
 
    <plugin
          id="ch.elexis.core.ui.tasks"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
+         version="0.0.0"/>
+
+   <plugin
+         id="ch.elexis.core.tasks.model"
+         version="0.0.0"/>
 
 </feature>

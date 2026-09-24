@@ -58,7 +58,7 @@ public class InitializeDatabaseService {
 				clientEmail = "james@bond.invalid"; //$NON-NLS-1$
 			}
 			IMandator ret = createMandatorWithUser("007", "topsecret", "James", "Bond", clientEmail); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-			IPerson person = ret.asIPerson();
+			IPerson person = coreModelService.load(ret.getId(), IPerson.class).orElse(null);
 			person.setTitel("Dr. med."); //$NON-NLS-1$
 			person.setGender(Gender.MALE);
 			person.setPhone1("0061 555 55 55"); //$NON-NLS-1$

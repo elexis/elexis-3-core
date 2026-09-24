@@ -18,9 +18,9 @@ import ch.elexis.core.findings.util.fhir.IFhirTransformerRegistry;
 import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.model.IAppointment;
 import ch.elexis.core.model.builder.IAppointmentBuilder;
+import ch.elexis.core.rcp.utils.OsgiServiceUtil;
 import ch.elexis.core.services.IAppointmentService;
 import ch.elexis.core.test.util.TestUtil;
-import ch.elexis.core.utils.OsgiServiceUtil;
 
 public class SlotTerminTransformerTest {
 

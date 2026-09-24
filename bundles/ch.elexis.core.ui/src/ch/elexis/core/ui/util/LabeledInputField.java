@@ -47,12 +47,12 @@ import org.slf4j.LoggerFactory;
 import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
-import ch.elexis.core.data.service.ContextServiceHolder;
 import ch.elexis.core.exceptions.PersistenceException;
 import ch.elexis.core.interfaces.INumericEnum;
 import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.model.WithExtInfo;
 import ch.elexis.core.services.IModelService;
+import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.locks.IUnlockable;
 import ch.elexis.data.PersistentObject;
@@ -395,6 +395,8 @@ public class LabeledInputField extends Composite {
 		private org.eclipse.jface.viewers.IContentProvider contentProvider;
 		private ILabelProvider labelProvider;
 		private IStructuredSelectionResolver selectionResolver;
+		
+		private boolean alwaysEdit = false;
 
 		/**
 		 * create control of different types.
@@ -448,6 +450,19 @@ public class LabeledInputField extends Composite {
 			sFeldname = feldname;
 			ext = cp;
 			tFeldTyp = Typ.HYPERLINK;
+			sLimit = Text.LIMIT;
+		}
+
+		/**
+		 * create control of type STRING with {@link IContentProvider}
+		 * 
+		 * @param anzeige
+		 * @param cp
+		 */
+		public InputData(String anzeige, IContentProvider cp) {
+			sAnzeige = anzeige;
+			ext = cp;
+			tFeldTyp = Typ.STRING;
 			sLimit = Text.LIMIT;
 		}
 
@@ -537,6 +552,10 @@ public class LabeledInputField extends Composite {
 		}
 
 		public void setEditable(boolean ed) {
+			// override if always edit field
+			if (alwaysEdit) {
+				ed = true;
+			}
 			mine.lbl.setEnabled(ed);
 			if (tFeldTyp == Typ.EXECSTRING || tFeldTyp == Typ.HYPERLINK) {
 				mine.lbl.setEnabled(true);
@@ -560,6 +579,11 @@ public class LabeledInputField extends Composite {
 				mine.ctl.setToolTipText(label);
 				mine.fixedTooltip = true;
 			}
+		}
+
+		public InputData alwaysEdit() {
+			this.alwaysEdit = true;
+			return this;
 		}
 	}
 
@@ -668,6 +692,10 @@ public class LabeledInputField extends Composite {
 
 		protected void save(InputData inp, boolean postUpdateEvent) {
 			if (act == null) {
+				return;
+			}
+			// Typ.STRING with IContentProvider is read only
+			if (inp.tFeldTyp == InputData.Typ.STRING && inp.ext instanceof IContentProvider) {
 				return;
 			}
 			String val = StringTool.leer;
@@ -828,7 +856,12 @@ public class LabeledInputField extends Composite {
 					continue;
 				} else {
 					if (def[i].sHashname == null) {
-						val = o.get(def[i].sFeldname);
+						if (def[i].ext instanceof IContentProvider) {
+							((IContentProvider) def[i].ext).displayContent(o, def[i]);
+							continue;
+						} else {
+							val = o.get(def[i].sFeldname);
+						}
 					} else {
 						Map ext = o.getMap(def[i].sFeldname);
 						val = (String) ext.get(def[i].sHashname);

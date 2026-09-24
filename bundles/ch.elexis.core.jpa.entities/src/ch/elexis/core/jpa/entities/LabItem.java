@@ -3,8 +3,6 @@ package ch.elexis.core.jpa.entities;
 import java.beans.Transient;
 import java.util.List;
 
-import org.eclipse.persistence.annotations.Cache;
-
 import ch.elexis.core.jpa.entities.converter.BooleanCharacterConverterSafe;
 import ch.elexis.core.jpa.entities.converter.IntegerStringConverter;
 import ch.elexis.core.jpa.entities.converter.LabItemTypConverter;
@@ -27,7 +25,6 @@ import jakarta.persistence.Table;
 @Entity
 @Table(name = "laboritems")
 @EntityListeners(EntityWithIdListener.class)
-@Cache(expiry = 15000)
 @NamedQuery(name = "LabItem.code.name", query = "SELECT li FROM LabItem li WHERE li.deleted = false AND li.code = :code AND li.name = :name")
 @NamedQuery(name = "LabItem.code.name.typ", query = "SELECT li FROM LabItem li WHERE li.deleted = false AND li.code = :code AND li.name = :name AND li.typ = :typ")
 public class LabItem extends AbstractEntityWithId implements EntityWithId, EntityWithDeleted {

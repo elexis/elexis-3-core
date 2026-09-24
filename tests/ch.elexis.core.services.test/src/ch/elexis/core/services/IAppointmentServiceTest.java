@@ -30,10 +30,10 @@ import ch.elexis.core.model.agenda.AreaType;
 import ch.elexis.core.model.agenda.EndingType;
 import ch.elexis.core.model.agenda.SeriesType;
 import ch.elexis.core.model.builder.IAppointmentBuilder;
+import ch.elexis.core.rcp.utils.OsgiServiceUtil;
 import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.elexis.core.types.AppointmentState;
 import ch.elexis.core.types.AppointmentType;
-import ch.elexis.core.utils.OsgiServiceUtil;
 
 public class IAppointmentServiceTest extends AbstractServiceTest {
 
@@ -167,7 +167,7 @@ public class IAppointmentServiceTest extends AbstractServiceTest {
 	}
 
 	@Test
-	public void series() {
+	public void series() throws InterruptedException {
 		// create series
 		LocalDate previousMonday = LocalDate.now().with(TemporalAdjusters.previous(DayOfWeek.MONDAY));
 		LocalDateTime seriesStart = previousMonday.atTime(10, 30);
@@ -198,6 +198,7 @@ public class IAppointmentServiceTest extends AbstractServiceTest {
 		appointmentService.delete(appointments.get(3), true);
 		assertTrue(series.getAppointments().isEmpty());
 		// delete notification is done via post event, try reload first
+		Thread.sleep(20); // if still flaky, there's another problem
 		coreModelService.refresh(appointments.get(2), true);
 		assertTrue(appointments.get(2).isDeleted());
 		coreModelService.refresh(appointments.get(3), true);

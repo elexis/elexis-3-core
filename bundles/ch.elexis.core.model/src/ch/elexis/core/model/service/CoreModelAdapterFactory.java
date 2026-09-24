@@ -59,6 +59,7 @@ import ch.elexis.core.model.IEncounter;
 import ch.elexis.core.model.IFreeTextDiagnosis;
 import ch.elexis.core.model.IImage;
 import ch.elexis.core.model.IInvoice;
+import ch.elexis.core.model.IInvoiceBillRecordInfo;
 import ch.elexis.core.model.IInvoiceBilled;
 import ch.elexis.core.model.ILabItem;
 import ch.elexis.core.model.ILabMapping;
@@ -79,7 +80,6 @@ import ch.elexis.core.model.IRecipe;
 import ch.elexis.core.model.IRelatedContact;
 import ch.elexis.core.model.IReminder;
 import ch.elexis.core.model.IReminderResponsibleLink;
-import ch.elexis.core.model.IRight;
 import ch.elexis.core.model.IRole;
 import ch.elexis.core.model.ISickCertificate;
 import ch.elexis.core.model.ISticker;
@@ -93,6 +93,7 @@ import ch.elexis.core.model.IVaccination;
 import ch.elexis.core.model.IXid;
 import ch.elexis.core.model.Image;
 import ch.elexis.core.model.Invoice;
+import ch.elexis.core.model.InvoiceBillRecordInfo;
 import ch.elexis.core.model.InvoiceBilled;
 import ch.elexis.core.model.Laboratory;
 import ch.elexis.core.model.Mandator;
@@ -108,7 +109,6 @@ import ch.elexis.core.model.Recipe;
 import ch.elexis.core.model.RelatedContact;
 import ch.elexis.core.model.Reminder;
 import ch.elexis.core.model.ReminderResponsibleLink;
-import ch.elexis.core.model.Right;
 import ch.elexis.core.model.Role;
 import ch.elexis.core.model.SickCertificate;
 import ch.elexis.core.model.TextTemplate;
@@ -224,7 +224,6 @@ public class CoreModelAdapterFactory extends AbstractModelAdapterFactory {
 				ch.elexis.core.jpa.entities.Vaccination.class));
 
 		addMapping(new MappingEntry(IRole.class, Role.class, ch.elexis.core.jpa.entities.Role.class));
-		addMapping(new MappingEntry(IRight.class, Right.class, ch.elexis.core.jpa.entities.Right.class));
 
 		addMapping(new MappingEntry(ILabItem.class, ch.elexis.core.model.LabItem.class,
 				ch.elexis.core.jpa.entities.LabItem.class));
@@ -257,6 +256,8 @@ public class CoreModelAdapterFactory extends AbstractModelAdapterFactory {
 		addMapping(
 				new MappingEntry(IOutputLog.class, OutputLog.class, ch.elexis.core.jpa.entities.OutputLogEntity.class));
 
+		addMapping(new MappingEntry(IInvoiceBillRecordInfo.class, InvoiceBillRecordInfo.class,
+				ch.elexis.core.jpa.entities.InvoiceBillRecordInfo.class));
 	}
 
 	private Object setContactDiscriminator(AbstractIdModelAdapter<?> adapter) {

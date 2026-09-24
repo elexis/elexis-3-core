@@ -15,7 +15,7 @@ import org.junit.Test;
 
 import ch.elexis.core.findings.IEncounter;
 import ch.elexis.core.findings.IFindingsService;
-import ch.elexis.core.utils.OsgiServiceUtil;
+import ch.elexis.core.rcp.utils.OsgiServiceUtil;
 
 public class ModelUtilTest {
 

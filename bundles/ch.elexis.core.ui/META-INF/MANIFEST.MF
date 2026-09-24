@@ -2,13 +2,14 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Elexis Core UI
 Bundle-SymbolicName: ch.elexis.core.ui;singleton:=true
-Bundle-Version: 3.13.0.qualifier
+Bundle-Version: 3.14.0.qualifier
 Bundle-Activator: ch.elexis.core.ui.Hub
 Bundle-Vendor: elexis.info
 Bundle-Localization: plugin
 Require-Bundle: ch.elexis.core.ui.e4;bundle-version="3.10.0";visibility:=reexport,
  ch.elexis.core.mail;bundle-version="3.10.0",
  ch.elexis.core.data;bundle-version="3.10.0",
+ ch.elexis.core.httpclient;bundle-version="3.13.0",
  ch.elexis.core.documents;bundle-version="3.10.0",
  ch.elexis.core.ui.icons;bundle-version="3.10.0";visibility:=reexport,
  org.eclipse.ui;bundle-version="3.119.0";visibility:=reexport,
@@ -42,7 +43,9 @@ Export-Package: ch.elexis.core.ui,
  ch.elexis.core.ui.databinding,
  ch.elexis.core.ui.dialogs,
  ch.elexis.core.ui.dialogs.base,
+ ch.elexis.core.ui.dialogs.eedep,
  ch.elexis.core.ui.dialogs.provider,
+ ch.elexis.core.ui.editors,
  ch.elexis.core.ui.eigenleistung,
  ch.elexis.core.ui.events,
  ch.elexis.core.ui.exchange,
@@ -63,6 +66,7 @@ Export-Package: ch.elexis.core.ui,
  ch.elexis.core.ui.views.codesystems,
  ch.elexis.core.ui.views.contribution,
  ch.elexis.core.ui.views.controls,
+ ch.elexis.core.ui.views.ordermanagement,
  ch.elexis.core.ui.views.provider,
  ch.elexis.core.ui.views.rechnung,
  ch.elexis.core.ui.views.textsystem,
@@ -102,4 +106,6 @@ Service-Component: OSGI-INF/ch.elexis.core.ui.compatibility.UiStartupHandler.xml
  OSGI-INF/ch.elexis.core.ui.services.internal.ContextService.xml,
  OSGI-INF/ch.elexis.core.ui.services.internal.ContextServiceEventHandler.xml,
  OSGI-INF/ch.elexis.core.ui.services.internal.LoginDialogLoginContributor.xml,
- OSGI-INF/ch.elexis.core.ui.startup.StartupHandler.xml
+ OSGI-INF/ch.elexis.core.ui.startup.ChromiumWarmupHandler.xml,
+ OSGI-INF/ch.elexis.core.ui.startup.StartupHandler.xml,
+ OSGI-INF/ch.elexis.core.ui.views.DeprecatedViewsEventHandler.xml

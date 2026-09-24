@@ -170,6 +170,7 @@ public class VirtualFilesystemHandle implements IVirtualFilesystemHandle {
 		return listHandles(null);
 	}
 
+	@SuppressWarnings("resource")
 	@Override
 	public IVirtualFilesystemHandle[] listHandles(IVirtualFilesystemhandleFilter ff) throws IOException {
 
@@ -190,7 +191,17 @@ public class VirtualFilesystemHandle implements IVirtualFilesystemHandle {
 
 		URLConnection connection = uri.toURL().openConnection();
 		if (connection instanceof SmbFile) {
-			try (SmbFile smbFile = (SmbFile) connection) {
+			SmbFile smbFile = (SmbFile) connection;
+			try {
+				// workaround for bug in jcifs lib listFiles impl.
+				if (!uri.getPath().endsWith("/")) {
+					try {
+						smbFile.close();
+						smbFile = (SmbFile) new URI(uri.toString() + "/").toURL().openConnection();
+					} catch (Exception e) {
+						LoggerFactory.getLogger(getClass()).error("Could not correct directory URI", e);
+					}
+				}
 				SmbFile[] listFiles = smbFile.listFiles(new IVFSFileFilterAdapter(ff));
 				IVirtualFilesystemHandle[] retVal = new IVirtualFilesystemHandle[listFiles.length];
 				for (int i = 0; i < listFiles.length; i++) {
@@ -201,9 +212,12 @@ public class VirtualFilesystemHandle implements IVirtualFilesystemHandle {
 					} catch (URISyntaxException e) {
 						LoggerFactory.getLogger(getClass()).warn("listHandles() [{}]", listFiles[i], e);
 					}
-
 				}
 				return retVal;
+			} finally {
+				if (smbFile != null) {
+					smbFile.close();
+				}
 			}
 		} else if (connection instanceof WebdavFile) {
 			WebdavFile[] listFiles = ((WebdavFile) connection).listFiles(new IVFSFileFilterAdapter(ff));
@@ -476,8 +490,10 @@ public class VirtualFilesystemHandle implements IVirtualFilesystemHandle {
 		}
 
 		URI _uri = null;
-		if (uri.getAuthority() != null && uri.getAuthority().length() > 0 && uri.getAuthority().charAt(1) == ':') {
-			// workaround - URIUtil "swallows" C: authority
+		if (uri.getAuthority() != null && uri.getAuthority().length() > 1 && uri.getAuthority().charAt(1) == ':') {
+			// workaround - URIUtil "swallows" C: authority. Only reachable for legacy
+			// file://C:/ uris, IVirtualFilesystemService#stringToURI does not create
+			// them anymore
 			String _cur = uri.toString();
 			if (!_cur.endsWith("/")) {
 				_cur += "/";
@@ -503,8 +519,10 @@ public class VirtualFilesystemHandle implements IVirtualFilesystemHandle {
 			throw new IllegalArgumentException("must not start with /");
 		}
 		URI _uri = null;
-		if (uri.getAuthority() != null && uri.getAuthority().length() > 0 && uri.getAuthority().charAt(1) == ':') {
-			// workaround - URIUtil "swallows" C: authority
+		if (uri.getAuthority() != null && uri.getAuthority().length() > 1 && uri.getAuthority().charAt(1) == ':') {
+			// workaround - URIUtil "swallows" C: authority. Only reachable for legacy
+			// file://C:/ uris, IVirtualFilesystemService#stringToURI does not create
+			// them anymore
 			try {
 				_uri = IVirtualFilesystemService.stringToURI(uri.toString() + subFile);
 			} catch (MalformedURLException | URISyntaxException e) {

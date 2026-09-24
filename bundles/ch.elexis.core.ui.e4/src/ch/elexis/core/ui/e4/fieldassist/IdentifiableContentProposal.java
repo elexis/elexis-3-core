@@ -6,6 +6,8 @@ public class IdentifiableContentProposal<T> extends ContentProposal {
 
 	private final T identifiable;
 
+	private String additionalValue;
+
 	public IdentifiableContentProposal(String label, T identifiable) {
 		super(label, null);
 		this.identifiable = identifiable;
@@ -15,4 +17,12 @@ public class IdentifiableContentProposal<T> extends ContentProposal {
 		return identifiable;
 	}
 
+	public IdentifiableContentProposal<T> withAdditionalValue(String additionalValue) {
+		this.additionalValue = additionalValue;
+		return this;
+	}
+
+	public String getAdditionalValue() {
+		return additionalValue;
+	}
 }

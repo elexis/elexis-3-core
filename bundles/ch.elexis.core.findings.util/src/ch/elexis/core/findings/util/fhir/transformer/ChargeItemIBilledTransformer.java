@@ -34,21 +34,28 @@ import ch.elexis.core.services.IContextService;
 import ch.elexis.core.services.IModelService;
 import ch.elexis.core.status.StatusUtil;
 import ch.rgw.tools.Result;
+import jakarta.enterprise.context.Dependent;
+import jakarta.inject.Inject;
 
+@Dependent
 @Component(property = IFhirTransformer.TRANSFORMERID + "=ChargeItem.IBilled")
 public class ChargeItemIBilledTransformer implements IFhirTransformer<ChargeItem, IBilled> {
 
+	@Inject
 	@Reference(target = "(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.model)")
-	private IModelService coreModelService;
+	IModelService coreModelService;
 
+	@Inject
 	@Reference
-	private IBillingService billingService;
+	IBillingService billingService;
 
+	@Inject
 	@Reference
-	private ICodeElementService codeElementService;
+	ICodeElementService codeElementService;
 
+	@Inject
 	@Reference
-	private IContextService contextService;
+	IContextService contextService;
 
 	@Override
 	public Optional<ChargeItem> getFhirObject(IBilled localObject, SummaryEnum summaryEnum, Set<Include> includes) {

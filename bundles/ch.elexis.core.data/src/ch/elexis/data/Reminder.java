@@ -12,7 +12,6 @@
 
 package ch.elexis.data;
 
-import org.apache.commons.lang3.StringUtils;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -25,6 +24,8 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
+
+import org.apache.commons.lang3.StringUtils;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
@@ -78,6 +79,10 @@ public class Reminder extends PersistentObject implements Comparable<Reminder> {
 
 	public static final Cache<String, Boolean> cachedAttributeKeys = CacheBuilder.newBuilder()
 			.expireAfterWrite(30, TimeUnit.SECONDS).build();
+
+	private static final Object patientLabelConfigCacheLock = new Object();
+	private static String cachedPatientLabelConfigUserId;
+	private static String[] cachedPatientLabelConfigFields;
 
 	/**
 	 * To be stored in {@link #FLD_RESPONSIBLE}, making this reminder a
@@ -214,8 +219,7 @@ public class Reminder extends PersistentObject implements Comparable<Reminder> {
 	private String getConfiguredKontaktLabel(Kontakt k, boolean isPatientRelatedReminder) {
 		if (isPatientRelatedReminder) {
 			StringBuilder sb = new StringBuilder();
-			String[] configLabel = ConfigServiceHolder
-					.getUser(Preferences.USR_REMINDER_PAT_LABEL_CHOOSEN, LabelFields.LASTNAME.toString()).split(",");
+			String[] configLabel = getConfiguredPatientLabelFields();
 
 			String[] values = k.get(true, configLabel);
 			for (int i = 0; i < values.length; i++) {
@@ -228,6 +232,33 @@ public class Reminder extends PersistentObject implements Comparable<Reminder> {
 			return sb.toString();
 		}
 		return k.get(Kontakt.FLD_NAME3);
+	}
+
+	public static void invalidatePatientLabelConfigCache() {
+		synchronized (patientLabelConfigCacheLock) {
+			cachedPatientLabelConfigUserId = null;
+			cachedPatientLabelConfigFields = null;
+		}
+	}
+
+	private static String[] getConfiguredPatientLabelFields() {
+		Anwender loggedInContact = CoreHub.getLoggedInContact();
+		String userId = loggedInContact != null ? loggedInContact.getId() : StringUtils.EMPTY;
+
+		synchronized (patientLabelConfigCacheLock) {
+			if (Objects.equals(cachedPatientLabelConfigUserId, userId) && cachedPatientLabelConfigFields != null) {
+				return cachedPatientLabelConfigFields;
+			}
+		}
+
+		String[] configLabel = ConfigServiceHolder
+				.getUser(Preferences.USR_REMINDER_PAT_LABEL_CHOOSEN, LabelFields.LASTNAME.toString()).split(",");
+
+		synchronized (patientLabelConfigCacheLock) {
+			cachedPatientLabelConfigUserId = userId;
+			cachedPatientLabelConfigFields = configLabel;
+			return cachedPatientLabelConfigFields;
+		}
 	}
 
 	public static ProcessStatus determineCurrentStatus(ProcessStatus givenStatus, TimeTool dueDate) {
@@ -394,7 +425,7 @@ public class Reminder extends PersistentObject implements Comparable<Reminder> {
 		return !Objects.equals(creatorId, contactId);
 	}
 
-	private static String PS_REMINDERS_RESPONSIBLE = "SELECT r.ID, r.SUBJECT, r.DateDue, r.IdentID, r.OriginID FROM "
+	private static String PS_REMINDERS_RESPONSIBLE = "SELECT r.ID, r.SUBJECT, r.DateDue, r.IdentID, r.OriginID, r.Message, r.Typ, r.Status FROM "
 			+ TABLENAME
 			+ " r LEFT JOIN REMINDERS_RESPONSIBLE_LINK rrl ON (r.id = rrl.ReminderId) WHERE (rrl.ResponsibleID = ? OR r.Responsible = '"
 			+ ALL_RESPONSIBLE + "') AND r.deleted = '0'";
@@ -423,11 +454,7 @@ public class Reminder extends PersistentObject implements Comparable<Reminder> {
 				Reminder reminder = Reminder.load(res.getString(1));
 
 				// cache pre-fetch
-				reminder.putInCache("subject", res.getString(2));
-				String decode = reminder.decode(Reminder.FLD_DUE, res);
-				reminder.putInCache("Due", decode);
-				reminder.putInCache("IdentId", res.getString(4));
-				reminder.putInCache("OriginId", res.getString(5));
+				reminder.cachePrefetchedValues(res);
 
 				reminder.setDBConnection(dbConnection);
 				ret.add(reminder);
@@ -486,8 +513,9 @@ public class Reminder extends PersistentObject implements Comparable<Reminder> {
 	 * Alle Reminder holen, die beim Progammstart gezeigt werden sollen
 	 *
 	 * @return
+	 * @since 3.14 remove unnecessary parameter
 	 */
-	public static List<Reminder> findToShowOnStartup(final Anwender a) {
+	public static List<Reminder> findToShowOnStartup() {
 		Query<Reminder> qbe = new Query<>(Reminder.class);
 		qbe.add(FLD_DUE, Query.LESS_OR_EQUAL, new TimeTool().toString(TimeTool.DATE_COMPACT));
 		qbe.add(FLD_STATUS, Query.NOT_EQUAL, Integer.toString(ProcessStatus.CLOSED.numericValue()));
@@ -495,7 +523,7 @@ public class Reminder extends PersistentObject implements Comparable<Reminder> {
 		return qbe.execute();
 	}
 
-	private static String PS_REMINDERS_BASE = "SELECT r.ID, r.SUBJECT, r.DateDue, r.IdentID, r.OriginID FROM "
+	private static String PS_REMINDERS_BASE = "SELECT r.ID, r.SUBJECT, r.DateDue, r.IdentID, r.OriginID, r.Message, r.Typ, r.Status FROM "
 			+ TABLENAME
 			+ " r LEFT JOIN REMINDERS_RESPONSIBLE_LINK rrl ON (r.id = rrl.ReminderId) WHERE (rrl.ResponsibleID = ? OR r.Responsible = '"
 			+ ALL_RESPONSIBLE + "') AND r.deleted = '0' AND r.Status != '3'";
@@ -553,11 +581,7 @@ public class Reminder extends PersistentObject implements Comparable<Reminder> {
 					Reminder reminder = Reminder.load(res.getString(1));
 
 					// cache pre-fetch
-					reminder.putInCache("subject", res.getString(2));
-					String decode = reminder.decode(Reminder.FLD_DUE, res);
-					reminder.putInCache("Due", decode);
-					reminder.putInCache("IdentId", res.getString(4));
-					reminder.putInCache("OriginID", res.getString(5));
+					reminder.cachePrefetchedValues(res);
 
 					reminder.setDBConnection(dbConnection);
 					if (onlyPopup && (reminder.getVisibility() != Visibility.POPUP_ON_PATIENT_SELECTION)) {
@@ -592,6 +616,16 @@ public class Reminder extends PersistentObject implements Comparable<Reminder> {
 	 */
 	public static List<Reminder> findRemindersDueFor(final Patient p, final Anwender a, final boolean bOnlyPopup) {
 		return findOpenRemindersResponsibleFor(a, true, p, bOnlyPopup);
+	}
+
+	private void cachePrefetchedValues(ResultSet res) throws SQLException {
+		putInCache(FLD_SUBJECT, res.getString(2));
+		putInCache(FLD_DUE, decode(FLD_DUE, res));
+		putInCache(FLD_KONTAKT_ID, res.getString(4));
+		putInCache(FLD_CREATOR, res.getString(5));
+		putInCache(FLD_MESSAGE, res.getString(6));
+		putInCache(FLD_VISIBILITY, res.getString(7));
+		putInCache(FLD_STATUS, res.getString(8));
 	}
 
 	public Patient getKontakt() {

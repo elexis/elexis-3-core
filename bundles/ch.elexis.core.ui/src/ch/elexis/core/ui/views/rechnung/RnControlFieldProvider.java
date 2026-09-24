@@ -34,6 +34,7 @@ import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
 
 import ch.elexis.core.constants.StringConstants;
+import ch.elexis.core.model.InvoiceState;
 import ch.elexis.core.services.IQuery;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.dialogs.KontaktSelektor;
@@ -43,7 +44,6 @@ import ch.elexis.core.ui.util.viewers.ViewerConfigurer.ControlFieldListener;
 import ch.elexis.data.BillingSystem;
 import ch.elexis.data.Patient;
 import ch.elexis.data.Query;
-import ch.elexis.data.RnStatus;
 import ch.rgw.tools.IFilter;
 import ch.rgw.tools.StringTool;
 
@@ -68,12 +68,17 @@ class RnControlFieldProvider implements ViewerConfigurer.ControlFieldProvider {
 			Messages.RnControlFieldProvider_toBePaid, Messages.RnControlFieldProvider_dontRemind,
 			Messages.RnControlFieldProvider_writtenOff, Messages.RnControlFieldProvider_rejected };
 
-	final static int[] statInts = { RnStatus.UNBEKANNT, RnStatus.OFFEN, RnStatus.OFFEN_UND_GEDRUCKT,
-			RnStatus.TEILZAHLUNG, RnStatus.BEZAHLT, RnStatus.ZUVIEL_BEZAHLT, RnStatus.MAHNUNG_1,
-			RnStatus.MAHNUNG_1_GEDRUCKT, RnStatus.MAHNUNG_2, RnStatus.MAHNUNG_2_GEDRUCKT, RnStatus.MAHNUNG_3,
-			RnStatus.MAHNUNG_3_GEDRUCKT, RnStatus.IN_BETREIBUNG, RnStatus.TEILVERLUST, RnStatus.TOTALVERLUST,
-			RnStatus.STORNIERT, RnStatus.FEHLERHAFT, RnStatus.ZU_DRUCKEN, RnStatus.AUSSTEHEND, RnStatus.MAHNSTOPP,
-			RnStatus.ABGESCHRIEBEN, RnStatus.ZURUECKGEWIESEN };
+	final static int[] statInts = { InvoiceState.UNKNOWN.getState(), InvoiceState.OPEN.getState(),
+			InvoiceState.OPEN_AND_PRINTED.getState(), InvoiceState.PARTIAL_PAYMENT.getState(),
+			InvoiceState.PAID.getState(), InvoiceState.EXCESSIVE_PAYMENT.getState(),
+			InvoiceState.DEMAND_NOTE_1.getState(), InvoiceState.DEMAND_NOTE_1_PRINTED.getState(),
+			InvoiceState.DEMAND_NOTE_1.getState(), InvoiceState.DEMAND_NOTE_2_PRINTED.getState(),
+			InvoiceState.DEMAND_NOTE_3.getState(), InvoiceState.DEMAND_NOTE_3_PRINTED.getState(),
+			InvoiceState.IN_EXECUTION.getState(), InvoiceState.PARTIAL_LOSS.getState(),
+			InvoiceState.TOTAL_LOSS.getState(), InvoiceState.DEPRECIATED.getState(), InvoiceState.DEFECTIVE.getState(),
+			InvoiceState.TO_PRINT.getState(), InvoiceState.OWING.getState(),
+			InvoiceState.STOP_LEGAL_PROCEEDING.getState(), InvoiceState.DEPRECIATED.getState(),
+			InvoiceState.REJECTED.getState() };
 
 	final static int STAT_DEFAULT_INDEX = 1;
 	private final static String ALLE = Messages.RnControlFieldProvider_allPatients;

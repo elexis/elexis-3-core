@@ -105,7 +105,6 @@
     </setAttribute>
     <setAttribute key="selected_workspace_bundles">
         <setEntry value="ch.elexis.core.l10n@default:default"/>
-        <setEntry value="ch.elexis.core.logback.rocketchat@default:false"/>
         <setEntry value="ch.elexis.core.logging.default_configuration@default:false"/>
         <setEntry value="ch.elexis.core.serial.test@default:false"/>
         <setEntry value="ch.elexis.core.serial@default:default"/>

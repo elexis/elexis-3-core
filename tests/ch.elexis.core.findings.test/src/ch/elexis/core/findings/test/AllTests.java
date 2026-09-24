@@ -26,7 +26,7 @@ import ch.elexis.core.findings.MigratorServiceTest;
 import ch.elexis.core.findings.ObservationTest;
 import ch.elexis.core.findings.ProcedureRequestTest;
 import ch.elexis.core.findings.codings.CodingServiceTest;
-import ch.elexis.core.utils.OsgiServiceUtil;
+import ch.elexis.core.rcp.utils.OsgiServiceUtil;
 import ch.elexis.data.PersistentObject;
 
 @RunWith(Suite.class)
@@ -46,9 +46,9 @@ public class AllTests {
 	}
 
 	@BeforeClass
-	public static void beforeClass() throws ClassNotFoundException, InstantiationException, IllegalAccessException,
-			NoSuchMethodException, SecurityException, IllegalArgumentException, InvocationTargetException,
-			SQLException {
+	public static void beforeClass()
+			throws ClassNotFoundException, InstantiationException, IllegalAccessException, NoSuchMethodException,
+			SecurityException, IllegalArgumentException, InvocationTargetException, SQLException {
 
 		// check if for server test mode and init db if so
 		String testMode = System.getProperty("es.test");

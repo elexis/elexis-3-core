@@ -12,11 +12,11 @@ import org.slf4j.LoggerFactory;
 
 import com.google.gson.Gson;
 
+import ch.elexis.core.cdi.PortableServiceLoader;
 import ch.elexis.core.model.IImage;
+import ch.elexis.core.services.IContextService;
 import ch.elexis.core.services.IQuery;
 import ch.elexis.core.services.IQuery.COMPARATOR;
-import ch.elexis.core.services.holder.ContextServiceHolder;
-import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import jakarta.mail.internet.AddressException;
 import jakarta.mail.internet.InternetAddress;
 
@@ -167,7 +167,13 @@ public class MailMessage implements Serializable {
 	}
 
 	public String getHtmlText() {
-		return text.replace(StringUtils.LF, "<br />\n");
+		String htmlText = text.replace(StringUtils.LF, "<br />\n");
+		if (imageStrings != null) {
+			for (String imageString : imageStrings) {
+				htmlText = htmlText.replace(imageString, "cid:" + getImageMimeContentId(imageString));
+			}
+		}
+		return htmlText;
 	}
 
 	public void setText(String text) {
@@ -234,12 +240,12 @@ public class MailMessage implements Serializable {
 	@SuppressWarnings("unchecked")
 	private Optional<IImage> loadImage(String imageString) {
 		Optional<IImage> ret = Optional.empty();
-		IQuery<IImage> query = CoreModelServiceHolder.get().getQuery(IImage.class);
+		IQuery<IImage> query = PortableServiceLoader.getCoreModelService().getQuery(IImage.class);
 		query.and("prefix", COMPARATOR.EQUALS, "ch.elexis.core.mail");
 		query.and("title", COMPARATOR.LIKE, getImageContentId(imageString) + "%");
 		ret = query.executeSingleResult();
 		if (ret.isEmpty()) {
-			Optional<?> value = ContextServiceHolder.get()
+			Optional<?> value = PortableServiceLoader.get(IContextService.class)
 					.getNamed("ch.elexis.core.mail.image." + getImageContentId(imageString));
 			if (value.isPresent() && value.get() instanceof IImage) {
 				ret = (Optional<IImage>) value;
@@ -262,5 +268,10 @@ public class MailMessage implements Serializable {
 
 	public String getImageContentId(String imageString) {
 		return imageString.substring(imageString.indexOf("cid:") + "cid:".length(), imageString.length());
+	}
+
+	public String getImageMimeContentId(String imageString) {
+		return loadImage(imageString).map(IImage::getTitle).filter(StringUtils::isNotBlank)
+				.orElseGet(() -> getImageContentId(imageString));
 	}
 }

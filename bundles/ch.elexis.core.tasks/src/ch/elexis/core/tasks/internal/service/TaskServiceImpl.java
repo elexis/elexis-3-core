@@ -9,11 +9,15 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.RejectedExecutionException;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.osgi.service.component.annotations.Component;
@@ -23,7 +27,6 @@ import org.quartz.SchedulerException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import ch.elexis.core.model.IUser;
 import ch.elexis.core.model.message.MessageCode;
 import ch.elexis.core.model.message.TransientMessage;
 import ch.elexis.core.model.tasks.IIdentifiedRunnable;
@@ -137,7 +140,22 @@ public class TaskServiceImpl implements ITaskService {
 	}
 
 	@Deactivate
-	private void deactivateComponent() {
+	protected void deactivateComponent() {
+		if (fileSystemChangeWatcher != null) {
+			fileSystemChangeWatcher.stopPolling();
+		}
+
+		parallelExecutorService.shutdown();
+		perRunnableSingletonExecutorService.forEach((c, e) -> e.shutdown());
+
+		if (quartzExecutor != null) {
+			try {
+				quartzExecutor.shutdown();
+				quartzExecutor = null;
+			} catch (SchedulerException e) {
+				logger.warn("Error stopping quartz scheduler", e);
+			}
+		}
 
 		List<ITask> runningTasks = getRunningTasks();
 		long start = System.currentTimeMillis();
@@ -158,22 +176,6 @@ public class TaskServiceImpl implements ITaskService {
 		}
 
 		getRunningTasks().forEach(task -> logger.warn("Could not gracefully stop task " + task.getLabel()));
-
-		if (quartzExecutor != null) {
-			try {
-				quartzExecutor.shutdown();
-				quartzExecutor = null;
-			} catch (SchedulerException e) {
-				logger.warn("Error stopping quartz scheduler", e);
-			}
-		}
-
-		parallelExecutorService.shutdown();
-		perRunnableSingletonExecutorService.forEach((c, e) -> e.shutdown());
-
-		if (fileSystemChangeWatcher != null) {
-			fileSystemChangeWatcher.stopPolling();
-		}
 	}
 
 	/**
@@ -213,7 +215,7 @@ public class TaskServiceImpl implements ITaskService {
 		if (taskDescriptor != null && !taskDescriptor.isDeleted() && taskDescriptor.isActive()) {
 			String runner = taskDescriptor.getRunner();
 			if (StringUtils.isNotBlank(runner)) {
-				return StringUtils.equalsIgnoreCase(runner, contextService.getStationIdentifier());
+				return Strings.CI.equals(runner, contextService.getStationIdentifier());
 			}
 			return true;
 		}
@@ -374,7 +376,7 @@ public class TaskServiceImpl implements ITaskService {
 
 		taskDescriptor.setReferenceId(System.currentTimeMillis() + StringUtils.EMPTY);
 
-		contextService.getActiveUser().ifPresent(u -> taskDescriptor.setOwner(u));
+		contextService.getActiveUser().ifPresent(u -> taskDescriptor.setOwner(u.getId()));
 
 		saveTaskDescriptor(taskDescriptor);
 
@@ -391,18 +393,23 @@ public class TaskServiceImpl implements ITaskService {
 			TaskTriggerType triggerType, Map<String, Serializable> result) {
 		accessControl.doPrivileged(() -> {
 
-			ITaskDescriptor taskDescriptor = findTaskDescriptorByIdOrReferenceId(taskDescriptorId).orElse(null);
-			if (taskDescriptor == null) {
-				logger.warn("Invalid taskDescriptorId " + taskDescriptorId
-						+ " passed to updateCreateSingleLatestTaskResult()");
-				return;
+			try {
+				ITaskDescriptor taskDescriptor = findTaskDescriptorByIdOrReferenceId(taskDescriptorId).orElse(null);
+				if (taskDescriptor == null) {
+					logger.warn("Invalid taskDescriptorId " + taskDescriptorId
+							+ " passed to updateCreateSingleLatestTaskResult()");
+					return;
+				}
+
+				ITask existingLatest = taskModelService.load(taskDescriptorId, ITask.class).orElse(null);
+				if (existingLatest == null && taskDescriptor != null) {
+					existingLatest = new Task(taskDescriptor, taskState, triggerType, result);
+				}
+				taskModelService.save(existingLatest);
+			} catch (Exception e) {
+				logger.warn("[{}] Error updateCreateSingleLatestTaskResult ", taskDescriptorId, e);
 			}
 
-			ITask existingLatest = taskModelService.load(taskDescriptorId, ITask.class).orElse(null);
-			if (existingLatest == null && taskDescriptor != null) {
-				existingLatest = new Task(taskDescriptor, taskState, triggerType, result);
-			}
-			taskModelService.save(existingLatest);
 		});
 	}
 
@@ -432,7 +439,7 @@ public class TaskServiceImpl implements ITaskService {
 
 			ITaskDescriptor taskDescriptor = task.getTaskDescriptor();
 			OwnerTaskNotification ownerNotification = taskDescriptor.getOwnerNotification();
-			IUser owner = taskDescriptor.getOwner();
+			String owner = taskDescriptor.getOwner();
 
 			TaskState state = task.getState();
 			if (OwnerTaskNotification.WHEN_FINISHED == ownerNotification
@@ -450,10 +457,10 @@ public class TaskServiceImpl implements ITaskService {
 		}
 	}
 
-	private void sendMessageToOwner(ITask task, IUser owner, TaskState state) {
+	private void sendMessageToOwner(ITask task, String ownerId, TaskState state) {
 		TransientMessage message = messageService.prepare(
 				"Task-Service@" + contextService.getRootContext().getStationIdentifier(),
-				IMessageService.INTERNAL_MESSAGE_URI_SCHEME + ":" + owner.getId());
+				IMessageService.INTERNAL_MESSAGE_URI_SCHEME + ":" + ownerId);
 		message.addMessageCode(MessageCode.Key.SenderSubId, "tasks.taskservice");
 		message.setSenderAcceptsAnswer(false);
 
@@ -516,8 +523,8 @@ public class TaskServiceImpl implements ITaskService {
 			throw new TaskException(TaskException.EXECUTION_REJECTED,
 					"Task Descriptor [" + taskDescriptor.getId() + "] is not active");
 		}
-		
-		if(sync) {
+
+		if (sync) {
 			// create modifiable copy
 			runContext = new HashMap<>(runContext);
 			runContext.put("isTriggerSync", Boolean.TRUE.toString());
@@ -544,7 +551,9 @@ public class TaskServiceImpl implements ITaskService {
 					// singleton tasks/runnables must not run in multiple instances in parallel
 					// hence we hold a separate thread for each of them
 					if (!perRunnableSingletonExecutorService.containsKey(identifiedRunnableId)) {
-						ExecutorService executorService = Executors.newSingleThreadExecutor();
+						// Do NOT accept more than 10 tasks in the queue
+						ThreadPoolExecutor executorService = new ThreadPoolExecutor(1, 1, 0L, TimeUnit.MILLISECONDS,
+								new ArrayBlockingQueue<>(10));
 						perRunnableSingletonExecutorService.put(identifiedRunnableId, executorService);
 					}
 					ExecutorService executorService = perRunnableSingletonExecutorService.get(identifiedRunnableId);
@@ -671,8 +680,7 @@ public class TaskServiceImpl implements ITaskService {
 	private void validateTaskDescriptor(ITaskDescriptor taskDescriptor) throws TaskException {
 
 		IIdentifiedRunnable runnable = instantiateRunnableById(taskDescriptor.getIdentifiedRunnableId());
-		Map<String, Serializable> defaultRunContext = new HashMap<>(
-				runnable.getDefaultRunContext());
+		Map<String, Serializable> defaultRunContext = new HashMap<>(runnable.getDefaultRunContext());
 
 		if (TaskTriggerType.OTHER_TASK == taskDescriptor.getTriggerType()) {
 			// we will not check activation here, as the required parameters

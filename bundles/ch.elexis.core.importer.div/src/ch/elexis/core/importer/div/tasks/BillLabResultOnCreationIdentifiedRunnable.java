@@ -15,6 +15,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ch.elexis.core.cdi.PortableServiceLoader;
 import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.model.IBillable;
@@ -37,20 +38,17 @@ import ch.elexis.core.model.message.TransientMessage;
 import ch.elexis.core.model.tasks.IIdentifiedRunnable;
 import ch.elexis.core.model.tasks.SerializableBoolean;
 import ch.elexis.core.model.tasks.TaskException;
+import ch.elexis.core.services.IBillingService;
+import ch.elexis.core.services.ICodeElementService;
 import ch.elexis.core.services.ICodeElementService.ContextKeys;
+import ch.elexis.core.services.IContextService;
 import ch.elexis.core.services.ICoverageService;
+import ch.elexis.core.services.IEncounterService;
+import ch.elexis.core.services.ILabService;
 import ch.elexis.core.services.IMessageService;
 import ch.elexis.core.services.IModelService;
 import ch.elexis.core.services.IQuery;
 import ch.elexis.core.services.IQuery.COMPARATOR;
-import ch.elexis.core.services.holder.BillingServiceHolder;
-import ch.elexis.core.services.holder.CodeElementServiceHolder;
-import ch.elexis.core.services.holder.ContextServiceHolder;
-import ch.elexis.core.services.holder.CoreModelServiceHolder;
-import ch.elexis.core.services.holder.CoverageServiceHolder;
-import ch.elexis.core.services.holder.EncounterServiceHolder;
-import ch.elexis.core.services.holder.LabServiceHolder;
-import ch.elexis.core.services.holder.MessageServiceHolder;
 import ch.elexis.core.time.TimeUtil;
 import ch.rgw.tools.Result;
 
@@ -84,6 +82,8 @@ public class BillLabResultOnCreationIdentifiedRunnable implements IIdentifiedRun
 	private static Object addTarifLock = new Object();
 	private static Logger logger;
 
+	private static List<String> tardocConsCodes = List.of("AA.00.0010", "CA.00.0010");
+
 	private final IModelService coreModelService;
 	private final EncounterSelector encounterSelector;
 
@@ -101,10 +101,19 @@ public class BillLabResultOnCreationIdentifiedRunnable implements IIdentifiedRun
 
 	private IBillable getKonsVerrechenbar(IEncounter kons) {
 		if (kons.getCoverage() != null) {
-			Map<Object, Object> context = CodeElementServiceHolder.createContext(kons);
-			Optional<ICodeElement> tarmed = CodeElementServiceHolder.get().loadFromString("Tarmed", "00.0010", context);
-			if (tarmed.isPresent()) {
-				return (IBillable) tarmed.get();
+			Map<Object, Object> context = PortableServiceLoader.get(ICodeElementService.class).createContext(kons);
+			if (kons.getDate().isAfter(LocalDate.of(2025, 12, 31))) {
+				Optional<ICodeElement> tardoc = PortableServiceLoader.get(ICodeElementService.class)
+						.loadFromString("TARDOC", getTardocConsCode(kons.getMandator()), context);
+				if (tardoc.isPresent()) {
+					return (IBillable) tardoc.get();
+				}
+			} else {
+				Optional<ICodeElement> tarmed = PortableServiceLoader.get(ICodeElementService.class)
+						.loadFromString("Tarmed", "00.0010", context);
+				if (tarmed.isPresent()) {
+					return (IBillable) tarmed.get();
+				}
 			}
 		}
 		return null;
@@ -142,7 +151,7 @@ public class BillLabResultOnCreationIdentifiedRunnable implements IIdentifiedRun
 
 		IEncounter validEncounter = null;
 
-		IQuery<ICoverage> openCoverageQuery = CoreModelServiceHolder.get().getQuery(ICoverage.class);
+		IQuery<ICoverage> openCoverageQuery = PortableServiceLoader.getCoreModelService().getQuery(ICoverage.class);
 		openCoverageQuery.and(ModelPackage.Literals.ICOVERAGE__PATIENT, COMPARATOR.EQUALS, patient);
 		openCoverageQuery.and(ModelPackage.Literals.ICOVERAGE__DATE_TO, COMPARATOR.EQUALS, null);
 		List<ICoverage> openCoverages = openCoverageQuery.execute();
@@ -151,7 +160,7 @@ public class BillLabResultOnCreationIdentifiedRunnable implements IIdentifiedRun
 		if (!openCoverages.isEmpty()) {
 			todaysOpenBillableEncounters = openCoverages.stream().flatMap(cv -> cv.getEncounters().stream())
 					.filter(encounter -> TimeUtil.isToday(encounter.getDate()))
-					.filter(encounter -> BillingServiceHolder.get().isEditable(encounter).isOK())
+					.filter(encounter -> PortableServiceLoader.get(IBillingService.class).isEditable(encounter).isOK())
 					.collect(Collectors.toList());
 
 			if (todaysOpenBillableEncounters.size() == 1) {
@@ -218,7 +227,8 @@ public class BillLabResultOnCreationIdentifiedRunnable implements IIdentifiedRun
 		if (todaysOpenBillableEncounters != null && !todaysOpenBillableEncounters.isEmpty()) {
 			mandatorToBillUpon = todaysOpenBillableEncounters.get(0).getMandator();
 		} else {
-			List<IEncounter> allEncountersForPatient = EncounterServiceHolder.get().getAllEncountersForPatient(patient);
+			List<IEncounter> allEncountersForPatient = PortableServiceLoader.get(IEncounterService.class)
+					.getAllEncountersForPatient(patient);
 			if (!allEncountersForPatient.isEmpty()) {
 				mandatorToBillUpon = allEncountersForPatient.get(0).getMandator();
 			}
@@ -250,22 +260,22 @@ public class BillLabResultOnCreationIdentifiedRunnable implements IIdentifiedRun
 	}
 
 	private ICoverage createDefaultCoverage(IModelService coreModelService2, IPatient patient) {
-		ICoverageService iCoverageService = CoverageServiceHolder.get();
+		ICoverageService iCoverageService = PortableServiceLoader.get(ICoverageService.class);
 		return new ICoverageBuilder(coreModelService, patient, iCoverageService.getDefaultCoverageLabel(),
 				iCoverageService.getDefaultCoverageReason(), iCoverageService.getDefaultCoverageLaw()).buildAndSave();
 	}
 
 	private IStatus sendMessageToOwner(IPatient patient) {
-		IUser owner = ContextServiceHolder.get().getActiveUser().orElse(null);
-		TransientMessage transientMessage = MessageServiceHolder.get().prepare(getClass().getSimpleName(),
-				IMessageService.INTERNAL_MESSAGE_URI_SCHEME + ":" + owner.getId());
+		IUser owner = PortableServiceLoader.get(IContextService.class).getActiveUser().orElse(null);
+		TransientMessage transientMessage = PortableServiceLoader.get(IMessageService.class)
+				.prepare(getClass().getSimpleName(), IMessageService.INTERNAL_MESSAGE_URI_SCHEME + ":" + owner.getId());
 		transientMessage.addMessageCode(MessageCode.Key.MessageId,
 				MessageCodeMessageId.INFO_BILLING_AUTO_CREATE_ENCOUNTER.name());
 		transientMessage.addMessageCode(MessageCode.Key.MessageIdParam, patient.getPatientNr());
 		transientMessage.setSenderAcceptsAnswer(false);
 		transientMessage.setMessageText(
 				Messages.NO_BILLABLE_ENCOUNTER1 + patient.getPatientNr() + Messages.NO_BILLABLE_ENCOUNTER2);
-		return MessageServiceHolder.get().send(transientMessage);
+		return PortableServiceLoader.get(IMessageService.class).send(transientMessage);
 	}
 
 	private Result<?> addTarifToKons(IBillable tarif, IEncounter kons,
@@ -273,6 +283,7 @@ public class BillLabResultOnCreationIdentifiedRunnable implements IIdentifiedRun
 		// see RochePreferencePage.LABORRESULTS_BILL_ADDCONS
 		if (autoBillTarmed00_0010IfNotAlreadyBilledOnEncounter) {
 			synchronized (kons) {
+				String tardocConsCode = getTardocConsCode(kons.getMandator());
 				List<IBilled> leistungen = kons.getBilled();
 				boolean addCons = true;
 				for (IBilled verrechnet : leistungen) {
@@ -282,32 +293,56 @@ public class BillLabResultOnCreationIdentifiedRunnable implements IIdentifiedRun
 						addCons = false;
 						break;
 					}
+					if (verrechenbar != null && verrechenbar.getCodeSystemName().equals("TARDOC")
+							&& tardocConsCodes.contains(verrechenbar.getCode())) {
+						addCons = false;
+						break;
+					}
 				}
 				if (addCons) {
 					IBillable consVerrechenbar = getKonsVerrechenbar(kons);
 					if (consVerrechenbar != null) {
-						Result<?> result = BillingServiceHolder.get().bill(consVerrechenbar, kons, 1);
+						Result<?> result = PortableServiceLoader.get(IBillingService.class).bill(consVerrechenbar, kons,
+								1);
 						if (!result.isOK()) {
 							throw new TaskException(TaskException.EXECUTION_ERROR, result);
 						}
-						ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_UPDATE, kons);
+						PortableServiceLoader.get(IContextService.class).postEvent(ElexisEventTopics.EVENT_UPDATE,
+								kons);
 					}
 				}
 			}
 		}
 
 		logger.info(String.format("Adding EAL tarif [%s] to [%s]", tarif.getCode(), kons.getLabel()));
-		Result<?> result = BillingServiceHolder.get().bill(tarif, kons, 1);
+		Result<?> result = PortableServiceLoader.get(IBillingService.class).bill(tarif, kons, 1);
 		if (!result.isOK()) {
 			throw new TaskException(TaskException.EXECUTION_ERROR, result);
 		}
 		return result;
 	}
 
+	private String getTardocConsCode(IMandator mandator) {
+		Object typeObj = mandator.getExtInfo("ch.elexis.data.tardoc.mandant.dignitaet");
+		if (typeObj instanceof String) {
+			String[] codesString = ((String) typeObj).split("::");
+			for (String codeString : codesString) {
+				String[] codeParts = codeString.split("\\|");
+				if (codeParts.length == 2) {
+					if ("1100".equals(codeParts[0]) || "3010".equals(codeParts[0])) {
+						return "CA.00.0010";
+					}
+				}
+			}
+		}
+		return "AA.00.0010";
+	}
+
 	private IBillable getLabor2009TarifByCode(String ealCode) {
-		Map<Object, Object> context = CodeElementServiceHolder.createContext();
+		Map<Object, Object> context = PortableServiceLoader.get(ICodeElementService.class).createContext();
 		context.put(ContextKeys.DATE, LocalDate.now());
-		Optional<ICodeElement> tarif = CodeElementServiceHolder.get().loadFromString("EAL 2009", ealCode, context);
+		Optional<ICodeElement> tarif = PortableServiceLoader.get(ICodeElementService.class).loadFromString("EAL 2009",
+				ealCode, context);
 		if (tarif.isPresent() && tarif.get() instanceof IBillable) {
 			return (IBillable) tarif.get();
 		}
@@ -378,8 +413,8 @@ public class BillLabResultOnCreationIdentifiedRunnable implements IIdentifiedRun
 		}
 
 		// all properties are available
-		Optional<ILabMapping> mapping = LabServiceHolder.get().getLabMappingByContactAndItem(labResult.getOrigin(),
-				labResult.getItem());
+		Optional<ILabMapping> mapping = PortableServiceLoader.get(ILabService.class)
+				.getLabMappingByContactAndItem(labResult.getOrigin(), labResult.getItem());
 		if (mapping.isPresent() && mapping.get().isCharge()) {
 			String ealCode = labResult.getItem().getBillingCode();
 			logger.info(String.format("Adding EAL tarif [%s] from [%s]", ealCode, labResult.getOrigin().getLabel()));

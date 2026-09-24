@@ -35,9 +35,11 @@ import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.model.ICoverage;
 import ch.elexis.core.model.IEncounter;
+import ch.elexis.core.model.IMandator;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.IUser;
 import ch.elexis.core.services.holder.AccessControlServiceHolder;
+import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.services.holder.StoreToStringServiceHolder;
@@ -95,7 +97,18 @@ public class HistoryDisplay extends Composite implements BackgroundJobListener {
 		this.multiline = multiline;
 		lKons = new ArrayList<>(20);
 
-		text = UiDesk.getToolkit().createFormText(scrolledComposite, false);
+		if ("cocoa".equals(SWT.getPlatform())) { //$NON-NLS-1$
+			// Prevent focus-induced scrolling from moving the link during a mouse click.
+			// NO_FOCUS also disables keyboard traversal of the links on macOS.
+			text = new FormText(scrolledComposite, SWT.NO_FOCUS | UiDesk.getToolkit().getOrientation());
+			text.marginWidth = 1;
+			text.marginHeight = 0;
+			text.setHyperlinkSettings(UiDesk.getToolkit().getHyperlinkGroup());
+			UiDesk.getToolkit().adapt(text, false, true);
+			text.setMenu(scrolledComposite.getMenu());
+		} else {
+			text = UiDesk.getToolkit().createFormText(scrolledComposite, false);
+		}
 		text.setWhitespaceNormalized(true);
 		text.setColor(UiDesk.COL_BLUE, UiDesk.getColorRegistry().get(UiDesk.COL_BLUE));
 		text.setColor(UiDesk.COL_GREEN, UiDesk.getColorRegistry().get(UiDesk.COL_LIGHTGREY));
@@ -169,15 +182,25 @@ public class HistoryDisplay extends Composite implements BackgroundJobListener {
 			lKons.clear();
 		}
 		if (fall != null) {
+			boolean filerByActiveMandator = ConfigServiceHolder.getUser(Preferences.USR_KONSLIST_FILTERMANDATOR, false);
 			// @TODO sort reverse
 			for (IEncounter k : fall.getEncounters()) {
 				if (AccessControlServiceHolder.get()
 						.evaluate(EvACE.of(IEncounter.class, Right.READ, StoreToStringServiceHolder.getStoreToString(k))
-								.and(Right.VIEW))) {
+								.and(Right.VIEW))
+						&& (!filerByActiveMandator || isActiveMandator(k))) {
 					lKons.add(k);
 				}
 			}
 		}
+	}
+
+	private boolean isActiveMandator(IEncounter encounter) {
+		IMandator activeMandator = ContextServiceHolder.getActiveMandatorOrNull();
+		if (activeMandator != null) {
+			return activeMandator.equals(encounter.getMandator());
+		}
+		return true;
 	}
 
 	public void showLoading() {

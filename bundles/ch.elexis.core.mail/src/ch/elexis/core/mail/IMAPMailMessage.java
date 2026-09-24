@@ -49,9 +49,9 @@ public class IMAPMailMessage {
 		sentDate = message.getSentDate();
 		subject = message.getSubject();
 
-		String contentType = message.getContentType();
-
 		try {
+			String contentType = message.getContentType();
+
 			Object content = message.getContent();
 			if (content instanceof Multipart) {
 				extractMultipartContent((Multipart) content);
@@ -61,7 +61,9 @@ public class IMAPMailMessage {
 				extractOtherContent(contentType, content);
 			}
 
-		} catch (IOException e) {
+		} catch (Exception e) {
+			LoggerFactory.getLogger(getClass()).warn("Error reading attachments on mail {} {}: {}", sender, sentDate,
+					subject);
 			throw new MessagingException("Error reading attachments", e);
 		}
 	}
@@ -74,7 +76,7 @@ public class IMAPMailMessage {
 				try {
 					text = IOUtils.toString((InputStream) content, "ISO-8859-1");
 				} catch (IOException e) {
-					LoggerFactory.getLogger(getClass()).warn("Error extraction other content", e);
+					LoggerFactory.getLogger(getClass()).warn("Error extracting other content", e);
 				}
 			} else {
 				LoggerFactory.getLogger(getClass()).warn("Unknown other content [" + content + "]");
@@ -89,7 +91,12 @@ public class IMAPMailMessage {
 		for (int partCount = 0; partCount < numberOfParts; partCount++) {
 			BodyPart part = multiPart.getBodyPart(partCount);
 			if (part.getContentType().contains("multipart")) {
-				extractMultipartContent((Multipart) part.getContent());
+				Object content = part.getContent();
+				if (content instanceof Multipart _multipart) {
+					extractMultipartContent(_multipart);
+				} else {
+					extractOtherContent(part.getContentType(), content);
+				}
 			} else {
 				extractBodyPartContent(part);
 			}

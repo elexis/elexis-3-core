@@ -54,7 +54,7 @@ public class FilesystemChangeTriggerTest {
 				.instantiateRunnableById(IdentifiedRunnableIdConstants.DELETEFILE);
 		taskDescriptor = taskService.createTaskDescriptor(rwcDeleteFile);
 		taskDescriptor.setReferenceId("onTemporaryDirectory");
-		taskDescriptor.setOwner(AllTests.getOwner());
+		taskDescriptor.setOwner(AllTests.getOwner().getId());
 		taskDescriptor.setRunContext(new HashMap<>());
 		taskDescriptor.setTriggerType(TaskTriggerType.FILESYSTEM_CHANGE);
 		taskDescriptor.setTriggerParameter(IIdentifiedRunnable.RunContextParameter.STRING_URL,
@@ -95,7 +95,7 @@ public class FilesystemChangeTriggerTest {
 				.instantiateRunnableById(TestExecutionContextRunnable.ID);
 		taskDescriptor = taskService.createTaskDescriptor(rwcDeleteFile);
 		taskDescriptor.setReferenceId("onTemporaryFile");
-		taskDescriptor.setOwner(AllTests.getOwner());
+		taskDescriptor.setOwner(AllTests.getOwner().getId());
 		taskDescriptor.setRunContext(new HashMap<>());
 		taskDescriptor.setTriggerType(TaskTriggerType.FILESYSTEM_CHANGE);
 		taskDescriptor.setTriggerParameter(IIdentifiedRunnable.RunContextParameter.STRING_URL, createFile.toString());

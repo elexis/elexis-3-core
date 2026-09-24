@@ -14,6 +14,7 @@ package ch.elexis.core.ui.dialogs;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
@@ -215,6 +216,8 @@ public class KontaktSelektor extends TitleAreaDialog implements PoDoubleClickLis
 			mandantenViewer.setLabelProvider(new IdentifiableLabelProvider());
 			IQuery<IMandator> query = CoreModelServiceHolder.get().getQuery(IMandator.class);
 			List<IMandator> list = query.execute();
+			list = new ArrayList<>(list.stream().filter(m -> m.isActive()).toList());
+			Collections.sort(list, (l, r) -> l.getLabel().toLowerCase().compareTo(r.getLabel().toLowerCase()));
 			mandantenViewer.setInput(list);
 			ScrollBar scrollBar = mandantenViewer.getList().getVerticalBar();
 			scrollBar.setVisible(true);
@@ -222,6 +225,7 @@ public class KontaktSelektor extends TitleAreaDialog implements PoDoubleClickLis
 			mandantenComposite.layout();
 
 			mandantenViewer.addSelectionChangedListener(new ISelectionChangedListener() {
+				@Override
 				public void selectionChanged(SelectionChangedEvent event) {
 					if (isSelecting) {
 						return;
@@ -235,6 +239,7 @@ public class KontaktSelektor extends TitleAreaDialog implements PoDoubleClickLis
 				}
 			});
 			mandantenViewer.addDoubleClickListener(new IDoubleClickListener() {
+				@Override
 				public void doubleClick(DoubleClickEvent event) {
 					okPressed();
 				}
@@ -249,6 +254,7 @@ public class KontaktSelektor extends TitleAreaDialog implements PoDoubleClickLis
 			bezugsKontaktViewer.getControl().setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
 
 			bezugsKontaktViewer.setContentProvider(new IStructuredContentProvider() {
+				@Override
 				public Object[] getElements(Object inputElement) {
 					Patient patient = ElexisEventDispatcher.getSelectedPatient();
 					if (patient != null) {
@@ -301,10 +307,12 @@ public class KontaktSelektor extends TitleAreaDialog implements PoDoubleClickLis
 					return new Object[] {};
 				}
 
+				@Override
 				public void dispose() {
 					// nothing to do
 				}
 
+				@Override
 				public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 					// nothing to do
 				}
@@ -312,6 +320,7 @@ public class KontaktSelektor extends TitleAreaDialog implements PoDoubleClickLis
 			bezugsKontaktViewer.setLabelProvider(new KontaktSelektorLabelProvider());
 			bezugsKontaktViewer.setInput(this);
 			bezugsKontaktViewer.addSelectionChangedListener(new ISelectionChangedListener() {
+				@Override
 				public void selectionChanged(SelectionChangedEvent event) {
 					if (isSelecting) {
 						return;
@@ -344,6 +353,7 @@ public class KontaktSelektor extends TitleAreaDialog implements PoDoubleClickLis
 						"Geburtsdatum=" + Messages.Core_Enter_Birthdate //$NON-NLS-1$
 				}), new ViewerConfigurer.ButtonProvider() {
 
+					@Override
 					public Button createButton(final Composite parent) {
 						Button ret = new Button(parent, SWT.PUSH);
 						ret.setText("Neu erstellen...");
@@ -373,6 +383,7 @@ public class KontaktSelektor extends TitleAreaDialog implements PoDoubleClickLis
 						return ret;
 					}
 
+					@Override
 					public boolean isAlwaysEnabled() {
 						return false;
 					}
@@ -422,6 +433,7 @@ public class KontaktSelektor extends TitleAreaDialog implements PoDoubleClickLis
 	private void addSelectionChangedListener(ListViewer viewer) {
 		if (viewer != null) {
 			cv.getViewerWidget().addSelectionChangedListener(new ISelectionChangedListener() {
+				@Override
 				public void selectionChanged(SelectionChangedEvent event) {
 					if (isSelecting) {
 						return;
@@ -550,6 +562,7 @@ public class KontaktSelektor extends TitleAreaDialog implements PoDoubleClickLis
 		super.okPressed();
 	}
 
+	@Override
 	public void doubleClicked(PersistentObject obj, CommonViewer cv) {
 		okPressed();
 	}
@@ -582,6 +595,7 @@ public class KontaktSelektor extends TitleAreaDialog implements PoDoubleClickLis
 			type = t;
 		}
 
+		@Override
 		public void apply(Query<? extends PersistentObject> qbe) {
 			if (type == 1) {
 				qbe.add(Kontakt.FLD_IS_PERSON, Query.EQUALS, StringConstants.ONE);
@@ -644,6 +658,7 @@ public class KontaktSelektor extends TitleAreaDialog implements PoDoubleClickLis
 			}
 		}
 
+		@Override
 		public void run() {
 			Shell shell = UiDesk.getDisplay().getActiveShell();
 			KontaktSelektor ksl = new KontaktSelektor(shell, clazz, title, message, extra, orderFields);

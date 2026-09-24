@@ -2,6 +2,7 @@ package ch.elexis.core.services;
 
 import java.io.ByteArrayInputStream;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,8 +12,11 @@ import org.apache.commons.lang3.StringUtils;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ReferenceCardinality;
+import org.osgi.service.component.annotations.ReferencePolicyOption;
 import org.slf4j.LoggerFactory;
 
+import ch.elexis.core.exceptions.ElexisException;
 import ch.elexis.core.model.BriefConstants;
 import ch.elexis.core.model.IDocument;
 import ch.elexis.core.model.IDocumentTemplate;
@@ -21,23 +25,33 @@ import ch.elexis.core.services.internal.text.RecipeDocumentTemplateReplacement;
 import ch.elexis.core.status.ObjectStatus;
 import ch.elexis.core.text.ITextPlugin;
 import ch.elexis.core.text.ReplaceCallback;
+import io.quarkus.arc.All;
+import jakarta.annotation.PostConstruct;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 
+@ApplicationScoped
 @Component
 public class DocumentService implements IDocumentService {
 
 	public static final String MATCH_DIRECTTEMPLATE = "\\[[-a-zA-ZäöüÄÖÜéàè_]+\\]";
 
+	@Inject
 	@Reference
-	private ITextPlugin textPlugin;
+	ITextPlugin textPlugin;
 
+	@Inject
 	@Reference
 	private ITextReplacementService textReplacementService;
 
-	@Reference
-	private List<IDocumentStore> documentStores;
+	@Inject
+	@All
+	@Reference(cardinality = ReferenceCardinality.MULTIPLE, policyOption = ReferencePolicyOption.GREEDY)
+	volatile List<IDocumentStore> documentStores;
 
 	private Map<String, IDirectTemplateReplacement> directTemplateReplacement;
 
+	@PostConstruct
 	@Activate
 	public void activate() {
 		directTemplateReplacement = new HashMap<>();
@@ -167,11 +181,52 @@ public class DocumentService implements IDocumentService {
 	}
 
 	@Override
+	public Optional<IDocument> getDocument(String documentStoreId, String documentId) {
+		if (StringUtils.isNotBlank(documentStoreId) && StringUtils.isNotBlank(documentId)) {
+			IDocumentStore store = getDocumentStore(documentStoreId);
+			if (store != null) {
+				return store.loadDocument(documentId);
+			} else {
+				LoggerFactory.getLogger(DocumentService.class)
+						.warn("Could not get store for id [" + documentStoreId + "]");
+			}
+		}
+		return Optional.empty();
+	}
+
+	@Override
 	public void addDirectTemplateReplacement(String template, IDirectTemplateReplacement textTemplateConsumer) {
 		if (directTemplateReplacement.containsKey(template)) {
 			LoggerFactory.getLogger(getClass())
 					.warn("Direct template consumer [" + template + "] replaced with [" + textTemplateConsumer + "]");
 		}
 		directTemplateReplacement.put(template, textTemplateConsumer);
+	}
+
+	@Override
+	public IDocument createCopy(IDocument source) {
+		if (source != null && StringUtils.isNotBlank(source.getStoreId())) {
+			try {
+				IDocumentStore documentStore = getDocumentStore(source.getStoreId());
+				IDocument ret = documentStore.createDocument(source.getPatient().getId(), source.getTitle(),
+						source.getCategory().getName());
+
+				ret.setCreated(new Date());
+				ret.setAuthor(source.getAuthor());
+				ret.setDescription(source.getDescription());
+				ret.setExtension(source.getExtension());
+				ret.setKeywords(source.getKeywords());
+				ret.setMimeType(source.getMimeType());
+				if (source.getStatus() != null && !source.getStatus().isEmpty()) {
+					ret.setStatus(source.getStatus().get(0), true);
+				}
+
+				documentStore.saveDocument(ret, source.getContent());
+				return ret;
+			} catch (ElexisException e) {
+				LoggerFactory.getLogger(DocumentService.class).error("Exception creating copy of document.", e);
+			}
+		}
+		return null;
 	}
 }

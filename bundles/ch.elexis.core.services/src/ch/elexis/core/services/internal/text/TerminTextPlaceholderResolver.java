@@ -16,7 +16,9 @@ import ch.elexis.core.services.IContext;
 import ch.elexis.core.text.ITextPlaceholderResolver;
 import ch.elexis.core.text.PlaceholderAttribute;
 import ch.rgw.tools.TimeTool;
+import jakarta.enterprise.context.Dependent;
 
+@Dependent
 @Component
 public class TerminTextPlaceholderResolver implements ITextPlaceholderResolver {
 

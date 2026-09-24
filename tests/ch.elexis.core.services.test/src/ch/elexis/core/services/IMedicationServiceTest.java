@@ -22,10 +22,10 @@ import ch.elexis.core.model.builder.IArticleBuilder;
 import ch.elexis.core.model.builder.IContactBuilder;
 import ch.elexis.core.model.builder.IPrescriptionBuilder;
 import ch.elexis.core.model.prescription.EntryType;
+import ch.elexis.core.rcp.utils.OsgiServiceUtil;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.types.ArticleTyp;
 import ch.elexis.core.types.Gender;
-import ch.elexis.core.utils.OsgiServiceUtil;
 
 public class IMedicationServiceTest extends AbstractServiceTest {
 

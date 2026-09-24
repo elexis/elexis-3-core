@@ -64,6 +64,7 @@ public class CodeElementStatisticsComposite extends Composite {
 		MenuManager menu = new MenuManager();
 		menu.setRemoveAllWhenShown(true);
 		menu.addMenuListener(new IMenuListener() {
+			@Override
 			public void menuAboutToShow(IMenuManager manager) {
 				manager.add(new ClearStatisticAction());
 			}
@@ -93,10 +94,12 @@ public class CodeElementStatisticsComposite extends Composite {
 
 	public void setContact(IContact contact) {
 		this.contact = contact;
-		if (contact != null) {
-			viewer.setInput(CodeElementServiceHolder.getStatistics(elexisClassName, contact));
-		} else {
-			viewer.setInput(Collections.emptyList());
+		if (viewer != null && viewer.getControl() != null && !viewer.getControl().isDisposed()) {
+			if (contact != null) {
+				viewer.setInput(CodeElementServiceHolder.getStatistics(elexisClassName, contact));
+			} else {
+				viewer.setInput(Collections.emptyList());
+			}
 		}
 	}
 

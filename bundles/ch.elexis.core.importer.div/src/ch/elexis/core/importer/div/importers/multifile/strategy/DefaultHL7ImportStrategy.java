@@ -86,6 +86,12 @@ public class DefaultHL7ImportStrategy implements IFileImportStrategy {
 
 	private TimeTool getDate(ILabResult result) {
 		LocalDateTime observationTime = result.getObservationTime();
+		if (observationTime != null && observationTime.equals(observationTime.toLocalDate().atStartOfDay())) {
+			LocalDateTime anaylseTime = result.getAnalyseTime();
+			if (!anaylseTime.equals(anaylseTime.toLocalDate().atStartOfDay())) {
+				return new TimeTool(anaylseTime);
+			}
+		}
 		if (observationTime == null) {
 			return new TimeTool(result.getDate());
 		}

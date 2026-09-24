@@ -24,13 +24,13 @@ import ch.elexis.core.model.builder.ICoverageBuilder;
 import ch.elexis.core.model.builder.IEncounterBuilder;
 import ch.elexis.core.model.builder.IUserBuilder;
 import ch.elexis.core.model.ch.BillingLaw;
+import ch.elexis.core.rcp.utils.OsgiServiceUtil;
 import ch.elexis.core.services.IBillingSystemService;
 import ch.elexis.core.services.IContextService;
 import ch.elexis.core.services.IModelService;
 import ch.elexis.core.test.initializer.TestDatabaseInitializer;
 import ch.elexis.core.types.ArticleTyp;
 import ch.elexis.core.types.Gender;
-import ch.elexis.core.utils.OsgiServiceUtil;
 import ch.rgw.tools.Money;
 
 public abstract class AbstractTest {
@@ -144,7 +144,7 @@ public abstract class AbstractTest {
 	public static final String UVG_NAME = Messages.Case_UVG_Short;
 	public static final String MV_NAME = Messages.Fall_MV_Name;
 	public static final String IV_NAME = Messages.Fall_IV_Name;
-	private static final String KVG_REQUIREMENTS = Messages.Fall_KVGRequirements;
+	public static final String KVG_REQUIREMENTS = Messages.Fall_KVGRequirements;
 	public static final String UVG_REQUIREMENTS = Messages.Fall_UVGRequirements;
 	public static final String CONST_TARMED_DRUCKER = Messages.Fall_TarmedPrinter;
 	public static final String CONST_TARMED_LEISTUNG = Messages.Fall_TarmedLeistung;

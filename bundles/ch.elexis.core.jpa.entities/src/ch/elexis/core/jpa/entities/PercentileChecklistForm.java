@@ -1,9 +1,5 @@
 package ch.elexis.core.jpa.entities;
 
-import java.time.LocalDate;
-
-import org.eclipse.persistence.annotations.Cache;
-
 import ch.elexis.core.jpa.entities.converter.BooleanCharacterConverterSafe;
 import ch.elexis.core.jpa.entities.listener.EntityWithIdListener;
 import ch.elexis.core.model.util.ElexisIdGenerator;
@@ -12,12 +8,13 @@ import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.Id;
+import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "net_medshare_percentile_checklist_form")
 @EntityListeners(EntityWithIdListener.class)
-@Cache(expiry = 15000)
+@NamedQuery(name = "PercentileChecklistForm.title", query = "SELECT pcf FROM PercentileChecklistForm pcf WHERE pcf.formTitle = :title")
 public class PercentileChecklistForm extends AbstractEntityWithId implements EntityWithId, EntityWithDeleted {
 
 	// Transparently updated by the EntityListener
@@ -32,7 +29,7 @@ public class PercentileChecklistForm extends AbstractEntityWithId implements Ent
 	protected boolean deleted = false;
 
 	@Column(length = 255)
-	private LocalDate formTitle;
+	private String formTitle;
 
 	@Column(length = 11)
 	private String fromAge;
@@ -70,11 +67,11 @@ public class PercentileChecklistForm extends AbstractEntityWithId implements Ent
 		this.lastupdate = lastupdate;
 	}
 
-	public LocalDate getFormTitle() {
+	public String getFormTitle() {
 		return formTitle;
 	}
 
-	public void setFormTitle(LocalDate formTitle) {
+	public void setFormTitle(String formTitle) {
 		this.formTitle = formTitle;
 	}
 

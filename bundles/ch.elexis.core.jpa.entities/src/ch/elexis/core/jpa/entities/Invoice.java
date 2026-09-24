@@ -3,14 +3,11 @@ package ch.elexis.core.jpa.entities;
 import java.time.LocalDate;
 import java.util.List;
 
-import org.eclipse.persistence.annotations.Cache;
-
 import ch.elexis.core.ac.AoboEntity;
 import ch.elexis.core.ac.AoboEntityColumn;
 import ch.elexis.core.jpa.entities.converter.BooleanCharacterConverterSafe;
 import ch.elexis.core.jpa.entities.converter.InvoiceStateConverter;
 import ch.elexis.core.jpa.entities.listener.EntityWithIdListener;
-import ch.elexis.core.jpa.entities.listener.InvoiceEntityListener;
 import ch.elexis.core.model.InvoiceState;
 import ch.elexis.core.model.util.ElexisIdGenerator;
 import jakarta.persistence.CascadeType;
@@ -27,12 +24,15 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
+/**
+ * @since 3.13 removed InvoiceEntityListener
+ */
 @Entity
 @AoboEntity
 @Table(name = "RECHNUNGEN")
-@EntityListeners({ InvoiceEntityListener.class, EntityWithIdListener.class })
-@Cache(expiry = 15000)
+@EntityListeners({ EntityWithIdListener.class })
 @NamedQuery(name = "Invoice.number", query = "SELECT i FROM Invoice i WHERE i.deleted = false AND i.number = :number")
+@NamedQuery(name = "Invoice.number.aobo", query = "SELECT i FROM Invoice i WHERE i.deleted = false AND i.number = :number AND (i.mandator.id IN :aoboids OR i.mandator is null)")
 @NamedQuery(name = "Invoice.from.to.paid.notempty", query = "SELECT i FROM Invoice i WHERE i.deleted = false "
 		+ "AND i.invoiceDate >= :from AND i.invoiceDate <= :to AND NOT (i.state = ch.elexis.core.model.InvoiceState.PAID AND i.amount = '0')")
 @NamedQuery(name = "Invoice.from.to.mandator.paid.notempty", query = "SELECT i FROM Invoice i WHERE i.deleted = false "

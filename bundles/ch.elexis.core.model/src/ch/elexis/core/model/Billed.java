@@ -124,6 +124,11 @@ public class Billed extends AbstractIdDeleteModelAdapter<Verrechnet> implements 
 	public Money getScaledPrice() {
 		// do not include secondary as it is either 1 or the amount
 		int cents = Math.toIntExact(Math.round(getPoints() * getFactor() * getPrimaryScaleFactor()));
+		if (isALTLScale()) {
+			double alAmountExact = getAL() * getFactor() * getALScaleFactor();
+			double tlAmountExact = getTL() * getFactor() * getTLScaleFactor();
+			cents = (int) Math.round(alAmountExact + tlAmountExact);
+		}
 		return new Money(cents);
 	}
 
@@ -218,7 +223,8 @@ public class Billed extends AbstractIdDeleteModelAdapter<Verrechnet> implements 
 	@Override
 	public String getCode() {
 		IBillable billable = getBillable();
-		return billable != null ? billable.getCode() : getBillableStoreToString().orElse("?");
+		return billable != null ? StringUtils.defaultString(billable.getCode())
+				: getBillableStoreToString().orElse("?");
 	}
 
 	@Override
@@ -228,11 +234,101 @@ public class Billed extends AbstractIdDeleteModelAdapter<Verrechnet> implements 
 		// get sales for the verrechnet including all scales and quantity
 		// replaced with toIntExact and round: new DecimalFormat("#").parse(new
 		// DecimalFormat("#").format(value)).doubleValue()
-		int cents = Math.toIntExact(Math.round(getPoints() * getFactor() * getPrimaryScaleFactor()
-				* getSecondaryScaleFactor() * getEntity().getZahl()));
+		// special handling for swiss specific AL TL based billed
+		int cents = 0;
+		if (isALTL()) {
+			if (isALTLScale()) {
+				// calc al tl based price with al tl based scaling if information is present
+				double alAmountExact = getAL() * getFactor() * getEntity().getZahl() * getALScaleFactor();
+				double tlAmountExact = getTL() * getFactor() * getEntity().getZahl() * getTLScaleFactor();
+				cents = (int) Math.round(alAmountExact + tlAmountExact);
+			} else {
+				// fallback calc al tl based price with single scale factor
+				long roundedAmount = Math.round(getAL() * getFactor() * getEntity().getZahl())
+						+ Math.round(getTL() * getFactor() * getEntity().getZahl());
+				cents = Math
+						.toIntExact(Math.round(roundedAmount * getPrimaryScaleFactor() * getSecondaryScaleFactor()));
+			}
+		} else {
+			cents = Math.toIntExact(Math.round(getPoints() * getFactor() * getPrimaryScaleFactor()
+					* getSecondaryScaleFactor() * getEntity().getZahl()));
+		}
 		return new Money(cents);
 	}
 
+	private boolean isALTL() {
+		String className = getEntity().getKlasse();
+		return className != null && !className.isEmpty()
+				&& (className.endsWith("TarmedLeistung") || className.endsWith("TardocLeistung"));
+	}
+
+	private boolean isALTLScale() {
+		if (isALTL()) {
+			String alScaleString = (String) getExtInfo(Verrechnet.EXT_VERRRECHNET_AL_SCALE);
+			String tlScaleString = (String) getExtInfo(Verrechnet.EXT_VERRRECHNET_TL_SCALE);
+			return StringUtils.isNotBlank(alScaleString) && StringUtils.isNotBlank(tlScaleString);
+		}
+		return false;
+	}
+
+	private double getAL() {
+		// if price was changed, use TP as AL
+		boolean changedPrice = isChangedPrice();
+		if (changedPrice) {
+			return getPoints();
+		}
+		String alString = (String) getExtInfo(Verrechnet.EXT_VERRRECHNET_AL);
+		if (alString != null) {
+			try {
+				return (int) Double.parseDouble(alString);
+			} catch (NumberFormatException ne) {
+				// ignore
+			}
+		}
+		return 0;
+	}
+
+	private double getALScaleFactor() {
+		String alScaleString = (String) getExtInfo(Verrechnet.EXT_VERRRECHNET_AL_SCALE);
+		if (StringUtils.isNotBlank(alScaleString)) {
+			try {
+				return Double.parseDouble(alScaleString) / 100;
+			} catch (NumberFormatException ne) {
+				// ignore
+			}
+		}
+		return 1.0;
+	}
+
+	public double getTL() {
+		// if price was changed to 0, use TP as TL
+		boolean changedPrice = isChangedPrice();
+		if (changedPrice && getPoints() == 0) {
+			return getPoints();
+		}
+		String tlString = (String) getExtInfo(Verrechnet.EXT_VERRRECHNET_TL);
+		if (tlString != null) {
+			try {
+				return (int) Double.parseDouble(tlString);
+			} catch (NumberFormatException ne) {
+				// ignore
+			}
+		}
+		return 0;
+	}
+
+	private double getTLScaleFactor() {
+		String tlScaleString = (String) getExtInfo(Verrechnet.EXT_VERRRECHNET_TL_SCALE);
+		if (StringUtils.isNotBlank(tlScaleString)) {
+			try {
+				return Double.parseDouble(tlScaleString) / 100;
+			} catch (NumberFormatException ne) {
+				// ignore
+			}
+		}
+		return 1.0;
+	}
+	
 	@Override
 	public boolean isChangedPrice() {
 		Object changedPrice = getExtInfo(Constants.FLD_EXT_CHANGEDPRICE);
@@ -258,7 +354,7 @@ public class Billed extends AbstractIdDeleteModelAdapter<Verrechnet> implements 
 		if (getPrimaryScale() == 0) {
 			return 1.0;
 		}
-		return ((double) getPrimaryScale()) / 100.0;
+		return (getPrimaryScale()) / 100.0;
 	}
 
 	@Override
@@ -266,7 +362,7 @@ public class Billed extends AbstractIdDeleteModelAdapter<Verrechnet> implements 
 		if (getSecondaryScale() == 0) {
 			return 1.0;
 		}
-		return ((double) getSecondaryScale()) / 100.0;
+		return (getSecondaryScale()) / 100.0;
 	}
 
 	@Override

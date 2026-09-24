@@ -659,7 +659,7 @@ public class RnDialogs {
 		String RnListExportDirname = CoreHub.localCfg.get("rechnung/RnListExportDirname", null); //$NON-NLS-1$
 		Text tDirName;
 		// RnStatus[] states=RnStatus.Text;
-		private Logger log = LoggerFactory.getLogger(RnActions.class);
+		private Logger log = LoggerFactory.getLogger(RnDialogs.class);
 		private String RnListExportFileName = new SimpleDateFormat("'RnListExport-'yyyyMMddHHmmss'.csv'") //$NON-NLS-1$
 				.format(new Date());
 

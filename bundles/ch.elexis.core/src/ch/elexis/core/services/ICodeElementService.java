@@ -7,6 +7,7 @@ import java.util.Optional;
 
 import ch.elexis.core.model.IArticle;
 import ch.elexis.core.model.ICodeElement;
+import ch.elexis.core.model.IEncounter;
 
 /**
  * Interface for a service that can be used to load and store
@@ -118,4 +119,24 @@ public interface ICodeElementService {
 	 * @return
 	 */
 	public Optional<ICodeElementServiceContribution> getContribution(CodeElementTyp typ, String codeSystemName);
+
+	/**
+	 * Create a default context using the current typed selection of encounter and
+	 * coverage from the {@link ContextServiceHolder}s root context.
+	 *
+	 * @return
+	 * @since 3.13 moved from static method in
+	 *        ch.elexis.core.services.holder.CodeElementServiceHolder
+	 */
+	public Map<Object, Object> createContext();
+
+	/**
+	 * Create a context using the provided encounter.
+	 *
+	 * @param encounter
+	 * @return
+	 * @since 3.13 moved from static method in
+	 *        ch.elexis.core.services.holder.CodeElementServiceHolder
+	 */
+	public Map<Object, Object> createContext(IEncounter encounter);
 }

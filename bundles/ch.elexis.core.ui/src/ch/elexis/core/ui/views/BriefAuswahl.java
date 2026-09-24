@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.commands.Command;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
@@ -72,12 +73,15 @@ import ch.elexis.core.data.events.ElexisEventDispatcher;
 import ch.elexis.core.data.util.NoPoUtil;
 import ch.elexis.core.model.BriefConstants;
 import ch.elexis.core.model.ICategory;
+import ch.elexis.core.model.IDocument;
 import ch.elexis.core.model.IDocumentLetter;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.model.ModelPackage;
+import ch.elexis.core.services.IDocumentService;
 import ch.elexis.core.services.IQuery;
 import ch.elexis.core.services.IQuery.COMPARATOR;
+import ch.elexis.core.services.IQuery.ORDER;
 import ch.elexis.core.services.LocalConfigService;
 import ch.elexis.core.services.holder.BriefDocumentStoreHolder;
 import ch.elexis.core.services.holder.ContextServiceHolder;
@@ -107,10 +111,14 @@ import jakarta.inject.Named;
 
 public class BriefAuswahl extends ViewPart implements IRefreshable {
 
+	@Inject
+	private IDocumentService documentService;
+
 	public final static String ID = "ch.elexis.BriefAuswahlView"; //$NON-NLS-1$
 	private final FormToolkit tk;
 	private Form form;
-	private Action briefNeuAction, briefLadenAction, editNameAction, startLocalEditAction, endLocalEditAction,
+	private Action briefNeuAction, briefCopyAction, briefLadenAction, editNameAction, startLocalEditAction,
+			endLocalEditAction,
 			cancelLocalEditAction;
 	private Action deleteAction;
 	private ViewMenus menus;
@@ -123,6 +131,7 @@ public class BriefAuswahl extends ViewPart implements IRefreshable {
 	void activePatient(@Optional IPatient patient) {
 		ContextServiceHolder.get().getRootContext().removeTyped(IDocumentLetter.class);
 		Display.getDefault().asyncExec(() -> {
+			pages.forEach(sPage::resetQueryLimit);
 			if (form != null && !form.isDisposed()) {
 				if (patient == null) {
 					form.setText(Messages.Core_No_patient_selected); // $NON-NLS-1$
@@ -212,10 +221,10 @@ public class BriefAuswahl extends ViewPart implements IRefreshable {
 			sPage page = new sPage(ctab, cat);
 			pages.add(page);
 			if (LocalConfigService.get(Preferences.P_TEXT_EDIT_LOCAL, false)) {
-				menus.createViewerContextMenu(page.cv.getViewerWidget(), editNameAction, deleteAction,
+				menus.createViewerContextMenu(page.cv.getViewerWidget(), editNameAction, deleteAction, briefCopyAction,
 						startLocalEditAction, endLocalEditAction, cancelLocalEditAction);
 			} else {
-				menus.createViewerContextMenu(page.cv.getViewerWidget(), editNameAction, deleteAction);
+				menus.createViewerContextMenu(page.cv.getViewerWidget(), editNameAction, deleteAction, briefCopyAction);
 			}
 			ct.setData(page.cv);
 			ct.setControl(page);
@@ -279,10 +288,15 @@ public class BriefAuswahl extends ViewPart implements IRefreshable {
 	}
 
 	class sPage extends Composite {
+		private static final int QUERY_LIMIT_INCREMENT = 50;
+
 		private TableViewer tableViewer;
+		private Button loadMoreButton;
 		private LetterViewerComparator comparator;
 		private final CommonViewer cv;
 		private final ViewerConfigurer vc;
+		private int queryLimit = QUERY_LIMIT_INCREMENT;
+		private boolean hasMore;
 
 		public CommonViewer getCommonViewer() {
 			return cv;
@@ -297,8 +311,6 @@ public class BriefAuswahl extends ViewPart implements IRefreshable {
 					});
 			CommonViewerContentProvider contentProvider = new ch.elexis.core.ui.util.viewers.CommonViewerContentProvider(
 					cv) {
-
-				private static final int QUERY_LIMIT = 500;
 
 				@Override
 				public Object[] getElements(final Object inputElement) {
@@ -315,8 +327,12 @@ public class BriefAuswahl extends ViewPart implements IRefreshable {
 						// apply filters from control field provider
 						controlFieldProvider.setQuery(query);
 						List<?> elements = query.execute();
-						return elements.toArray(new Object[elements.size()]);
+						boolean hasMore = !ignoreLimit && elements.size() > queryLimit;
+						updateLoadMoreButton(hasMore);
+						List<?> visibleElements = hasMore ? elements.subList(0, queryLimit) : elements;
+						return visibleElements.toArray(new Object[visibleElements.size()]);
 					} else {
+						updateLoadMoreButton(false);
 						return new Object[0];
 					}
 				}
@@ -324,8 +340,10 @@ public class BriefAuswahl extends ViewPart implements IRefreshable {
 				@Override
 				protected IQuery<?> getBaseQuery() {
 					IQuery<IDocumentLetter> ret = CoreModelServiceHolder.get().getQuery(IDocumentLetter.class);
+					ret.orderBy("creationDate", ORDER.DESC); //$NON-NLS-1$
+					ret.orderBy("id", ORDER.DESC); //$NON-NLS-1$
 					if (!ignoreLimit) {
-						ret.limit(QUERY_LIMIT);
+						ret.limit(queryLimit + 1);
 					}
 					return ret;
 				}
@@ -358,6 +376,17 @@ public class BriefAuswahl extends ViewPart implements IRefreshable {
 			}
 
 			vc.getContentProvider().startListening();
+			loadMoreButton = tk.createButton(this, Messages.BriefAuswahlLoadMoreButtonText, SWT.PUSH);
+			loadMoreButton.setEnabled(hasMore);
+			loadMoreButton.addSelectionListener(new SelectionAdapter() {
+				@Override
+				public void widgetSelected(final SelectionEvent e) {
+					queryLimit += QUERY_LIMIT_INCREMENT;
+					cv.notify(CommonViewer.Message.update);
+				}
+			});
+			loadMoreButton.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
+
 			Button bLoad = tk.createButton(this, Messages.BriefAuswahlLoadButtonText, SWT.PUSH); // $NON-NLS-1$
 			bLoad.addSelectionListener(new SelectionAdapter() {
 				@Override
@@ -367,6 +396,17 @@ public class BriefAuswahl extends ViewPart implements IRefreshable {
 
 			});
 			bLoad.setLayoutData(SWTHelper.getFillGridData(1, true, 1, false));
+		}
+
+		private void resetQueryLimit() {
+			queryLimit = QUERY_LIMIT_INCREMENT;
+		}
+
+		private void updateLoadMoreButton(boolean enabled) {
+			hasMore = enabled;
+			if (loadMoreButton != null && !loadMoreButton.isDisposed()) {
+				loadMoreButton.setEnabled(enabled);
+			}
 		}
 
 		// create the columns for the table
@@ -494,6 +534,26 @@ public class BriefAuswahl extends ViewPart implements IRefreshable {
 					LoggerFactory.getLogger(BriefAuswahl.class).error("cannot execute cmd", e); //$NON-NLS-1$
 				}
 			}
+		};
+		
+		briefCopyAction = new Action(
+				ch.elexis.core.l10n.Messages.InvoiceOutputter_Copy + StringUtils.SPACE + Messages.Core_Open) {
+			@Override
+			public void run() {
+				IDocumentLetter selectedLetter = getSelected();
+				if (selectedLetter != null) {
+					IDocument copy = documentService.createCopy(selectedLetter);
+					if (copy != null) {
+						CommonViewer cv = (CommonViewer) ctab.getSelection().getData();
+						// refresh make copy available for selection
+						cv.notify(CommonViewer.Message.update);
+						cv.getViewerWidget().refresh(true);
+						cv.getViewerWidget().setSelection(new StructuredSelection(copy), true);
+						// open the copy
+						briefLadenAction.run();
+					}
+				}
+			};
 		};
 
 		briefLadenAction = new Action(Messages.Core_Open) { // $NON-NLS-1$

@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: Docx Test
 Bundle-SymbolicName: ch.elexis.core.text.docx.test
 Bundle-Vendor: at.medevit
-Bundle-Version: 3.13.0.qualifier
+Bundle-Version: 3.14.0.qualifier
 Fragment-Host: ch.elexis.core.text.docx;bundle-version="1.0.0.qualifier"
 Automatic-Module-Name: at.medevit.elexis.text.docx.test
 Bundle-RequiredExecutionEnvironment: JavaSE-21

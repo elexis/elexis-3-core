@@ -10,8 +10,6 @@
  ******************************************************************************/
 package ch.elexis.core.jpa.entities;
 
-import org.eclipse.persistence.annotations.Cache;
-
 import ch.elexis.core.jpa.entities.converter.BooleanCharacterConverterSafe;
 import ch.elexis.core.jpa.entities.converter.XidQualityConverter;
 import ch.elexis.core.jpa.entities.listener.EntityWithIdListener;
@@ -34,7 +32,6 @@ import jakarta.persistence.Table;
 @Entity
 @Table(name = "xid")
 @EntityListeners(EntityWithIdListener.class)
-@Cache(expiry = 15000)
 @NamedQuery(name = "Xid.domain.domainid", query = "SELECT xi FROM Xid xi WHERE xi.deleted = false AND xi.domain = :domain AND xi.domainId = :domainid")
 @NamedQuery(name = "Xid.domain.objectid", query = "SELECT xi FROM Xid xi WHERE xi.deleted = false AND xi.domain = :domain AND xi.object = :objectid")
 @NamedQuery(name = "Xid.domain.objectid.type", query = "SELECT xi FROM Xid xi WHERE xi.deleted = false AND xi.domain = :domain AND xi.object = :objectid AND xi.type = :type")

@@ -30,12 +30,12 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
 import ch.elexis.core.common.ElexisEventTopics;
-import ch.elexis.core.data.service.ContextServiceHolder;
 import ch.elexis.core.data.service.CoreModelServiceHolder;
 import ch.elexis.core.data.service.LocalLockServiceHolder;
 import ch.elexis.core.eigenartikel.EigenartikelUtil;
 import ch.elexis.core.model.IArticle;
 import ch.elexis.core.services.IModelService;
+import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.types.ArticleSubTyp;
 import ch.elexis.core.types.ArticleTyp;
 import ch.elexis.core.ui.databinding.SavingUpdateValueStrategy;

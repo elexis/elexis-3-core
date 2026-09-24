@@ -9,5 +9,12 @@
             uri="fragment.e4xmi">
       </fragment>
    </extension>
+   <extension
+         point="ch.elexis.core.ui.KonsExtension">
+      <Link
+            KonsExtension="ch.elexis.core.ui.mediorder.internal.MediorderKonsExtension"
+            name="MediorderHistoryLink">
+      </Link>
+   </extension>
 
 </plugin>

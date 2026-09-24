@@ -11,7 +11,10 @@ import org.osgi.service.component.annotations.Reference;
 
 import ch.elexis.core.model.IAccount;
 import ch.elexis.core.services.internal.Account;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 
+@ApplicationScoped
 @Component
 public class AccountService implements IAccountService {
 	private static final String ACCOUNTS_CONFIG = "ch.elexis.core.data/accounttransaction/accounts"; //$NON-NLS-1$
@@ -20,8 +23,9 @@ public class AccountService implements IAccountService {
 	public Account UNKNOWN = new Account(-1, StringUtils.EMPTY);
 	private HashMap<Integer, IAccount> localCache;
 
+	@Inject
 	@Reference
-	private IConfigService configService;
+	IConfigService configService;
 
 	private List<IAccount> loadAccounts() {
 		List<IAccount> ret = new ArrayList<>();

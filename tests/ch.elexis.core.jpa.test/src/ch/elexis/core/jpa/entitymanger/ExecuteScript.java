@@ -8,8 +8,8 @@ import java.util.Optional;
 import org.junit.Test;
 
 import ch.elexis.core.jpa.test.AllPluginTests;
+import ch.elexis.core.rcp.utils.OsgiServiceUtil;
 import ch.elexis.core.services.IElexisEntityManager;
-import ch.elexis.core.utils.OsgiServiceUtil;
 
 public class ExecuteScript {
 	

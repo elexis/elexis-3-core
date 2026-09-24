@@ -17,7 +17,7 @@ import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.builder.ICoverageBuilder;
 import ch.elexis.core.model.builder.IEncounterBuilder;
 import ch.elexis.core.model.ch.BillingLaw;
-import ch.elexis.core.utils.OsgiServiceUtil;
+import ch.elexis.core.rcp.utils.OsgiServiceUtil;
 
 public class ICoverageServiceTest extends AbstractServiceTest {
 

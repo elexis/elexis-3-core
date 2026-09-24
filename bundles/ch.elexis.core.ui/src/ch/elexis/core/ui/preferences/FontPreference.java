@@ -17,7 +17,7 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
 import ch.elexis.core.constants.Preferences;
-import ch.elexis.core.data.service.ContextServiceHolder;
+import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.preferences.ConfigServicePreferenceStore.Scope;
 

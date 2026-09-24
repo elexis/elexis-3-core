@@ -15,6 +15,9 @@ package ch.elexis.core.ui.util;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.e4.ui.model.application.ui.basic.MPart;
+import org.eclipse.e4.ui.workbench.modeling.EPartService;
+import org.eclipse.e4.ui.workbench.modeling.EPartService.PartState;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
@@ -124,6 +127,7 @@ public class SWTHelper {
 	/** Eine Alertbox anzeigen (synchron) */
 	public static void alert(final String title, final String message) {
 		UiDesk.getDisplay().syncExec(new Runnable() {
+			@Override
 			public void run() {
 				Shell shell = UiDesk.getDisplay().getActiveShell();
 				if (shell == null) {
@@ -146,6 +150,7 @@ public class SWTHelper {
 	public static void showError(final String title, final String message) {
 		UiDesk.getDisplay().syncExec(new Runnable() {
 
+			@Override
 			public void run() {
 				Shell shell = UiDesk.getTopShell();
 				MessageDialog.openError(shell, title, message);
@@ -162,6 +167,7 @@ public class SWTHelper {
 	public static void showError(final String logHeader, final String title, final String message) {
 		log.log(logHeader + ": " + title + "->" + message, Log.ERRORS); //$NON-NLS-1$ //$NON-NLS-2$
 		UiDesk.getDisplay().syncExec(new Runnable() {
+			@Override
 			public void run() {
 				Shell shell = UiDesk.getDisplay().getActiveShell();
 				MessageDialog.openError(shell, title, message);
@@ -178,6 +184,7 @@ public class SWTHelper {
 	public static void showInfo(final String title, final String message) {
 		UiDesk.getDisplay().syncExec(new Runnable() {
 
+			@Override
 			public void run() {
 				Shell shell = UiDesk.getTopShell();
 				MessageDialog.openInformation(shell, title, message);
@@ -224,6 +231,7 @@ public class SWTHelper {
 			this.dialogButtonLabels = dialogButtonLabels;
 		}
 
+		@Override
 		public void run() {
 			Shell shell = UiDesk.getTopShell();
 			ret = MessageDialog.open(MessageDialog.QUESTION, shell, title, message, SWT.SHEET, dialogButtonLabels);
@@ -239,6 +247,7 @@ public class SWTHelper {
 			this.message = message;
 		}
 
+		@Override
 		public void run() {
 			Shell shell = UiDesk.getTopShell();
 			ret = MessageDialog.openConfirm(shell, title, message);
@@ -267,6 +276,7 @@ public class SWTHelper {
 			this.message = message;
 		}
 
+		@Override
 		public void run() {
 			Shell shell = UiDesk.getTopShell();
 			MessageDialog dialog = new MessageDialog(shell, title, null, // accept
@@ -484,11 +494,13 @@ public class SWTHelper {
 	public static void setSelectOnFocus(final Text text) {
 		if (selectOnFocusListener == null) {
 			selectOnFocusListener = new FocusListener() {
+				@Override
 				public void focusGained(final FocusEvent e) {
 					Text t = (Text) e.widget;
 					t.selectAll();
 				}
 
+				@Override
 				public void focusLost(final FocusEvent e) {
 					Text t = (Text) e.widget;
 					if (t.getSelectionCount() > 0) {
@@ -593,6 +605,26 @@ public class SWTHelper {
 				Status status = new Status(IStatus.ERROR, Hub.PLUGIN_ID, "Error reopening viewPart " + viewID, e); //$NON-NLS-1$
 				StatusManager.getManager().handle(status, StatusManager.SHOW);
 			}
+		}
+	}
+
+	/**
+	 * Same as {@link SWTHelper#reloadViewPart(String)} but uses
+	 * {@link EPartService} if not null. If {@link EPartService} is null
+	 * {@link SWTHelper#reloadViewPart(String)} is called as fallback.
+	 * 
+	 * @param viewID
+	 * @param partService
+	 */
+	public static void reloadViewPart(String viewID, EPartService partService) {
+		if (partService != null) {
+			MPart viewPart = partService.findPart(viewID);
+			if (viewPart != null) {
+				partService.hidePart(viewPart);
+				partService.showPart(viewPart, PartState.ACTIVATE);
+			}
+		} else {
+			reloadViewPart(viewID);
 		}
 	}
 

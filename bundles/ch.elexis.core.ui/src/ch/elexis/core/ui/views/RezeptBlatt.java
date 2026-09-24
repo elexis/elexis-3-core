@@ -30,6 +30,7 @@ import ch.elexis.core.data.service.LocalLockServiceHolder;
 import ch.elexis.core.data.util.NoPoUtil;
 import ch.elexis.core.lock.types.LockResponse;
 import ch.elexis.core.model.IRecipe;
+import ch.elexis.core.model.prescription.Constants;
 import ch.elexis.core.model.prescription.EntryType;
 import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.text.ITextPlugin.Parameter;
@@ -214,9 +215,9 @@ public class RezeptBlatt extends ViewPart implements ICallback, IActivationListe
 
 		fields[0] = new String[4];
 		fields[0][0] = StringUtils.EMPTY;
-		fields[0][1] = "Medikament";
-		fields[0][2] = "Einnahme";
-		fields[0][3] = "Bemerkung";
+		fields[0][1] = "";
+		fields[0][2] = "";
+		fields[0][3] = "";
 
 		for (int i = 1; i < fields.length; i++) {
 			Prescription p = lines.get(i - 1);
@@ -227,7 +228,7 @@ public class RezeptBlatt extends ViewPart implements ICallback, IActivationListe
 			} else {
 				fields[i][0] = StringUtils.EMPTY;
 			}
-			fields[i][1] = StringUtils.defaultString(p.getSimpleLabel());
+			fields[i][1] = StringUtils.defaultString(getPrescriptionLabel(p));
 			fields[i][2] = StringUtils.defaultString(p.getDosis());
 			fields[i][3] = StringUtils.defaultString(p.getBemerkung());
 			// fields[i][4] = StringUtils.defaultString(p.getDisposalComment());
@@ -278,13 +279,25 @@ public class RezeptBlatt extends ViewPart implements ICallback, IActivationListe
 			} else {
 				fields[i][0] = StringUtils.EMPTY;
 			}
-			fields[i][1] = StringUtils.defaultString(p.getSimpleLabel());
+			fields[i][1] = StringUtils.defaultString(getPrescriptionLabel(p));
 			fields[i][2] = StringUtils.defaultString(p.getDosis());
 			fields[i][3] = StringUtils.defaultString(p.getBeginDate());
 			fields[i][4] = StringUtils.defaultString(p.getBemerkung());
 			fields[i][5] = StringUtils.defaultString(p.getDisposalComment());
 		}
 		return fields;
+	}
+
+	private String getPrescriptionLabel(Prescription prescription) {
+		if (prescription != null) {
+			String ret = prescription.getSimpleLabel();
+			if (prescription.getExtInfoStoredObjectByKey(Constants.FLD_EXT_INDICATIONCODE) instanceof String) {
+				ret = ret + "\nSLIndication="
+						+ prescription.getExtInfoStoredObjectByKey(Constants.FLD_EXT_INDICATIONCODE);
+			}
+			return ret;
+		}
+		return null;
 	}
 
 	public boolean createRezept(Rezept rp) {

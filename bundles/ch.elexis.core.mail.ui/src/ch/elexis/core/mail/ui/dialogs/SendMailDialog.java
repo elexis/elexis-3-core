@@ -165,13 +165,13 @@ public class SendMailDialog extends TitleAreaDialog {
 					if (proposal instanceof IdentifiableContentProposal) {
 						@SuppressWarnings("unchecked")
 						IdentifiableContentProposal<IContact> identifiableContentProposal = (IdentifiableContentProposal<IContact>) proposal;
-						IContact contact = identifiableContentProposal.getIdentifiable();
+						String email = identifiableContentProposal.getAdditionalValue();
 						int index = MailAddressContentProposalProvider.getLastAddressIndex(toText.getText());
 						StringBuilder sb = new StringBuilder();
 						if (index != 0) {
-							sb.append(toText.getText().substring(0, index)).append(", ").append(contact.getEmail());
+							sb.append(toText.getText().substring(0, index)).append(", ").append(email);
 						} else {
-							sb.append(contact.getEmail());
+							sb.append(email);
 						}
 						toText.setText(sb.toString());
 						toText.setSelection(toText.getText().length());
@@ -323,9 +323,12 @@ public class SendMailDialog extends TitleAreaDialog {
 
 						textText.setText(textReplacement.performReplacement(ContextServiceHolder.get().getRootContext(),
 								selectedTemplate.getTemplate()));
-						if (selectedTemplate.getExtInfo(MailConstants.TEXTTEMPLATE_SUBJECT) != null) {
-							subjectText.setText((String) selectedTemplate.getExtInfo(MailConstants.TEXTTEMPLATE_SUBJECT)
-									+ StringUtils.SPACE + subjectString);
+						if (selectedTemplate.getExtInfo(MailConstants.TEXTTEMPLATE_SUBJECT) instanceof String subjTpl) {
+							String ctx = textReplacement.performReplacement(ContextServiceHolder.get().getRootContext(),
+									subjTpl);
+							subjectText.setText(ctx);
+						} else {
+							subjectText.setText(StringUtils.EMPTY);
 						}
 					} else {
 						textText.setText(StringUtils.EMPTY);
@@ -580,17 +583,15 @@ public class SendMailDialog extends TitleAreaDialog {
 	}
 
 	private String getValidation() {
-		boolean isConfidential = Boolean.TRUE
-				.equals(selectedTemplate != null ? selectedTemplate.getExtInfo(MailConstants.CONFIDENTIAL_MAIL) : null);
-		boolean isCheckboxSelected = getConfidentialCheckbox().getSelection();
 
-		if (isConfidential && isCheckboxSelected) {
-			subjectString = subjectText.getText() + MailConstants.CONFIDENTIAL_STRING;
-		} else if (isCheckboxSelected && !isConfidential) {
-			subjectString = subjectText.getText() + MailConstants.CONFIDENTIAL_STRING;
-		} else {
-			subjectString = subjectText.getText();
-		}
+		boolean templateConfidential = Boolean.TRUE
+				.equals(selectedTemplate != null ? selectedTemplate.getExtInfo(MailConstants.CONFIDENTIAL_MAIL) : null);
+		boolean checkboxConfidential = getConfidentialCheckbox().getSelection();
+		String rawSubject = StringUtils.defaultString(subjectText.getText());
+		String replacedSubject = textReplacement.performReplacement(ContextServiceHolder.get().getRootContext(),
+				rawSubject);
+		boolean finalConfidential = templateConfidential || checkboxConfidential;
+		subjectString = finalConfidential ? replacedSubject + MailConstants.CONFIDENTIAL_STRING : replacedSubject;
 
 		StructuredSelection accountSelection = (StructuredSelection) accountsViewer.getSelection();
 		if (accountSelection == null || accountSelection.isEmpty()) {

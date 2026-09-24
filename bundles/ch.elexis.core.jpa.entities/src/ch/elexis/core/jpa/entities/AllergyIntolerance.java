@@ -1,7 +1,5 @@
 package ch.elexis.core.jpa.entities;
 
-import org.eclipse.persistence.annotations.Cache;
-
 import ch.elexis.core.jpa.entities.converter.BooleanCharacterConverterSafe;
 import ch.elexis.core.jpa.entities.listener.EntityWithIdListener;
 import ch.elexis.core.model.util.ElexisIdGenerator;
@@ -16,7 +14,6 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "CH_ELEXIS_CORE_FINDINGS_ALLERGYINTOLERANCE")
-@Cache(expiry = 15000)
 @EntityListeners(EntityWithIdListener.class)
 @NamedQuery(name = "AllergyIntolerance.patientid", query = "SELECT al FROM AllergyIntolerance al WHERE al.deleted = false AND al.patientid = :patientid")
 public class AllergyIntolerance extends AbstractEntityWithId implements EntityWithId, EntityWithDeleted {

@@ -9,7 +9,7 @@ import org.hl7.fhir.r4.model.Coding;
 import org.hl7.fhir.r4.model.Ratio;
 import org.hl7.fhir.r4.model.SimpleQuantity;
 
-import ch.elexis.core.findings.util.fhir.MedicamentCoding;
+import ch.elexis.core.findings.codes.MedicamentCoding;
 import ch.elexis.core.model.IArticle;
 
 public class IMedicationHelper {

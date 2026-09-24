@@ -2,8 +2,6 @@ package ch.elexis.core.services;
 
 import java.util.UUID;
 
-import jakarta.ws.rs.core.Response;
-
 import org.eclipse.core.runtime.IStatus;
 
 import ch.elexis.core.common.ElexisEvent;
@@ -11,6 +9,7 @@ import ch.elexis.core.common.InstanceStatus;
 import ch.elexis.core.lock.types.LockInfo;
 import ch.elexis.core.lock.types.LockRequest;
 import ch.elexis.core.lock.types.LockResponse;
+import jakarta.ws.rs.core.Response;
 
 public interface IElexisServerService {
 

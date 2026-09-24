@@ -10,12 +10,16 @@ import ch.elexis.core.model.IArticle;
 import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.services.IModelService;
 import ch.elexis.core.services.IStoreToStringContribution;
+import jakarta.enterprise.context.Dependent;
+import jakarta.inject.Inject;
 
+@Dependent
 @Component
 public class DefaultArticleStoreToStringContribution implements IStoreToStringContribution {
 
+	@Inject
 	@Reference(target = "(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.model)")
-	private IModelService coreModelService;
+	IModelService coreModelService;
 
 	@Override
 	public Optional<String> storeToString(Identifiable identifiable) {

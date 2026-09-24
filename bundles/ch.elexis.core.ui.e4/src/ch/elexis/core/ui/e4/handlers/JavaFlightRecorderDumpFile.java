@@ -14,9 +14,9 @@ import org.eclipse.swt.widgets.FileDialog;
 
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.jfr.JavaFlightRecorderService;
+import ch.elexis.core.rcp.utils.OsgiServiceUtil;
 import ch.elexis.core.services.IConfigService;
 import ch.elexis.core.utils.CoreUtil;
-import ch.elexis.core.utils.OsgiServiceUtil;
 
 public class JavaFlightRecorderDumpFile {
 

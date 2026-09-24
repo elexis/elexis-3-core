@@ -22,13 +22,13 @@ import ch.elexis.core.model.IFreeTextDiagnosis;
 import ch.elexis.core.model.IInvoice;
 import ch.elexis.core.model.IStockEntry;
 import ch.elexis.core.model.builder.IEncounterBuilder;
+import ch.elexis.core.rcp.utils.OsgiServiceUtil;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.services.holder.InvoiceServiceHolder;
 import ch.elexis.core.services.holder.StockServiceHolder;
 import ch.elexis.core.types.ArticleTyp;
-import ch.elexis.core.utils.OsgiServiceUtil;
 import ch.rgw.tools.Money;
 import ch.rgw.tools.Result;
 import jakarta.persistence.EntityManager;
@@ -199,13 +199,13 @@ public class IBillingServiceTest extends AbstractServiceTest {
 		Result<IBilled> billed = billingService.bill(customArticle_2, encounter, 1.0);
 		assertTrue(billed.getMessages().get(0).getText(), billed.isOK());
 		double billed_amount = billed.get().getAmount();
-		double billed_price = billed.get().getPrice().getCents();
+		double billed_total = billed.get().getTotal().getCents();
 
 		coreModelService.remove(billed.get());
 		coreModelService.remove(customArticle_2);
 
-		assertEquals(1, billed_amount, 0.1);
-		assertEquals(new Money(635).getCents(), billed_price, 0.1);
+		assertEquals(0.1, billed_amount, 0.1);
+		assertEquals(new Money(635).getCents(), billed_total, 0.1);
 	}
 
 }

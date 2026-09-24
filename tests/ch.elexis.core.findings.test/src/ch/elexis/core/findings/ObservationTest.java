@@ -156,7 +156,7 @@ public class ObservationTest {
 		testObservationText("ABC &sect; ABC1", 4);
 		testObservationText("ABC &copy; &sect; ABC2", 5);
 		testObservationText("!$%&/()=?`´*#'*@€^°\n\n\ta", 6);
-		testObservationText("§", 7); // BUG!!!!
+		testObservationText("§", 7);
 		testObservationText("<3 & >3", 8);
 	}
 

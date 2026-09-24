@@ -2,8 +2,6 @@ package ch.elexis.core.jpa.entities;
 
 import java.beans.Transient;
 
-import org.eclipse.persistence.annotations.Cache;
-
 import ch.elexis.core.jpa.entities.converter.BooleanCharacterConverterSafe;
 import ch.elexis.core.jpa.entities.converter.IntegerStringConverter;
 import ch.elexis.core.jpa.entities.listener.EntityWithIdListener;
@@ -21,13 +19,14 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "LEISTUNGEN")
-@Cache(expiry = 15000)
 @EntityListeners(EntityWithIdListener.class)
 @NamedQuery(name = "Verrechnet.behandlung.leistungenCode", query = "SELECT v FROM Verrechnet v WHERE v.deleted = false AND v.behandlung = :behandlung AND v.leistungenCode = :leistungenCode")
 public class Verrechnet extends AbstractEntityWithId implements EntityWithId, EntityWithDeleted, EntityWithExtInfo {
 
 	public static final String EXT_VERRRECHNET_TL = "TL"; //$NON-NLS-1$
+	public static final String EXT_VERRRECHNET_TL_SCALE = "TL_SCALE"; //$NON-NLS-1$
 	public static final String EXT_VERRRECHNET_AL = "AL"; //$NON-NLS-1$
+	public static final String EXT_VERRRECHNET_AL_SCALE = "AL_SCALE"; //$NON-NLS-1$
 
 	// Transparently updated by the EntityListener
 	protected Long lastupdate;
@@ -86,7 +85,7 @@ public class Verrechnet extends AbstractEntityWithId implements EntityWithId, En
 		if (getScale() == 0) {
 			return 1.0;
 		}
-		return ((double) getScale()) / 100.0;
+		return (getScale()) / 100.0;
 	}
 
 	@Transient
@@ -100,7 +99,7 @@ public class Verrechnet extends AbstractEntityWithId implements EntityWithId, En
 		if (getScale2() == 0) {
 			return 1.0;
 		}
-		return ((double) getScale2()) / 100.0;
+		return (getScale2()) / 100.0;
 	}
 
 	@Transient

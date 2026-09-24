@@ -47,26 +47,29 @@
     <setAttribute key="selected_target_bundles">
         <setEntry value="ch.qos.logback.classic@2:true"/>
         <setEntry value="ch.qos.logback.core@default:default"/>
-        <setEntry value="com.google.gson@default:default"/>
+        <setEntry value="com.google.gson*2.12.1@default:default"/>
         <setEntry value="com.h2database@default:default"/>
         <setEntry value="com.mysql.cj@default:default"/>
         <setEntry value="com.sun.xml.bind.jaxb-osgi@default:default"/>
         <setEntry value="jakarta.activation-api@default:default"/>
         <setEntry value="jakarta.annotation-api@default:default"/>
+        <setEntry value="jakarta.el-api@default:default"/>
+        <setEntry value="jakarta.enterprise.cdi-api@default:default"/>
+        <setEntry value="jakarta.enterprise.lang-model@default:default"/>
         <setEntry value="jakarta.inject.jakarta.inject-api@default:default"/>
+        <setEntry value="jakarta.interceptor-api@default:default"/>
         <setEntry value="jakarta.ws.rs-api*3.1.99@default:default"/>
         <setEntry value="jakarta.xml.bind-api@default:default"/>
         <setEntry value="jcl.over.slf4j@default:default"/>
         <setEntry value="org.apache.aries.spifly.dynamic.bundle@1:true"/>
         <setEntry value="org.apache.commons.commons-codec*1.17.0@default:default"/>
-        <setEntry value="org.apache.commons.commons-dbcp2@default:default"/>
+        <setEntry value="org.apache.commons.commons-compress*1.27.1@default:default"/>
         <setEntry value="org.apache.commons.commons-io*2.18.0@default:default"/>
         <setEntry value="org.apache.commons.commons-pool2@default:default"/>
         <setEntry value="org.apache.commons.lang3@default:default"/>
         <setEntry value="org.apache.felix.gogo.command@default:default"/>
         <setEntry value="org.apache.felix.gogo.runtime@default:default"/>
         <setEntry value="org.apache.felix.gogo.shell@default:default"/>
-        <setEntry value="org.apache.geronimo.specs.geronimo-jta_1.1_spec@default:default"/>
         <setEntry value="org.eclipse.core.contenttype@default:default"/>
         <setEntry value="org.eclipse.core.databinding.observable@default:default"/>
         <setEntry value="org.eclipse.core.databinding.property@default:default"/>
@@ -87,7 +90,6 @@
         <setEntry value="org.eclipse.jetty.ee10.osgi.alpn.fragment@default:false"/>
         <setEntry value="org.eclipse.jetty.servlet-api@default:default"/>
         <setEntry value="org.eclipse.osgi.compatibility.state@default:false"/>
-        <setEntry value="org.eclipse.osgi.services@default:default"/>
         <setEntry value="org.eclipse.osgi@1:true"/>
         <setEntry value="org.eclipse.pde.junit.runtime@default:default"/>
         <setEntry value="org.eclipse.swt.cocoa.macosx.aarch64@default:false"/>
@@ -138,7 +140,7 @@
         <setEntry value="info.elexis.server.core.logging@default:false"/>
         <setEntry value="org.apache.felix.gogo.shell.contribution@default:false"/>
     </setAttribute>
-    <booleanAttribute key="show_selected_only" value="true"/>
+    <booleanAttribute key="show_selected_only" value="false"/>
     <booleanAttribute key="tracing" value="false"/>
     <booleanAttribute key="useCustomFeatures" value="false"/>
     <booleanAttribute key="useDefaultConfig" value="true"/>

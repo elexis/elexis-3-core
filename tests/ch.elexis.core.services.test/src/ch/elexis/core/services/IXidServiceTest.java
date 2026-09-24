@@ -11,9 +11,9 @@ import ch.elexis.core.constants.XidConstants;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.IXid;
 import ch.elexis.core.model.builder.IContactBuilder;
+import ch.elexis.core.rcp.utils.OsgiServiceUtil;
 import ch.elexis.core.test.initializer.TestDatabaseInitializer;
 import ch.elexis.core.types.Gender;
-import ch.elexis.core.utils.OsgiServiceUtil;
 
 public class IXidServiceTest extends AbstractServiceTest {
 

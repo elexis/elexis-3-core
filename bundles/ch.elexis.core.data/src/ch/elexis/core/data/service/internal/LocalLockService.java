@@ -24,7 +24,6 @@ import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.events.ElexisEvent;
 import ch.elexis.core.data.events.ElexisEventDispatcher;
-import ch.elexis.core.data.service.ContextServiceHolder;
 import ch.elexis.core.data.service.StoreToStringServiceHolder;
 import ch.elexis.core.lock.types.LockInfo;
 import ch.elexis.core.lock.types.LockRequest;
@@ -39,6 +38,7 @@ import ch.elexis.core.services.IElexisServerService;
 import ch.elexis.core.services.ILocalLockService;
 import ch.elexis.core.services.IStickerService;
 import ch.elexis.core.services.IStoreToStringService;
+import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.status.ElexisStatus;
 import ch.elexis.data.PersistentObject;
 

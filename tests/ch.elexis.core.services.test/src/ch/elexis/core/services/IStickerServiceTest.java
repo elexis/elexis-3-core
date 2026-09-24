@@ -16,8 +16,8 @@ import ch.elexis.core.model.IArticle;
 import ch.elexis.core.model.IOrganization;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.ISticker;
+import ch.elexis.core.rcp.utils.OsgiServiceUtil;
 import ch.elexis.core.test.TestEntities;
-import ch.elexis.core.utils.OsgiServiceUtil;
 
 public class IStickerServiceTest extends AbstractServiceTest {
 

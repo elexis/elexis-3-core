@@ -1,8 +1,8 @@
 package ch.elexis.core.model.test;
 
 import ch.elexis.core.model.Identifiable;
+import ch.elexis.core.rcp.utils.OsgiServiceUtil;
 import ch.elexis.core.services.IStoreToStringService;
-import ch.elexis.core.utils.OsgiServiceUtil;
 
 public class StoreToStringServiceHolder {
 

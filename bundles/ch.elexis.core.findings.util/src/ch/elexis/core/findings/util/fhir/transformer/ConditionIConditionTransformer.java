@@ -11,24 +11,29 @@ import org.osgi.service.component.annotations.Reference;
 
 import ca.uhn.fhir.model.api.Include;
 import ca.uhn.fhir.rest.api.SummaryEnum;
+import ch.elexis.core.fhir.mapper.r4.findings.ConditionAccessor;
 import ch.elexis.core.findings.ICondition;
 import ch.elexis.core.findings.IFindingsService;
 import ch.elexis.core.findings.util.ModelUtil;
 import ch.elexis.core.findings.util.fhir.IFhirTransformer;
-import ch.elexis.core.findings.util.fhir.accessor.ConditionAccessor;
 import ch.elexis.core.findings.util.fhir.transformer.helper.FhirUtil;
 import ch.elexis.core.findings.util.fhir.transformer.helper.FindingsContentHelper;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.services.IModelService;
+import jakarta.enterprise.context.Dependent;
+import jakarta.inject.Inject;
 
+@Dependent
 @Component
 public class ConditionIConditionTransformer implements IFhirTransformer<Condition, ICondition> {
 
+	@Inject
 	@Reference(target = "(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.model)")
-	private IModelService modelService;
+	IModelService modelService;
 
+	@Inject
 	@Reference
-	private IFindingsService findingsService;
+	IFindingsService findingsService;
 
 	private ConditionAccessor accessor = new ConditionAccessor();
 

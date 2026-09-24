@@ -1,7 +1,5 @@
 package ch.elexis.core.jpa.entities;
 
-import org.eclipse.persistence.annotations.Cache;
-
 import ch.elexis.core.jpa.entities.converter.BooleanCharacterConverterSafe;
 import ch.elexis.core.jpa.entities.listener.EntityWithIdListener;
 import ch.elexis.core.model.util.ElexisIdGenerator;
@@ -16,7 +14,6 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "CH_ELEXIS_CORE_FINDINGS_DOCUMENTREFERENCE")
-@Cache(expiry = 15000)
 @EntityListeners(EntityWithIdListener.class)
 @NamedQuery(name = "DocumentReference.patientid", query = "SELECT dr FROM DocumentReference dr WHERE dr.deleted = false AND dr.patientid = :patientid")
 @NamedQuery(name = "DocumentReference.documentid", query = "SELECT dr FROM DocumentReference dr WHERE dr.deleted = false AND dr.documentid = :documentid")

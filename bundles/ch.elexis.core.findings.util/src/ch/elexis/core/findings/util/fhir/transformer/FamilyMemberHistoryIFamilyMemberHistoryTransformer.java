@@ -5,7 +5,6 @@ import java.util.Set;
 
 import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.hl7.fhir.r4.model.FamilyMemberHistory;
-import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
@@ -17,23 +16,23 @@ import ch.elexis.core.findings.util.fhir.IFhirTransformer;
 import ch.elexis.core.findings.util.fhir.transformer.helper.FindingsContentHelper;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.services.IModelService;
+import jakarta.enterprise.context.Dependent;
+import jakarta.inject.Inject;
 
-@Component(immediate = true)
+@Dependent
+@Component
 public class FamilyMemberHistoryIFamilyMemberHistoryTransformer
 		implements IFhirTransformer<FamilyMemberHistory, IFamilyMemberHistory> {
 
+	@Inject
 	@Reference(target = "(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.model)")
-	private IModelService modelService;
+	IModelService modelService;
 
+	@Inject
 	@Reference
 	private IFindingsService findingsService;
 
-	private FindingsContentHelper contentHelper;
-
-	@Activate
-	public void activate() {
-		contentHelper = new FindingsContentHelper();
-	}
+	private FindingsContentHelper contentHelper = new FindingsContentHelper();
 
 	@Override
 	public Optional<FamilyMemberHistory> getFhirObject(IFamilyMemberHistory localObject, SummaryEnum summaryEnum,

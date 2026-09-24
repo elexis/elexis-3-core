@@ -17,7 +17,6 @@ package ch.elexis.data;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
-import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -34,7 +33,6 @@ import ch.elexis.core.data.interfaces.IDiagnose;
 import ch.elexis.core.data.service.CoreModelServiceHolder;
 import ch.elexis.core.data.service.LocalLockServiceHolder;
 import ch.elexis.core.events.MessageEvent;
-import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.IInvoice;
 import ch.elexis.core.model.InvoiceState;
 import ch.elexis.core.services.IInvoiceService;
@@ -198,7 +196,7 @@ public class Rechnung extends PersistentObject {
 		Money summe = new Money();
 		for (Konsultation b : behandlungen) {
 			Rechnung shouldntExist = b.getRechnung();
-			if ((shouldntExist != null) && (shouldntExist.getStatus() != RnStatus.STORNIERT)) {
+			if ((shouldntExist != null) && (shouldntExist.getStatus() != InvoiceState.CANCELLED.getState())) {
 				log.warn("Tried to create bill for already billed kons " + b.getLabel());
 				continue;
 			}

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" name="ch.elexis.core.services.handler.OrderOnCreationEventHandler">
+   <property name="event.topics">info/elexis/po/compatibility/create
+info/elexis/model/create
+   </property>
+   <service>
+      <provide interface="org.osgi.service.event.EventHandler"/>
+   </service>
+   <implementation class="ch.elexis.core.services.handler.OrderOnCreationEventHandler"/>
+</scr:component>

@@ -16,6 +16,8 @@ import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
@@ -78,31 +80,55 @@ public class SpotlightResultListComposite extends Composite {
 		SpotlightResultLabelProvider srllp = new SpotlightResultLabelProvider(parent.getFont(), categoryFont);
 		tvSpotlightResults.setLabelProvider(srllp);
 
+		Listener altKeyFilter = event -> {
+
+			if (event.widget instanceof Control) {
+				Control control = (Control) event.widget;
+
+				if (control.getShell() != _spotlightShell) {
+					return;
+				}
+			} else {
+				return;
+			}
+
+			if ((event.stateMask & SWT.ALT) != 0) {
+				event.doit = false;
+				boolean success = false;
+				if (resultDetailComposite != null) {
+					success = resultDetailComposite.handleAltKeyPressed(event.keyCode);
+				}
+
+				if (success && !_spotlightShell.isDisposed()) {
+					_spotlightShell.close();
+				}
+				event.type = SWT.None;
+			}
+		};
+
+		getDisplay().addFilter(SWT.KeyDown, altKeyFilter);
+
+		tableSpotlightResults.addDisposeListener(e -> {
+			if (!getDisplay().isDisposed()) {
+				getDisplay().removeFilter(SWT.KeyDown, altKeyFilter);
+			}
+		});
+
 		tableSpotlightResults.addListener(SWT.KeyDown, event -> {
-		    if ((event.stateMask & SWT.ALT) != 0) {
-		        event.doit = false;
-
-		        boolean success = false;
-		        if (resultDetailComposite != null) {
-		            success = resultDetailComposite.handleAltKeyPressed(event.keyCode);
-		        }
-
-		        if (success && !_spotlightShell.isDisposed()) {
-		            _spotlightShell.close();
-		        }
-		        return;
-		    }
-			// TODO prevent selection of Category objects
+			if ((event.stateMask & SWT.ALT) != 0) {
+				return;
+			}
 			int keyCode = event.keyCode;
 			switch (keyCode) {
 			case SWT.ARROW_UP:
 			case SWT.ARROW_DOWN:
 				return;
 			case SWT.ARROW_RIGHT:
-				// try to focus detail composite
-				boolean result = resultDetailComposite.setFocus();
-				if (!result) {
-					event.doit = false;
+				if (resultDetailComposite != null) {
+					boolean result = resultDetailComposite.setFocus();
+					if (!result) {
+						event.doit = false;
+					}
 				}
 				return;
 			case SWT.ARROW_LEFT:
@@ -112,8 +138,7 @@ public class SpotlightResultListComposite extends Composite {
 				break;
 			}
 
-			// user wants to modify the filter
-			if (event.character != 0) {
+			if (event.character != 0 && (event.stateMask & SWT.CTRL) == 0 && (event.stateMask & SWT.ALT) == 0) {
 				_spotlightShell.setFocusAppendChar(event.character);
 				event.doit = false;
 			}

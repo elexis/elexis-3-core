@@ -35,13 +35,13 @@ import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.ISticker;
 import ch.elexis.core.model.StickerConstants;
+import ch.elexis.core.rcp.utils.OsgiServiceUtil;
 import ch.elexis.core.services.IStickerService;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.types.Gender;
 import ch.elexis.core.ui.locks.IUnlockable;
 import ch.elexis.core.ui.util.EmailValidationModifyListener;
 import ch.elexis.core.ui.util.SWTHelper;
-import ch.elexis.core.utils.OsgiServiceUtil;
 
 public class PatientPropertyPage extends PropertyPage implements IWorkbenchPropertyPage, IUnlockable {
 

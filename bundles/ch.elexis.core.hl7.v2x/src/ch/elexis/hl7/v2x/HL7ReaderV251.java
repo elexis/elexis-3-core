@@ -36,11 +36,11 @@ import ca.uhn.hl7v2.model.v251.segment.OBR;
 import ca.uhn.hl7v2.model.v251.segment.OBX;
 import ca.uhn.hl7v2.model.v251.segment.ORC;
 import ca.uhn.hl7v2.model.v251.segment.PID;
+import ch.elexis.core.cdi.PortableServiceLoader;
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.exceptions.ElexisException;
 import ch.elexis.core.model.IEncounter;
 import ch.elexis.core.model.IPatient;
-import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.types.Country;
 import ch.elexis.core.types.Gender;
 import ch.elexis.hl7.HL7PatientResolver;
@@ -161,7 +161,6 @@ public class HL7ReaderV251 extends HL7Reader {
 
 			return;
 		}
-
 
 		PID pid = oru.getPATIENT_RESULT().getPATIENT().getPID();
 		// place order number
@@ -588,7 +587,7 @@ public class HL7ReaderV251 extends HL7Reader {
 		if (StringUtils.isBlank(konsId))
 			return Optional.empty();
 		try {
-			Optional<IEncounter> enc = CoreModelServiceHolder.get().load(konsId, IEncounter.class);
+			Optional<IEncounter> enc = PortableServiceLoader.getCoreModelService().load(konsId, IEncounter.class);
 			return enc.map(IEncounter::getPatient).filter(Objects::nonNull);
 		} catch (Exception e) {
 			logger.warn("Encounter lookup by Kons-ID failed ({}).", konsId, e);

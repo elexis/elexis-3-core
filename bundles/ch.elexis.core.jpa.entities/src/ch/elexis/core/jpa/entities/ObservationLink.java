@@ -1,7 +1,5 @@
 package ch.elexis.core.jpa.entities;
 
-import org.eclipse.persistence.annotations.Cache;
-
 import ch.elexis.core.jpa.entities.listener.EntityWithIdListener;
 import ch.elexis.core.model.util.ElexisIdGenerator;
 import jakarta.persistence.Column;
@@ -14,7 +12,6 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "CH_ELEXIS_CORE_FINDINGS_OBSERVATIONLINK")
-@Cache(expiry = 15000)
 @EntityListeners(EntityWithIdListener.class)
 public class ObservationLink extends AbstractEntityWithId implements EntityWithId {
 

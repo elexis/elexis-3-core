@@ -10,6 +10,7 @@ import java.util.Date;
 import org.junit.Test;
 
 import ch.elexis.core.eenv.AccessToken;
+import ch.elexis.core.rcp.utils.OsgiServiceUtil;
 import ch.elexis.core.services.IVirtualFilesystemService;
 import ch.elexis.core.services.IVirtualFilesystemService.IVirtualFilesystemHandle;
 import ch.elexis.core.services.holder.ContextServiceHolder;
@@ -68,7 +69,7 @@ public class VirtualFilesystemServiceTest {
 
 	@Test
 	public void of_davs_Notation() throws IOException {
-		AccessToken accessToken = new AccessToken("token", new Date(), "username", null, null);
+		AccessToken accessToken = new AccessToken("token", new Date(), new Date(), "username", null, null);
 		ContextServiceHolder.get().setTyped(accessToken);
 
 		IVirtualFilesystemHandle handle = service.of(

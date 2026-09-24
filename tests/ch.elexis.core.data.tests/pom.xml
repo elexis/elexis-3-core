@@ -5,7 +5,7 @@
   <parent>
     <groupId>ch.elexis.core</groupId>
     <artifactId>ch.elexis.core.tests</artifactId>
-    <version>3.13.0-SNAPSHOT</version>
+    <version>3.14.0-SNAPSHOT</version>
   </parent>
   <artifactId>ch.elexis.core.data.tests</artifactId>
   <packaging>eclipse-test-plugin</packaging>
@@ -22,6 +22,11 @@
               <requirement>
                 <type>eclipse-plugin</type>
                 <id>ch.elexis.core.jpa.logging.slf4j</id>
+                <versionRange>0.0.0</versionRange>
+              </requirement>
+              <requirement>
+                <type>eclipse-plugin</type>
+                <id>ch.elexis.core.logging.default_configuration</id>
                 <versionRange>0.0.0</versionRange>
               </requirement>
               <requirement>
@@ -85,6 +90,11 @@
             </dependency>
             <dependency>
               <type>eclipse-plugin</type>
+              <artifactId>org.apache.httpcomponents.core5.httpcore5</artifactId>
+              <version>0.0.0</version>
+            </dependency>
+            <dependency>
+              <type>eclipse-plugin</type>
               <artifactId>com.h2database</artifactId>
               <version>0.0.0</version>
             </dependency>
@@ -110,6 +120,11 @@
             </dependency>
             <dependency>
               <type>eclipse-plugin</type>
+              <artifactId>org.apache.commons.commons-compress</artifactId>
+              <version>0.0.0</version>
+            </dependency>
+            <dependency>
+              <type>eclipse-plugin</type>
               <artifactId>jakarta.el-api</artifactId>
               <version>0.0.0</version>
             </dependency>
@@ -126,6 +141,11 @@
             <dependency>
               <type>eclipse-plugin</type>
               <artifactId>org.eclipse.persistence.jpa</artifactId>
+              <version>0.0.0</version>
+            </dependency>
+            <dependency>
+              <type>eclipse-plugin</type>
+              <artifactId>info.elexis.target.hapi.fhir</artifactId>
               <version>0.0.0</version>
             </dependency>
             <dependency>
@@ -155,6 +175,11 @@
             </dependency>
             <dependency>
               <type>eclipse-plugin</type>
+              <artifactId>org.apache.httpcomponents.client5.httpclient5</artifactId>
+              <version>0.0.0</version>
+            </dependency>
+            <dependency>
+              <type>eclipse-plugin</type>
               <artifactId>org.glassfish.hk2.osgi-resource-locator</artifactId>
               <version>0.0.0</version>
             </dependency>
@@ -170,6 +195,11 @@
             </dependency>
             <dependency>
               <type>eclipse-plugin</type>
+              <artifactId>com.sun.xml.bind.jaxb-osgi</artifactId>
+              <version>0.0.0</version>
+            </dependency>
+            <dependency>
+              <type>eclipse-plugin</type>
               <artifactId>org.osgi.util.promise</artifactId>
               <version>0.0.0</version>
             </dependency>
@@ -181,6 +211,11 @@
             <dependency>
               <type>eclipse-plugin</type>
               <artifactId>org.eclipse.equinox.console</artifactId>
+              <version>0.0.0</version>
+            </dependency>
+            <dependency>
+              <type>eclipse-plugin</type>
+              <artifactId>org.apache.httpcomponents.core5.httpcore5-h2</artifactId>
               <version>0.0.0</version>
             </dependency>
             <dependency>
@@ -330,11 +365,6 @@
             </dependency>
             <dependency>
               <type>eclipse-plugin</type>
-              <artifactId>org.apache.commons.commons-io</artifactId>
-              <version>0.0.0</version>
-            </dependency>
-            <dependency>
-              <type>eclipse-plugin</type>
               <artifactId>org.eclipse.core.jobs</artifactId>
               <version>0.0.0</version>
             </dependency>
@@ -356,6 +386,11 @@
             <dependency>
               <type>eclipse-plugin</type>
               <artifactId>org.eclipse.equinox.common</artifactId>
+              <version>0.0.0</version>
+            </dependency>
+            <dependency>
+              <type>eclipse-plugin</type>
+              <artifactId>jakarta.servlet-api</artifactId>
               <version>0.0.0</version>
             </dependency>
             <dependency>
@@ -471,6 +506,11 @@
             <dependency>
               <type>eclipse-plugin</type>
               <artifactId>org.osgi.service.component</artifactId>
+              <version>0.0.0</version>
+            </dependency>
+            <dependency>
+              <type>eclipse-plugin</type>
+              <artifactId>org.apache.commons.commons-io</artifactId>
               <version>0.0.0</version>
             </dependency>
             <dependency>

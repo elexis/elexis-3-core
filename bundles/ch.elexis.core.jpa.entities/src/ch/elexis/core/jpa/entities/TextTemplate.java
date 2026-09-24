@@ -1,7 +1,5 @@
 package ch.elexis.core.jpa.entities;
 
-import org.eclipse.persistence.annotations.Cache;
-
 import ch.elexis.core.jpa.entities.converter.BooleanCharacterConverterSafe;
 import ch.elexis.core.jpa.entities.converter.TextTemplateCategoryConverter;
 import ch.elexis.core.jpa.entities.listener.EntityWithIdListener;
@@ -19,7 +17,6 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "CH_ELEXIS_CORE_TEXTTEMPLATE")
-@Cache(expiry = 15000)
 @EntityListeners(EntityWithIdListener.class)
 public class TextTemplate extends AbstractEntityWithId implements EntityWithId, EntityWithDeleted, EntityWithExtInfo {
 

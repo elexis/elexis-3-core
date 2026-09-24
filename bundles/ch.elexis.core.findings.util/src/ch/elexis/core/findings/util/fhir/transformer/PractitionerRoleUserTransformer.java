@@ -16,7 +16,9 @@ import ch.elexis.core.findings.util.fhir.IFhirTransformer;
 import ch.elexis.core.findings.util.fhir.transformer.helper.MandantHelper;
 import ch.elexis.core.model.IRole;
 import ch.elexis.core.model.IUser;
+import jakarta.enterprise.context.Dependent;
 
+@Dependent
 @Component
 public class PractitionerRoleUserTransformer implements IFhirTransformer<PractitionerRole, IUser> {
 

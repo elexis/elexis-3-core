@@ -14,13 +14,11 @@
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="src" path="src-gen"/>
 	<classpathentry kind="con" path="org.eclipse.m2e.MAVEN2_CLASSPATH_CONTAINER">
 		<attributes>
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
 	<classpathentry exported="true" kind="lib" path="lib/c3p0-0.9.5.2.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/cron-utils-9.1.8.jar" sourcepath="lib-src/cron-utils-9.1.8-sources.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

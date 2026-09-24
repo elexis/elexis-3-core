@@ -17,18 +17,19 @@ import ch.elexis.core.mail.PreferenceConstants;
 import ch.elexis.core.model.message.TransientMessage;
 import ch.elexis.core.services.IConfigService;
 import ch.elexis.core.services.IMessageTransporter;
-import ch.elexis.core.services.IModelService;
 import ch.elexis.core.status.ObjectStatus;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 
+@ApplicationScoped
 @Component
 public class MailTransporter implements IMessageTransporter {
 
+	@Inject
 	@Reference
-	private IConfigService configService;
+	IConfigService configService;
 
-	@Reference(target = "(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.model)")
-	private IModelService coreModelService;
-
+	@Inject
 	@Reference
 	private IMailClient mailClient;
 

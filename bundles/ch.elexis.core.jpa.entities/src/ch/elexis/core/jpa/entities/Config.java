@@ -1,9 +1,5 @@
 package ch.elexis.core.jpa.entities;
 
-import org.eclipse.persistence.annotations.Cache;
-import org.eclipse.persistence.annotations.OptimisticLocking;
-import org.eclipse.persistence.annotations.OptimisticLockingType;
-
 import ch.elexis.core.jpa.entities.listener.EntityWithIdListener;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -15,8 +11,6 @@ import jakarta.persistence.Table;
 @Entity
 @Table(name = "config")
 @EntityListeners(EntityWithIdListener.class)
-@OptimisticLocking(type = OptimisticLockingType.SELECTED_COLUMNS, selectedColumns = { @Column(name = "LASTUPDATE") })
-@Cache(expiry = 15000)
 public class Config extends AbstractEntityWithId implements EntityWithId {
 
 	// Transparently updated by the EntityListener

@@ -24,9 +24,10 @@ import ca.uhn.hl7v2.parser.Parser;
 import ca.uhn.hl7v2.parser.PipeParser;
 import ca.uhn.hl7v2.util.Hl7InputStreamMessageStringIterator;
 import ca.uhn.hl7v2.validation.impl.NoValidation;
+import ch.elexis.core.cdi.PortableServiceLoader;
 import ch.elexis.core.jdt.Nullable;
+import ch.elexis.core.services.IVirtualFilesystemService;
 import ch.elexis.core.services.IVirtualFilesystemService.IVirtualFilesystemHandle;
-import ch.elexis.core.services.holder.VirtualFilesystemServiceHolder;
 import ch.elexis.hl7.v26.Messages;
 import ch.elexis.hl7.v2x.HL7ReaderV21;
 import ch.elexis.hl7.v2x.HL7ReaderV22;
@@ -46,7 +47,7 @@ public enum HL7ReaderFactory {
 	private static Logger logger = LoggerFactory.getLogger(HL7ReaderFactory.class);
 
 	public List<HL7Reader> getReader(File file) throws IOException {
-		IVirtualFilesystemHandle fileHandle = VirtualFilesystemServiceHolder.get().of(file);
+		IVirtualFilesystemHandle fileHandle = PortableServiceLoader.get(IVirtualFilesystemService.class).of(file);
 		return getReader(fileHandle);
 	}
 

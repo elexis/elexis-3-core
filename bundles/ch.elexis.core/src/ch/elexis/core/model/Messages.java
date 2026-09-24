@@ -74,4 +74,7 @@ public final class Messages {
 	public static String OrderHistory_Added = ch.elexis.core.l10n.Messages.OrderHistory_Added;
 	public static String OrderHistory_Increased = ch.elexis.core.l10n.Messages.OrderHistory_Increased;
 	public static String OrderHistory_Decreased = ch.elexis.core.l10n.Messages.OrderHistory_Decreased;
+	public static String OrderHistory_Billed = ch.elexis.core.l10n.Messages.OrderHistory_Billed;
+	public static String OrderHistory_PickedUp = ch.elexis.core.l10n.Messages.OrderHistory_PickedUp;
+	public static String OrderHistory_AmountAdjusted = ch.elexis.core.l10n.Messages.OrderHistory_AmountAdjusted;
 }

@@ -49,6 +49,11 @@ public class CsvUser implements IUser {
 	}
 
 	@Override
+	public String getAssociatedContactId() {
+		return userContact != null ? userContact.getId() : null;
+	}
+
+	@Override
 	public IContact getAssignedContact() {
 		return userContact;
 	}
@@ -61,6 +66,11 @@ public class CsvUser implements IUser {
 	@Override
 	public List<IRole> getRoles() {
 		return roles;
+	}
+
+	@Override
+	public List<String> getRoleIds() {
+		return getRoles().stream().map(IRole::getId).toList();
 	}
 
 	@Override
@@ -196,4 +206,5 @@ public class CsvUser implements IUser {
 		// TODO Auto-generated method stub
 
 	}
+
 }

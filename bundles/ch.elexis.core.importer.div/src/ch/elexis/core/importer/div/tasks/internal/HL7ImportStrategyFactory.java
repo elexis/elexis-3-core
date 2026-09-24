@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
 
 import ch.elexis.core.importer.div.importers.ILabContactResolver;
@@ -13,7 +14,6 @@ import ch.elexis.core.importer.div.importers.multifile.strategy.DefaultPDFImport
 import ch.elexis.core.importer.div.importers.multifile.strategy.IFileImportStrategy;
 import ch.elexis.core.importer.div.importers.multifile.strategy.IFileImportStrategyFactory;
 import ch.elexis.core.services.IVirtualFilesystemService.IVirtualFilesystemHandle;
-import ch.rgw.io.FileTool;
 
 public class HL7ImportStrategyFactory extends BasicFileImportStrategyFactory {
 
@@ -46,7 +46,7 @@ public class HL7ImportStrategyFactory extends BasicFileImportStrategyFactory {
 		if (!matchingFiles.isEmpty()) {
 			DefaultPDFImportStrategy pdfImportStrategy = new DefaultPDFImportStrategy(importHandler);
 			for (IVirtualFilesystemHandle mFile : matchingFiles) {
-				String type = FileTool.getExtension(mFile.getName()).toLowerCase();
+				String type = FilenameUtils.getExtension(mFile.getName()).toLowerCase();
 				if ("pdf".equals(type)) {
 					logger.debug("... adding [" + mFile.getName() + "] with DefaultPDFImportStrategy");
 					ret.put(mFile, pdfImportStrategy);

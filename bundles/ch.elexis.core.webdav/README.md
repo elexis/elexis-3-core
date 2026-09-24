@@ -12,3 +12,6 @@ In order to authenticate using a bearer token, one can use the URL of the target
 `davs://{ctx.access-token}@my.nextcloud.ch/`. Now before accessing the remote WebDav Url, the IVirtualFileystemService will query the IContextService for its containment of an `AccessToken` which is then set as Bearer Authentication.
 
 If required, the users preferred username is available via `{ctx.preferred-username}`.
+
+
+Requires `jaxb-osgi`

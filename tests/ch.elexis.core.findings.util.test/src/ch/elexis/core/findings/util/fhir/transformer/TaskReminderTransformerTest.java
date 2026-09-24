@@ -20,9 +20,9 @@ import ch.elexis.core.model.IReminder;
 import ch.elexis.core.model.builder.IReminderBuilder;
 import ch.elexis.core.model.issue.ProcessStatus;
 import ch.elexis.core.model.issue.Visibility;
+import ch.elexis.core.rcp.utils.OsgiServiceUtil;
 import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
-import ch.elexis.core.utils.OsgiServiceUtil;
 
 public class TaskReminderTransformerTest {
 

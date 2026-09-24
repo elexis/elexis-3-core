@@ -1,4 +1,4 @@
-/*******************************************************************************
+﻿/*******************************************************************************
  * Copyright (c) 2016-2022 MEDEVIT <office@medevit.at>.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -11,6 +11,8 @@
 package ch.elexis.core.findings.ui.composites;
 
 import java.time.LocalDate;
+import java.time.Month;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
@@ -35,18 +37,26 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.ToolBar;
+import org.eclipse.ui.forms.widgets.ScrolledForm;
 
 import ca.odell.glazedlists.BasicEventList;
 import ca.odell.glazedlists.EventList;
-import ch.elexis.core.data.events.ElexisEventDispatcher;
+import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.service.LocalLockServiceHolder;
 import ch.elexis.core.findings.ICoding;
 import ch.elexis.core.findings.ICondition;
 import ch.elexis.core.findings.ICondition.ConditionCategory;
 import ch.elexis.core.findings.ICondition.ConditionStatus;
+import ch.elexis.core.findings.migration.IMigratorService;
 import ch.elexis.core.findings.ui.dialogs.ConditionEditDialog;
 import ch.elexis.core.findings.ui.services.CodingServiceComponent;
 import ch.elexis.core.findings.ui.services.FindingsServiceComponent;
+import ch.elexis.core.l10n.Messages;
+import ch.elexis.core.model.IPatient;
+import ch.elexis.core.services.LocalConfigService;
+import ch.elexis.core.services.holder.ConfigServiceHolder;
+import ch.elexis.core.services.holder.ContextServiceHolder;
+import ch.elexis.core.text.docx.util.TextUtil;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.locks.AcquireLockBlockingUi;
 import ch.elexis.core.ui.locks.AcquireLockUi;
@@ -70,6 +80,18 @@ public class DiagnoseListComposite extends Composite {
 
 	private EventList<ICondition> dataList = new BasicEventList<>();
 
+	private static final Comparator<ICondition> BY_DATE_RECORDED_DESC = (left, right) -> {
+		LocalDate lRecorded = left.getDateRecorded().orElse(LocalDate.of(1970, Month.JANUARY, 1));
+		LocalDate rRecorded = right.getDateRecorded().orElse(LocalDate.of(1970, Month.JANUARY, 1));
+		int byRecorded = rRecorded.compareTo(lRecorded);
+		if (byRecorded != 0) {
+			return byRecorded;
+		}
+		Long lUpdated = left.getLastupdate() != null ? left.getLastupdate() : Long.valueOf(0);
+		Long rUpdated = right.getLastupdate() != null ? right.getLastupdate() : Long.valueOf(0);
+		return rUpdated.compareTo(lUpdated);
+	};
+
 	@SuppressWarnings("deprecation")
 	public DiagnoseListComposite(Composite parent, int style) {
 		super(parent, style);
@@ -86,23 +108,91 @@ public class DiagnoseListComposite extends Composite {
 					public Object getDataValue(ICondition condition, int columnIndex) {
 						switch (columnIndex) {
 						case 0:
-							return getFormattedDescriptionText(condition);
+							boolean useStructured = ConfigServiceHolder
+									.getGlobal(IMigratorService.DIAGNOSE_SETTINGS_USE_STRUCTURED, false);
+							boolean useAlternativeFormat = LocalConfigService
+									.get(Preferences.P_TEXT_DIAGNOSE_EXPORT_WORD_FORMAT, false);
+
+							if (useStructured && useAlternativeFormat) {
+								String rawHtml = (String) getAlternativeFormattedText(condition);
+								return TextUtil.sanitizeHtmlForNebula(rawHtml);
+							} else {
+								String rawHtml = (String) getStandardFormattedText(condition);
+								return TextUtil.sanitizeHtmlForNebula(rawHtml);
+							}
 						}
 						return StringUtils.EMPTY;
 					}
 
-					private Object getFormattedDescriptionText(ICondition condition) {
+					/**
+					 * NEW: Alternative formatting (bold title, bulleted text, spacing)
+					 */
+					private Object getAlternativeFormattedText(ICondition condition) {
 						StringBuilder text = new StringBuilder();
 
-						StringBuilder contentText = new StringBuilder();
-						// first display text
-						Optional<String> conditionText = condition.getText();
-						conditionText.ifPresent(t -> {
-							if (contentText.length() > 0) {
-								contentText.append(StringUtils.LF);
+						text.append("<strong>");
+
+						ConditionStatus status = condition.getStatus();
+						text.append(status.getLocalized());
+						StringBuilder secondLine = new StringBuilder();
+						Optional<String> start = condition.getStart();
+						if (start.isPresent() && StringUtils.isNotBlank(start.get())) {
+							secondLine.append(start.get());
+						}
+
+						Optional<String> end = condition.getEnd();
+						if (end.isPresent() && StringUtils.isNotBlank(end.get())) {
+							secondLine.append(" - ").append(end.get());
+						}
+
+						List<ICoding> codings = condition.getCoding();
+						if (codings != null && !codings.isEmpty()) {
+							for (ICoding iCoding : codings) {
+								secondLine.append(" [")
+										.append(CodingServiceComponent.getService().getShortLabel(iCoding))
+										.append("]");
 							}
-							contentText.append(t);
-						});
+						}
+						if (secondLine.length() > 0) {
+							text.append("<br/>").append(secondLine);
+						}
+						text.append("</strong>");
+
+						boolean hasText = condition.getText().isPresent()
+								&& StringUtils.isNotBlank(condition.getText().get());
+						boolean hasNotes = !condition.getNotes().isEmpty();
+
+						if (hasText || hasNotes) {
+							text.append("<p><br/>");
+						}
+
+						if (hasText) {
+							text.append(TextUtil.blocksToNebulaBreaks(condition.getText().get()));
+						}
+
+						if (hasNotes) {
+							for (String note : condition.getNotes()) {
+								if (StringUtils.isNotBlank(note)) {
+									for (String line : note.split("\\r?\\n")) {
+										appendFormattedLine(text, line);
+									}
+								}
+							}
+						}
+
+						return text.toString();
+					}
+
+					/**
+					 * OLD / STANDARD layout (used when checkboxes are disabled)
+					 */
+					private Object getStandardFormattedText(ICondition condition) {
+						StringBuilder contentText = new StringBuilder();
+						Optional<String> conditionText = condition.getText();
+						if (conditionText.isPresent() && StringUtils.isNotBlank(conditionText.get())) {
+							contentText.append(
+									TextUtil.stripInlineFormatting(TextUtil.blocksToNebulaBreaks(conditionText.get())));
+						}
 						// then display the coding
 						List<ICoding> codings = condition.getCoding();
 						if (codings != null && !codings.isEmpty()) {
@@ -116,6 +206,7 @@ public class DiagnoseListComposite extends Composite {
 							}
 						}
 						// add additional information before content
+						StringBuilder text = new StringBuilder();
 						text.append("<strong>");
 						ConditionStatus status = condition.getStatus();
 						text.append(status.getLocalized());
@@ -129,13 +220,14 @@ public class DiagnoseListComposite extends Composite {
 						if (!notes.isEmpty()) {
 							text.append(" (" + notes.size() + ")");
 						}
-						if (contentText.toString().contains(StringUtils.LF)) {
-							text.append("</strong>\n").append(contentText.toString());
-						} else {
-							text.append("</strong> ").append(contentText.toString());
+						text.append("</strong>");
+						if (contentText.length() > 0) {
+							boolean multiLine = contentText.indexOf("<br") >= 0 || contentText.indexOf("<ul") >= 0
+									|| contentText.indexOf("<ol") >= 0;
+							text.append(multiLine ? "<br/>" : " ").append(contentText);
 						}
 
-						return text.toString().replaceAll(StringUtils.LF, "<br/>");
+						return text.toString();
 					}
 
 					@Override
@@ -184,27 +276,28 @@ public class DiagnoseListComposite extends Composite {
 		toolbar.setBackground(parent.getBackground());
 	}
 
+	private static void appendFormattedLine(StringBuilder text, String line) {
+		text.append(line.trim()).append("<br/>");
+	}
+
 	public void setInput(List<ICondition> conditions) {
 		dataList.clear();
-		conditions.sort(new Comparator<ICondition>() {
-			@Override
-			public int compare(ICondition left, ICondition right) {
-				Optional<LocalDate> lrecorded = left.getDateRecorded();
-				Optional<LocalDate> rrecorded = right.getDateRecorded();
-				if (lrecorded.isPresent() && rrecorded.isPresent()) {
-					return rrecorded.get().compareTo(lrecorded.get());
-				} else {
-					Optional<String> lstart = left.getStart();
-					Optional<String> rstart = right.getStart();
-					if (lstart.isPresent() && rstart.isPresent()) {
-						return rstart.get().compareTo(lstart.get());
-					}
-				}
-				return 0;
-			}
-		});
+		conditions.sort(BY_DATE_RECORDED_DESC);
 		dataList.addAll(conditions);
 		natTableWrapper.getNatTable().refresh();
+
+		Display.getDefault().asyncExec(() -> {
+			if (!isDisposed()) {
+				Composite parent = getParent();
+				while (parent != null) {
+					if (parent instanceof ScrolledForm) {
+						((ScrolledForm) parent).reflow(true);
+						break;
+					}
+					parent = parent.getParent();
+				}
+			}
+		});
 	}
 
 	@Override
@@ -266,7 +359,7 @@ public class DiagnoseListComposite extends Composite {
 
 		@Override
 		public String getText() {
-			return "Status " + status.getLocalized();
+			return Messages.DiagnoseListComposite_StatusPrefix + StringUtils.SPACE + status.getLocalized();
 		}
 
 		@Override
@@ -296,12 +389,12 @@ public class DiagnoseListComposite extends Composite {
 
 		@Override
 		public String getText() {
-			return "erstellen";
+			return Messages.DiagnoseListComposite_Create;
 		}
 
 		@Override
 		public void run() {
-			Patient selectedPatient = ElexisEventDispatcher.getSelectedPatient();
+			IPatient selectedPatient = ContextServiceHolder.get().getActivePatient().orElse(null);
 			if (selectedPatient != null) {
 				ConditionEditDialog dialog = new ConditionEditDialog(ConditionCategory.PROBLEMLISTITEM, getShell());
 				if (dialog.open() == Dialog.OK) {
@@ -310,8 +403,9 @@ public class DiagnoseListComposite extends Composite {
 						FindingsServiceComponent.getService().saveFinding(c);
 						// touch after creation
 						LocalLockServiceHolder.get().acquireLock(c);
-						dataList.add(c);
-						natTableWrapper.getNatTable().refresh();
+						List<ICondition> updated = new ArrayList<>(dataList);
+						updated.add(c);
+						setInput(updated);
 					});
 				}
 			}
@@ -327,7 +421,7 @@ public class DiagnoseListComposite extends Composite {
 
 		@Override
 		public String getText() {
-			return "entfernen";
+			return Messages.DiagnoseListComposite_Remove;
 		}
 
 		@Override
@@ -375,7 +469,5 @@ public class DiagnoseListComposite extends Composite {
 				}
 			});
 		}
-
 	}
-
 }

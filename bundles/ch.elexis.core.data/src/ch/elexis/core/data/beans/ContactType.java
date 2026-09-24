@@ -10,11 +10,11 @@
  */
 package ch.elexis.core.data.beans;
 
-import org.apache.commons.lang3.StringUtils;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.emf.common.util.Enumerator;
 
 /**

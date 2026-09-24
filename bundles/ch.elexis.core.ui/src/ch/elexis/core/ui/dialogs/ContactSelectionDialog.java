@@ -15,6 +15,9 @@ package ch.elexis.core.ui.dialogs;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.dialogs.Dialog;
@@ -99,7 +102,7 @@ public class ContactSelectionDialog extends TitleAreaDialog implements PoDoubleC
 	private boolean isSelecting = false;
 	private final ContactContentProvider contentProvider;
 	private boolean enableEmptyField = false;
-
+	private Set<String> allowedContactIds = null;
 	private Class<? extends Identifiable> targetClass;
 
 	public ContactSelectionDialog(Shell parentShell, Class<? extends Identifiable> which, String title, String message,
@@ -149,6 +152,10 @@ public class ContactSelectionDialog extends TitleAreaDialog implements PoDoubleC
 				}
 			}
 			roots = (List<? extends Identifiable>) query.execute();
+
+			if (allowedContactIds != null && !allowedContactIds.isEmpty()) {
+				roots = roots.stream().filter(ident -> allowedContactIds.contains(ident.getId())).toList();
+			}
 			return roots.toArray();
 		}
 
@@ -618,5 +625,14 @@ public class ContactSelectionDialog extends TitleAreaDialog implements PoDoubleC
 
 	public void enableEmptyFieldButton() {
 		enableEmptyField = true;
+	}
+
+	public void setAllowedContacts(List<IContact> allowedContacts) {
+		if (allowedContacts == null) {
+			this.allowedContactIds = null;
+		} else {
+			this.allowedContactIds = allowedContacts.stream().filter(Objects::nonNull).map(IContact::getId)
+					.collect(Collectors.toSet());
+		}
 	}
 }

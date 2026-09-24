@@ -16,6 +16,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import ca.uhn.fhir.rest.gclient.IQuery;
+import ch.elexis.core.cdi.PortableServiceLoader;
 import ch.elexis.core.fhir.model.test.AllPluginTests;
 import ch.elexis.core.model.IMandator;
 import ch.elexis.core.model.IPatient;
@@ -28,7 +29,6 @@ import ch.elexis.core.services.IElexisServerService.ConnectionStatus;
 import ch.elexis.core.services.IModelService;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.types.Gender;
-import ch.elexis.core.utils.OsgiServiceUtil;
 
 public class FhirModelServiceTest {
 
@@ -36,7 +36,7 @@ public class FhirModelServiceTest {
 
 	@BeforeClass
 	public static void beforeClass() throws InterruptedException {
-		coreModelService = OsgiServiceUtil
+		coreModelService = PortableServiceLoader
 				.getService(IModelService.class, "(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.model)").get();
 	}
 
@@ -96,14 +96,14 @@ public class FhirModelServiceTest {
 			reminder.setDue(LocalDate.now().plusDays(i));
 			coreModelService.save(reminder);
 		}
-		IQuery<IBaseBundle> query = AllPluginTests.getModelService().getQuery(IReminder.class);
+		IQuery<IBaseBundle> query = AllPluginTests.getModelService().getFhirQuery(IReminder.class);
 		query.and(Task.STATUS.exactly().code(TaskStatus.COMPLETED.name()));
 		List<IReminder> closedResults = AllPluginTests.getModelService().getQueryResults(query, IReminder.class);
 		assertNotNull(closedResults);
 		assertFalse(closedResults.isEmpty());
 		assertEquals(5, closedResults.size());
 
-		query = AllPluginTests.getModelService().getQuery(IReminder.class);
+		query = AllPluginTests.getModelService().getFhirQuery(IReminder.class);
 		query.and(Task.STATUS.exactly().code(TaskStatus.ACCEPTED.name()));
 		List<IReminder> openResults = AllPluginTests.getModelService().getQueryResults(query, IReminder.class);
 		assertNotNull(openResults);

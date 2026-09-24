@@ -1,7 +1,5 @@
 package ch.elexis.core.jpa.entities;
 
-import org.eclipse.persistence.annotations.Cache;
-
 import ch.elexis.core.jpa.entities.converter.BooleanCharacterConverterSafe;
 import ch.elexis.core.jpa.entities.listener.EntityWithIdListener;
 import ch.elexis.core.model.util.ElexisIdGenerator;
@@ -12,12 +10,13 @@ import jakarta.persistence.EntityListeners;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "net_medshare_percentile_checklist_question")
 @EntityListeners(EntityWithIdListener.class)
-@Cache(expiry = 15000)
+@NamedQuery(name = "PercentileChecklistQuestion.title.subtitle.question", query = "SELECT pcq FROM PercentileChecklistQuestion pcq WHERE pcq.title = :title AND pcq.subtitle = :subtitle AND pcq.question = :question")
 public class PercentileChecklistQuestion extends AbstractEntityWithId implements EntityWithId, EntityWithDeleted {
 
 	// Transparently updated by the EntityListener

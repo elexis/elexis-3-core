@@ -170,7 +170,7 @@ public class TaskConfigurationPart implements IRefreshablePart {
 			@Override
 			public String getText(Object element) {
 				ITaskDescriptor td = (ITaskDescriptor) element;
-				String ownerId = td.getOwner() != null ? td.getOwner().getId() : "NO-OWNER";
+				String ownerId = td.getOwner() != null ? td.getOwner() : "NO-OWNER";
 				return ownerId + "@" + td.getRunner(); //$NON-NLS-1$
 			}
 
@@ -314,8 +314,8 @@ public class TaskConfigurationPart implements IRefreshablePart {
 				return Objects.compare(run1, run2, Comparator.nullsFirst(Comparator.naturalOrder())) * direction;
 
 			case 3:
-				String own1 = ts1.getOwner() != null ? ts1.getOwner().getLabel() : "";
-				String own2 = ts2.getOwner() != null ? ts2.getOwner().getLabel() : "";
+				String own1 = ts1.getOwner() != null ? ts1.getOwner() : "";
+				String own2 = ts2.getOwner() != null ? ts2.getOwner() : "";
 				return Objects.compare(own1, own2, Comparator.nullsFirst(Comparator.naturalOrder())) * direction;
 			}
 

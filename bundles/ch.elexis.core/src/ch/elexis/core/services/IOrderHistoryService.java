@@ -1,8 +1,13 @@
 package ch.elexis.core.services;
 
+import java.util.List;
+
+import ch.elexis.core.model.IArticle;
 import ch.elexis.core.model.IOrder;
 import ch.elexis.core.model.IOrderEntry;
 import ch.elexis.core.model.IOutputLog;
+import ch.elexis.core.model.IPatient;
+import ch.elexis.core.model.OrderHistoryEntry;
 
 /**
  * Service interface for managing the history of orders and order entries.
@@ -104,4 +109,58 @@ public interface IOrderHistoryService {
 	 * @param supplier the supplier's name
 	 */
 	void logSupplierAdded(IOrder order, IOrderEntry entry, String supplier);
+
+	/**
+	 * Log that a patient's medication order was billed.
+	 *
+	 * @param patient  the patient whose order was billed
+	 * @param articles labels of the billed articles, may be empty
+	 */
+	void logMediorderBilled(IPatient patient, List<String> articles);
+
+	/**
+	 * Log that a patient picked up their medication order. This closes the current
+	 * mediorder process.
+	 *
+	 * @param patient  the patient who picked up the order
+	 * @param articles labels of the picked up articles, may be empty
+	 */
+	void logMediorderPickedUp(IPatient patient, List<String> articles);
+
+	/**
+	 * Log that an article was manually added to a patient's mediorder stock.
+	 *
+	 * @param patient the patient whose stock was extended
+	 * @param article the added article
+	 */
+	void logMediorderArticleAdded(IPatient patient, IArticle article);
+
+	/**
+	 * Log that an article was manually removed from a patient's mediorder stock.
+	 *
+	 * @param patient the patient whose stock was reduced
+	 * @param article the removed article
+	 */
+	void logMediorderArticleRemoved(IPatient patient, IArticle article);
+
+	/**
+	 * Log that one of the amounts of a patient's mediorder stock entry was changed.
+	 * <p>
+	 *
+	 * @param patient     the patient whose stock entry changed
+	 * @param article     the affected article
+	 * @param amountLabel display label of the changed amount, e.g. the column title
+	 *                    the user edited
+	 * @param oldValue    value before the change
+	 * @param newValue    value after the change
+	 */
+	void logMediorderAmountChanged(IPatient patient, IArticle article, String amountLabel, int oldValue, int newValue);
+
+	/**
+	 * Read all logged mediorder events of a patient, oldest first.
+	 *
+	 * @param patient the patient
+	 * @return the logged entries, never <code>null</code>
+	 */
+	List<OrderHistoryEntry> getMediorderHistory(IPatient patient);
 }

@@ -20,11 +20,11 @@ import ch.elexis.core.model.IInvoiceBilled;
 import ch.elexis.core.model.IPayment;
 import ch.elexis.core.model.InvoiceState;
 import ch.elexis.core.model.ModelPackage;
+import ch.elexis.core.rcp.utils.OsgiServiceUtil;
 import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
-import ch.elexis.core.utils.OsgiServiceUtil;
 import ch.rgw.tools.Money;
 import ch.rgw.tools.Result;
 

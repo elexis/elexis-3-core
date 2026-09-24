@@ -6,13 +6,14 @@ import java.util.function.Consumer;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.data.interfaces.IFall;
-import ch.elexis.core.data.util.NoPoUtil;
 import ch.elexis.core.exceptions.ElexisException;
 import ch.elexis.core.model.IBillable;
 import ch.elexis.core.model.IBilled;
 import ch.elexis.core.model.IBillingSystemFactor;
+import ch.elexis.core.model.IInvoice;
+import ch.elexis.core.model.IInvoiceBillRecordInfo;
 import ch.elexis.core.services.holder.BillingServiceHolder;
-import ch.elexis.data.Verrechnet;
+import ch.elexis.core.services.holder.InvoiceServiceHolder;
 import ch.rgw.tools.Money;
 import ch.rgw.tools.Result;
 
@@ -23,21 +24,17 @@ public class LeistungDTO {
 	private double count;
 	private IBillable iVerrechenbar;
 	private long lastUpdate;
-	private IBilled verrechnet;
+	private IBilled billed;
+
+	private Optional<IInvoiceBillRecordInfo> recordInfo;
 
 	private int tp = 0;
 	private double tpw = 1.0;
 	private double scale1 = 1.0;
 
-	public LeistungDTO(Verrechnet verrechnet) throws ElexisException {
-
-		if (!verrechnet.exists()) {
-			throw new ElexisException(
-					"Verrechnete Leistung wird ignoriert - Keine Leistung vorhanden [ID: " + verrechnet.getId() + "].",
-					new Exception());
-		}
+	public LeistungDTO(IBilled verrechnet) throws ElexisException {
 		try {
-			if (verrechnet.getLastUpdate() < 0) {
+			if (verrechnet.getLastupdate() < 0) {
 				throw new Exception();
 			}
 		} catch (Exception e) {
@@ -46,15 +43,15 @@ public class LeistungDTO {
 							+ verrechnet.getId() + "].",
 					e);
 		}
-		this.verrechnet = NoPoUtil.loadAsIdentifiable(verrechnet, IBilled.class).get();
-		this.lastUpdate = verrechnet.getLastUpdate();
+		this.billed = verrechnet;
+		this.lastUpdate = verrechnet.getLastupdate();
 		this.id = verrechnet.getId();
-		this.code = this.verrechnet.getCode();
+		this.code = this.billed.getCode();
 		this.text = verrechnet.getText();
-		this.tp = this.verrechnet.getPoints();
-		this.tpw = this.verrechnet.getFactor();
-		this.count = this.verrechnet.getAmount();
-		this.iVerrechenbar = this.verrechnet.getBillable();
+		this.tp = this.billed.getPoints();
+		this.tpw = this.billed.getFactor();
+		this.count = this.billed.getAmount();
+		this.iVerrechenbar = this.billed.getBillable();
 	}
 
 	public LeistungDTO(IBillable iVerrechenbar, IFall fall) {
@@ -70,7 +67,7 @@ public class LeistungDTO {
 	}
 
 	public boolean calcPrice(KonsultationDTO konsultationDTO, FallDTO fallDTO, Consumer<Result<IBilled>> showResult) {
-		if (verrechnet == null) {
+		if (billed == null) {
 			@SuppressWarnings("unchecked")
 			Result<IBilled> result = iVerrechenbar.getOptifier().add(iVerrechenbar,
 					konsultationDTO.getTransientCopyWithoutBillable(iVerrechenbar), 1.0, false);
@@ -85,7 +82,7 @@ public class LeistungDTO {
 			}
 		} else {
 			tpw = getFactor();
-			scale1 = verrechnet.getPrimaryScaleFactor();
+			scale1 = billed.getPrimaryScaleFactor();
 		}
 		return true;
 	}
@@ -93,7 +90,7 @@ public class LeistungDTO {
 	private double getFactor() {
 		if (iVerrechenbar != null) {
 			Optional<IBillingSystemFactor> billingFactor = BillingServiceHolder.get()
-					.getBillingSystemFactor(iVerrechenbar.getCodeSystemName(), verrechnet.getEncounter().getDate());
+					.getBillingSystemFactor(iVerrechenbar.getCodeSystemName(), billed.getEncounter().getDate());
 			if (billingFactor.isPresent()) {
 				return billingFactor.get().getFactor();
 			}
@@ -106,7 +103,7 @@ public class LeistungDTO {
 	}
 
 	public IBilled getVerrechnet() {
-		return verrechnet;
+		return billed;
 	}
 
 	public void setCode(String code) {
@@ -122,7 +119,7 @@ public class LeistungDTO {
 	}
 
 	public void setVerrechnet(IBilled verrechnet) {
-		this.verrechnet = verrechnet;
+		this.billed = verrechnet;
 	}
 
 	public String getId() {
@@ -159,5 +156,16 @@ public class LeistungDTO {
 
 	public double getTpw() {
 		return tpw;
+	}
+
+	public IBilled getBilled() {
+		return billed;
+	}
+
+	public Optional<IInvoiceBillRecordInfo> getInvoiceBillRecordInfo(IInvoice invoice) {
+		if (recordInfo == null) {
+			recordInfo = InvoiceServiceHolder.get().getInvoiceInvoiceBillRecordInfo(invoice, billed);
+		}
+		return recordInfo;
 	}
 }

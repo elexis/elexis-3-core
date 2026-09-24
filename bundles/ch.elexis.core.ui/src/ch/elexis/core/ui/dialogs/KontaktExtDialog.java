@@ -47,6 +47,7 @@ public class KontaktExtDialog extends TitleAreaDialog {
 	private String[] fieldDefinitions;
 	private IContact actKontact;
 	private ExtInfoTable infoTable;
+	private boolean editable = true;
 	/*
 	 * private HashMap<String, String> xids; private String[] fields; private Text[]
 	 * values;
@@ -58,6 +59,7 @@ public class KontaktExtDialog extends TitleAreaDialog {
 		this.actKontact = k;
 		fieldDefinitions = defvalues;
 		Arrays.sort(fieldDefinitions, new Comparator<String>() {
+			@Override
 			public int compare(String o1, String o2) {
 				return o1.compareTo(o2);
 			}
@@ -70,6 +72,7 @@ public class KontaktExtDialog extends TitleAreaDialog {
 		infoTable.setLayoutData(SWTHelper.getFillGridData(1, true, 1, true));
 		infoTable.setLayout(new GridLayout(2, false));
 		infoTable.setKontakt(actKontact);
+		infoTable.setEditable(editable);
 		infoTable.pack();
 		return infoTable;
 	}
@@ -180,10 +183,20 @@ public class KontaktExtDialog extends TitleAreaDialog {
 				}
 			}
 		}
+
+		public void setEditable(boolean editable) {
+			for (Text value : values) {
+				value.setEditable(editable);
+			}
+		}
 	}
 
 	@Override
 	protected boolean isResizable() {
 		return true;
+	}
+
+	public void setEditable(boolean editable) {
+		this.editable = editable;
 	}
 }
