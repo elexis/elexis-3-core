@@ -23,6 +23,7 @@ import ch.elexis.core.ui.e4.dialog.VirtualFilesystemUriEditorDialog;
 public class URIFieldEditor extends StringButtonFieldEditor {
 
 	private String scheme;
+	private boolean useFileMode = false;
 
 	/**
 	 *
@@ -107,6 +108,7 @@ public class URIFieldEditor extends StringButtonFieldEditor {
 		VirtualFilesystemUriEditorDialog dialog = new VirtualFilesystemUriEditorDialog(getShell(),
 				virtualFilesystemService, inputUri);
 		dialog.setFixedScheme(scheme);
+		dialog.setFileMode(useFileMode);
 		if (IDialogConstants.OK_ID == dialog.open()) {
 			return dialog.getValue().toString();
 		}
@@ -120,5 +122,9 @@ public class URIFieldEditor extends StringButtonFieldEditor {
 	 */
 	public void setFixedScheme(String scheme) {
 		this.scheme = scheme;
+	}
+
+	public void setUseFileMode(boolean useFileMode) {
+		this.useFileMode = useFileMode;
 	}
 }

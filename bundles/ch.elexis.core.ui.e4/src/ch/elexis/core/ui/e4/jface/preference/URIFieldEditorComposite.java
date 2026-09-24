@@ -204,7 +204,7 @@ public class URIFieldEditorComposite extends Composite {
 	public void setFixedScheme(String scheme) {
 		this.scheme = scheme;
 		if (storePath != null) {
-			storePath.setFixedScheme("file");
+			storePath.setFixedScheme(scheme);
 		}
 	}
 

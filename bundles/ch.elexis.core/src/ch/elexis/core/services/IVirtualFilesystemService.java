@@ -322,7 +322,7 @@ public interface IVirtualFilesystemService {
 		// C:\main.c++ -> file:/C:/main.c++
 		if (value.length() > 2 && value.charAt(1) == ':') {
 			String replaced = value.replace("\\", "/");
-			value = "file://" + replaced;
+			value = "file:/" + replaced;
 		}
 
 		// UNC Path
