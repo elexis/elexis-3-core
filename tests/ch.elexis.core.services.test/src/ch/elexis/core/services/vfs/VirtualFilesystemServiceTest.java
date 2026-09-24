@@ -15,7 +15,6 @@ import ch.elexis.core.services.IVirtualFilesystemService;
 import ch.elexis.core.services.IVirtualFilesystemService.IVirtualFilesystemHandle;
 import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.utils.CoreUtil;
-import ch.elexis.core.utils.OsgiServiceUtil;
 
 public class VirtualFilesystemServiceTest {
 
