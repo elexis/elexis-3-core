@@ -4,12 +4,10 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -405,16 +403,18 @@ public class OrderService implements IOrderService {
 
 	@Override
 	public List<Integer> getOrderYears() {
-		List<IOrder> orders = modelService.getQuery(IOrder.class).execute();
-		return orders.stream().map(IOrder::getTimestamp).filter(Objects::nonNull).map(LocalDateTime::getYear)
-				.distinct().sorted(Collections.reverseOrder()).collect(Collectors.toList());
+		return modelService.executeNativeQuery(
+				"SELECT DISTINCT SUBSTRING(DATUM, 1, 4) FROM BESTELLUNGEN WHERE DELETED = '0' AND DATUM IS NOT NULL ORDER BY 1 DESC") //$NON-NLS-1$
+				.map(year -> Integer.valueOf(year.toString().trim())).collect(Collectors.toList());
 	}
 
 	@Override
 	public List<IOrder> getCompletedOrdersForYear(int year) {
-		List<IOrder> orders = modelService.getQuery(IOrder.class).execute();
-		return orders.stream().filter(o -> o.getTimestamp() != null && o.getTimestamp().getYear() == year)
-				.filter(this::isCompleted).sorted(this::compareTimestampsDesc).collect(Collectors.toList());
+		IQuery<IOrder> query = modelService.getQuery(IOrder.class);
+		query.and("date", COMPARATOR.GREATER_OR_EQUAL, LocalDate.of(year, 1, 1)); //$NON-NLS-1$
+		query.and("date", COMPARATOR.LESS, LocalDate.of(year + 1, 1, 1)); //$NON-NLS-1$
+		return query.execute().stream().filter(this::isCompleted).sorted(this::compareTimestampsDesc)
+				.collect(Collectors.toList());
 	}
 
 	private List<IOrder> getOrders(boolean completed, boolean showAllYears) {

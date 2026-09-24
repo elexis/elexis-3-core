@@ -5200,6 +5200,7 @@ public class Messages extends NLS {
 	public static String OrderHistory_Increased;
 	public static String OrderHistory_Decreased;
 	public static String OrderHistory_AmountAdjusted;
+	public static String OrderHistory_UnknownArticle;
 	public static String HttpOrderTransportService_OrderAlreadySent_Title;
 	public static String HttpOrderTransportService_OrderAlreadySent_Message;
 	public static String HttpOrderTransportService_LinkText;

@@ -16,6 +16,7 @@ import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 
 import ch.elexis.core.cdi.PortableServiceLoader;
+import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.model.IArticle;
 import ch.elexis.core.model.IOrder;
 import ch.elexis.core.model.IOrderEntry;
@@ -219,7 +220,7 @@ public class OrderHistoryService implements IOrderHistoryService {
 		if (entry != null && entry.getArticle() != null && entry.getArticle().getLabel() != null) {
 			return entry.getArticle().getLabel();
 		}
-		return "Unbekannter Artikel"; //$NON-NLS-1$
+		return Messages.OrderHistory_UnknownArticle;
 	}
 
 	private String stockSuffix(IOrderEntry entry) {
