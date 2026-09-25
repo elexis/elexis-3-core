@@ -2,6 +2,7 @@ package ch.elexis.core.services;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.YearMonth;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -422,6 +423,7 @@ public class OrderService implements IOrderService {
 		if (!showAllYears) {
 			query.and("date", COMPARATOR.GREATER_OR_EQUAL, LocalDate.now().minusYears(RECENT_ORDERS_YEARS)); //$NON-NLS-1$
 		}
+		query.orderBy("date", ORDER.DESC); //$NON-NLS-1$
 		query.orderBy(ModelPackage.Literals.IDENTIFIABLE__LASTUPDATE, ORDER.DESC);
 		List<IOrder> orders = query.execute();
 
@@ -449,19 +451,24 @@ public class OrderService implements IOrderService {
 		}
 
 		String trimmed = search.trim();
-		DateQuery dateQuery = parseDateQuery(trimmed);
-		if (dateQuery != null) {
-			List<IOrder> all = modelService.getQuery(IOrder.class).execute();
-			List<IOrder> filtered = all.stream().filter(o -> matchesDate(o, dateQuery))
-					.sorted((a, b) -> compareTimestampsDesc(a, b)).collect(Collectors.toList());
-			if (limit > 0 && filtered.size() > limit) {
-				filtered = filtered.subList(0, limit);
-			}
-			return filtered;
-		}
-
 		IQuery<IOrder> query = modelService.getQuery(IOrder.class);
-		query.and("id", COMPARATOR.LIKE, "%" + trimmed + "%", true); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		List<LocalDate[]> dateRanges = parseDateRanges(trimmed);
+		if (dateRanges != null) {
+			if (dateRanges.isEmpty()) {
+				return new ArrayList<>();
+			}
+			for (int i = 0; i < dateRanges.size(); i++) {
+				query.startGroup();
+				query.and("date", COMPARATOR.GREATER_OR_EQUAL, dateRanges.get(i)[0]); //$NON-NLS-1$
+				query.and("date", COMPARATOR.LESS, dateRanges.get(i)[1]); //$NON-NLS-1$
+				if (i > 0) {
+					query.orJoinGroups();
+				}
+			}
+			query.orderBy("date", ORDER.DESC); //$NON-NLS-1$
+		} else {
+			query.and("id", COMPARATOR.LIKE, "%" + trimmed + "%", true); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		}
 		query.orderBy(ModelPackage.Literals.IDENTIFIABLE__LASTUPDATE, ORDER.DESC);
 		if (limit > 0) {
 			query.limit(limit);
@@ -484,24 +491,7 @@ public class OrderService implements IOrderService {
 		return tb.compareTo(ta);
 	}
 
-	private boolean matchesDate(IOrder order, DateQuery dateQuery) {
-		LocalDateTime ts = order.getTimestamp();
-		if (ts == null) {
-			return false;
-		}
-		if (dateQuery.year != null && ts.getYear() != dateQuery.year) {
-			return false;
-		}
-		if (dateQuery.month != null && ts.getMonthValue() != dateQuery.month) {
-			return false;
-		}
-		if (dateQuery.day != null && ts.getDayOfMonth() != dateQuery.day) {
-			return false;
-		}
-		return true;
-	}
-
-	private DateQuery parseDateQuery(String search) {
+	private List<LocalDate[]> parseDateRanges(String search) {
 		boolean onlyDateChars = search.chars()
 				.allMatch(c -> Character.isDigit(c) || c == '.' || c == '/' || c == '-' || Character.isWhitespace(c));
 		if (!onlyDateChars) {
@@ -545,19 +535,21 @@ public class OrderService implements IOrderService {
 		if ((month != null && (month < 1 || month > 12)) || (day != null && (day < 1 || day > 31))) {
 			return null;
 		}
-		return new DateQuery(day, month, year);
-	}
-
-	private static final class DateQuery {
-		final Integer day;
-		final Integer month;
-		final Integer year;
-
-		DateQuery(Integer day, Integer month, Integer year) {
-			this.day = day;
-			this.month = month;
-			this.year = year;
+		List<Integer> years = year != null ? List.of(year) : getOrderYears();
+		List<LocalDate[]> ranges = new ArrayList<>();
+		for (int y : years) {
+			if (month == null) {
+				LocalDate from = LocalDate.of(y, 1, 1);
+				ranges.add(new LocalDate[] { from, from.plusYears(1) });
+			} else if (day == null) {
+				LocalDate from = LocalDate.of(y, month, 1);
+				ranges.add(new LocalDate[] { from, from.plusMonths(1) });
+			} else if (YearMonth.of(y, month).isValidDay(day)) {
+				LocalDate from = LocalDate.of(y, month, day);
+				ranges.add(new LocalDate[] { from, from.plusDays(1) });
+			}
 		}
+		return ranges;
 	}
 
 	@Override
