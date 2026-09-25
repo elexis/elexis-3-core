@@ -2,7 +2,9 @@ package ch.elexis.core.services;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.YearMonth;
 import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -374,7 +376,25 @@ public class OrderService implements IOrderService {
 
 	@Override
 	public List<IOrder> getOpenOrders() {
-		return getOrders(false, true);
+		return getOpenOrders(-1);
+	}
+
+	@Override
+	public List<IOrder> getOpenOrders(int limit) {
+		IQuery<IOrder> query = modelService.getQuery(IOrder.class);
+		query.orderBy(ModelPackage.Literals.IDENTIFIABLE__LASTUPDATE, ORDER.DESC);
+		List<IOrder> orders = query.execute();
+
+		List<IOrder> open = new ArrayList<>();
+		for (IOrder order : orders) {
+			if (!isCompleted(order)) {
+				open.add(order);
+				if (limit > 0 && open.size() >= limit) {
+					break;
+				}
+			}
+		}
+		return open;
 	}
 
 	@Override
@@ -382,13 +402,28 @@ public class OrderService implements IOrderService {
 		return getOrders(true, showAllYears);
 	}
 
+	@Override
+	public List<Integer> getOrderYears() {
+		return modelService.executeNativeQuery(
+				"SELECT DISTINCT SUBSTRING(DATUM, 1, 4) FROM BESTELLUNGEN WHERE DELETED = '0' AND DATUM IS NOT NULL ORDER BY 1 DESC") //$NON-NLS-1$
+				.map(year -> Integer.valueOf(year.toString().trim())).collect(Collectors.toList());
+	}
+
+	@Override
+	public List<IOrder> getCompletedOrdersForYear(int year) {
+		IQuery<IOrder> query = modelService.getQuery(IOrder.class);
+		query.and("date", COMPARATOR.GREATER_OR_EQUAL, LocalDate.of(year, 1, 1)); //$NON-NLS-1$
+		query.and("date", COMPARATOR.LESS, LocalDate.of(year + 1, 1, 1)); //$NON-NLS-1$
+		return query.execute().stream().filter(this::isCompleted).sorted(this::compareTimestampsDesc)
+				.collect(Collectors.toList());
+	}
+
 	private List<IOrder> getOrders(boolean completed, boolean showAllYears) {
 		IQuery<IOrder> query = modelService.getQuery(IOrder.class);
 		if (!showAllYears) {
-			LocalDateTime timeThreshold = LocalDateTime.now().minusYears(RECENT_ORDERS_YEARS);
-			long thresholdMillis = timeThreshold.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
-			query.and(ModelPackage.Literals.IDENTIFIABLE__LASTUPDATE, COMPARATOR.GREATER_OR_EQUAL, thresholdMillis);
+			query.and("date", COMPARATOR.GREATER_OR_EQUAL, LocalDate.now().minusYears(RECENT_ORDERS_YEARS)); //$NON-NLS-1$
 		}
+		query.orderBy("date", ORDER.DESC); //$NON-NLS-1$
 		query.orderBy(ModelPackage.Literals.IDENTIFIABLE__LASTUPDATE, ORDER.DESC);
 		List<IOrder> orders = query.execute();
 
@@ -397,9 +432,124 @@ public class OrderService implements IOrderService {
 	}
 
 	private boolean isCompleted(IOrder order) {
-		boolean isDone = order.isDone();
-		boolean hasEntries = !order.getEntries().isEmpty();
-		return isDone && hasEntries;
+		List<IOrderEntry> entries = order.getEntries();
+		if (entries.isEmpty()) {
+			return false;
+		}
+		return entries.stream().allMatch(e -> e.getState() == OrderEntryState.DONE);
+	}
+
+	@Override
+	public List<IOrder> searchOrders(String search, int limit) {
+		if (search == null || search.isBlank()) {
+			IQuery<IOrder> query = modelService.getQuery(IOrder.class);
+			query.orderBy(ModelPackage.Literals.IDENTIFIABLE__LASTUPDATE, ORDER.DESC);
+			if (limit > 0) {
+				query.limit(limit);
+			}
+			return query.execute();
+		}
+
+		String trimmed = search.trim();
+		IQuery<IOrder> query = modelService.getQuery(IOrder.class);
+		List<LocalDate[]> dateRanges = parseDateRanges(trimmed);
+		if (dateRanges != null) {
+			if (dateRanges.isEmpty()) {
+				return new ArrayList<>();
+			}
+			for (int i = 0; i < dateRanges.size(); i++) {
+				query.startGroup();
+				query.and("date", COMPARATOR.GREATER_OR_EQUAL, dateRanges.get(i)[0]); //$NON-NLS-1$
+				query.and("date", COMPARATOR.LESS, dateRanges.get(i)[1]); //$NON-NLS-1$
+				if (i > 0) {
+					query.orJoinGroups();
+				}
+			}
+			query.orderBy("date", ORDER.DESC); //$NON-NLS-1$
+		} else {
+			query.and("id", COMPARATOR.LIKE, "%" + trimmed + "%", true); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		}
+		query.orderBy(ModelPackage.Literals.IDENTIFIABLE__LASTUPDATE, ORDER.DESC);
+		if (limit > 0) {
+			query.limit(limit);
+		}
+		return query.execute();
+	}
+
+	private int compareTimestampsDesc(IOrder a, IOrder b) {
+		LocalDateTime ta = a.getTimestamp();
+		LocalDateTime tb = b.getTimestamp();
+		if (ta == null && tb == null) {
+			return 0;
+		}
+		if (ta == null) {
+			return 1;
+		}
+		if (tb == null) {
+			return -1;
+		}
+		return tb.compareTo(ta);
+	}
+
+	private List<LocalDate[]> parseDateRanges(String search) {
+		boolean onlyDateChars = search.chars()
+				.allMatch(c -> Character.isDigit(c) || c == '.' || c == '/' || c == '-' || Character.isWhitespace(c));
+		if (!onlyDateChars) {
+			return null;
+		}
+		boolean hasSeparator = search.matches(".*[./\\-\\s].*"); //$NON-NLS-1$
+		List<String> tokens = new ArrayList<>();
+		for (String p : search.split("[./\\-\\s]+")) { //$NON-NLS-1$
+			if (!p.isEmpty() && p.chars().allMatch(Character::isDigit)) {
+				tokens.add(p);
+			}
+		}
+		if (tokens.isEmpty()) {
+			return null;
+		}
+		if (!hasSeparator && !(tokens.size() == 1 && tokens.get(0).length() == 4)) {
+			return null;
+		}
+
+		Integer year = null;
+		List<Integer> dayMonth = new ArrayList<>();
+		for (String token : tokens) {
+			int value = Integer.parseInt(token);
+			if (token.length() == 4 && year == null) {
+				year = value;
+			} else {
+				dayMonth.add(value);
+			}
+		}
+		Integer day = null;
+		Integer month = null;
+		if (dayMonth.size() == 1) {
+			month = dayMonth.get(0);
+		} else if (dayMonth.size() >= 2) {
+			day = dayMonth.get(0);
+			month = dayMonth.get(1);
+		}
+		if (year == null && month == null && day == null) {
+			return null;
+		}
+		if ((month != null && (month < 1 || month > 12)) || (day != null && (day < 1 || day > 31))) {
+			return null;
+		}
+		List<Integer> years = year != null ? List.of(year) : getOrderYears();
+		List<LocalDate[]> ranges = new ArrayList<>();
+		for (int y : years) {
+			if (month == null) {
+				LocalDate from = LocalDate.of(y, 1, 1);
+				ranges.add(new LocalDate[] { from, from.plusYears(1) });
+			} else if (day == null) {
+				LocalDate from = LocalDate.of(y, month, 1);
+				ranges.add(new LocalDate[] { from, from.plusMonths(1) });
+			} else if (YearMonth.of(y, month).isValidDay(day)) {
+				LocalDate from = LocalDate.of(y, month, day);
+				ranges.add(new LocalDate[] { from, from.plusDays(1) });
+			}
+		}
+		return ranges;
 	}
 
 	@Override
@@ -495,7 +645,8 @@ public class OrderService implements IOrderService {
 		}
 		IQuery<IOutputLog> query = modelService.getQuery(IOutputLog.class);
 		query.and(ModelPackage.Literals.IOUTPUT_LOG__OBJECT_ID, COMPARATOR.EQUALS, order.getId());
-		return query.execute().isEmpty() ? null : query.execute().get(0);
+		List<IOutputLog> result = query.execute();
+		return result.isEmpty() ? null : result.get(0);
 	}
 
 	@Override
