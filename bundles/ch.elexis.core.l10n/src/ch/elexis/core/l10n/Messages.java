@@ -5151,6 +5151,10 @@ public class Messages extends NLS {
 	public static String OrderManagement_Stock_Unknown;
 	public static String OrderManagement_Toggle_Less;
 	public static String OrderManagement_Toggle_More;
+	public static String OrderManagement_LoadMoreOrders;
+	public static String OrderManagement_SearchHint;
+	public static String OrderManagement_ArticleSearchHint;
+	public static String OrderManagement_ResetOpenOrders;
 	public static String OrderManagement_YearSection;
 	public static String OrderManagement_CheckIn_NoOrder;
 	public static String OrderManagement_CheckIn_Done;
@@ -5176,6 +5180,7 @@ public class Messages extends NLS {
 	public static String OrderHistory_Increased;
 	public static String OrderHistory_Decreased;
 	public static String OrderHistory_AmountAdjusted;
+	public static String OrderHistory_UnknownArticle;
 	public static String HttpOrderTransportService_OrderAlreadySent_Title;
 	public static String HttpOrderTransportService_OrderAlreadySent_Message;
 	public static String HttpOrderTransportService_LinkText;
