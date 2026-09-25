@@ -420,9 +420,7 @@ public class OrderService implements IOrderService {
 	private List<IOrder> getOrders(boolean completed, boolean showAllYears) {
 		IQuery<IOrder> query = modelService.getQuery(IOrder.class);
 		if (!showAllYears) {
-			LocalDateTime timeThreshold = LocalDateTime.now().minusYears(RECENT_ORDERS_YEARS);
-			long thresholdMillis = timeThreshold.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
-			query.and(ModelPackage.Literals.IDENTIFIABLE__LASTUPDATE, COMPARATOR.GREATER_OR_EQUAL, thresholdMillis);
+			query.and("date", COMPARATOR.GREATER_OR_EQUAL, LocalDate.now().minusYears(RECENT_ORDERS_YEARS)); //$NON-NLS-1$
 		}
 		query.orderBy(ModelPackage.Literals.IDENTIFIABLE__LASTUPDATE, ORDER.DESC);
 		List<IOrder> orders = query.execute();
