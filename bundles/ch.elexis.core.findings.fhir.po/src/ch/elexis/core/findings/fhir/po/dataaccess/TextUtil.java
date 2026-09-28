@@ -2,7 +2,6 @@ package ch.elexis.core.findings.fhir.po.dataaccess;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -17,8 +16,6 @@ import ch.elexis.core.findings.codes.ICodingService;
 import ch.elexis.core.text.BulletConverter;
 
 public class TextUtil {
-
-	private static final Pattern MARKUP_TAG = Pattern.compile("(?i)</?[a-z][^>]*>");
 
 	/**
 	 * Test if an {@link IObservation} represents a risk factor.
@@ -100,7 +97,7 @@ public class TextUtil {
 				sb.append(end.orElse(StringUtils.EMPTY));
 				sb.append(") ");
 			}
-			Optional<String> text = condition.getText().map(TextUtil::toPlainText);
+			Optional<String> text = condition.getText().map(ch.elexis.core.text.docx.util.TextUtil::htmlToPlainText);
 			boolean multiline = text.isPresent() && text.get().contains(StringUtils.LF);
 			sb.append(text.orElse(StringUtils.EMPTY)).append(multiline ? StringUtils.LF : StringUtils.EMPTY);
 			List<ICoding> coding = condition.getCoding();
@@ -110,13 +107,6 @@ public class TextUtil {
 		}
 
 		return sb.toString();
-	}
-
-	private static String toPlainText(String text) {
-		if (MARKUP_TAG.matcher(text).find()) {
-			return ch.elexis.core.text.docx.util.TextUtil.htmlToPlainText(text);
-		}
-		return text;
 	}
 
 	private static String escapeHtml(String text) {
