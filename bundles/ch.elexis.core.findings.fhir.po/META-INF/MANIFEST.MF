@@ -14,6 +14,7 @@ Require-Bundle: ch.rgw.utility;bundle-version="3.9.100",
 Import-Package: ch.elexis.core.findings.templates.model,
  ch.elexis.core.findings.templates.service,
  ch.elexis.core.services.holder,
+ ch.elexis.core.text.docx.util,
  org.apache.commons.io
 Bundle-ClassPath: .
 Service-Component: OSGI-INF/ch.elexis.core.findings.fhir.po.migrator.MigratorService.xml

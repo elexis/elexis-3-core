@@ -362,6 +362,10 @@ public class TextContainer {
 		int maxLineLength = 70;
 		
 		if (isWordFormatEnabled() && isRelevantPatientField(b) && fieldValue instanceof String) {
+			Optional<String> structuredValue = readUsingDataAccessExtension(o, q[1]);
+			if (structuredValue.isPresent()) {
+				return structuredValue.get();
+			}
 		    String formattedText = formatTextField((String) fieldValue, maxLineLength);
 		    return formattedText;
 		}
@@ -369,7 +373,7 @@ public class TextContainer {
 	}
 
 	private boolean isWordFormatEnabled() {
-		return Boolean.parseBoolean(LocalConfigService.get(Preferences.P_TEXT_DIAGNOSE_EXPORT_WORD_FORMAT, null));
+		return LocalConfigService.get(Preferences.P_TEXT_DIAGNOSE_EXPORT_WORD_FORMAT, false);
 	}
 
 	private boolean isRelevantPatientField(String fieldName) {
