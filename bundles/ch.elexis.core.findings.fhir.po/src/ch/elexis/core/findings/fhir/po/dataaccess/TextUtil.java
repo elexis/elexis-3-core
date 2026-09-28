@@ -97,7 +97,7 @@ public class TextUtil {
 				sb.append(end.orElse(StringUtils.EMPTY));
 				sb.append(") ");
 			}
-			Optional<String> text = condition.getText();
+			Optional<String> text = condition.getText().map(ch.elexis.core.text.docx.util.TextUtil::htmlToPlainText);
 			boolean multiline = text.isPresent() && text.get().contains(StringUtils.LF);
 			sb.append(text.orElse(StringUtils.EMPTY)).append(multiline ? StringUtils.LF : StringUtils.EMPTY);
 			List<ICoding> coding = condition.getCoding();
@@ -130,7 +130,7 @@ public class TextUtil {
 		} else if (isRiskfactor(observation)) {
 			sb.append(observation.getText().orElse(StringUtils.EMPTY));
 		}
-		return StringUtils.EMPTY;
+		return sb.toString();
 	}
 
 	/**
