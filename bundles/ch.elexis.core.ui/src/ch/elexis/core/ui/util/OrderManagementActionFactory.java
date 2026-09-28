@@ -49,6 +49,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.constants.Preferences;
+import ch.elexis.core.mediorder.MediorderBilling;
 import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.IOrder;
 import ch.elexis.core.model.IOrderEntry;
@@ -294,7 +295,9 @@ public class OrderManagementActionFactory {
 						BestellBlatt bb = (BestellBlatt) view.getViewSite().getPage().showView(BestellBlatt.ID,
 								receiver.getId(), IWorkbenchPage.VIEW_CREATE);
 						bb.createOrder(receiver, entries);
+						List<IOrderEntry> openMediorderEntries = MediorderBilling.getOpenPatientOrderEntries(entries);
 						markAsOrdered(entries);
+						OrderManagementUtil.billOrderedMediorderEntries(openMediorderEntries);
 						orderService.getHistoryService().logOrderSent(actOrder, false);
 						view.reload();
 					} catch (Exception e) {
@@ -376,6 +379,8 @@ public class OrderManagementActionFactory {
 						IDataSender sender = (IDataSender) ic
 								.createExecutableExtension(ExtensionPointConstantsUi.TRANSPORTER_EXPC);
 						if (sender.canHandle(actOrder)) {
+							List<IOrderEntry> openMediorderEntries = MediorderBilling
+									.getOpenPatientOrderEntries(actOrder.getEntries());
 							try {
 								sender.store(actOrder);
 								sender.finalizeExport();
@@ -388,6 +393,8 @@ public class OrderManagementActionFactory {
 								SWTHelper.showError(Messages.OrderManagement_ExportError_Title,
 										Messages.OrderManagement_ExportError_Message);
 								continue;
+							} finally {
+								OrderManagementUtil.billOrderedMediorderEntries(openMediorderEntries);
 							}
 
 							String pluginName = ic.getAttribute("name"); //$NON-NLS-1$

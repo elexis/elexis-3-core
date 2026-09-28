@@ -90,11 +90,6 @@ public class MediorderPartUtil {
 		return "?";
 	}
 
-	public static void logBilled(IOrderService orderService, List<IStockEntry> entries) {
-		forEachPatient(entries,
-				(patient, articles) -> orderService.getHistoryService().logMediorderBilled(patient, articles));
-	}
-
 	public static void logPickedUp(IOrderService orderService, List<IStockEntry> entries) {
 		forEachPatient(entries,
 				(patient, articles) -> orderService.getHistoryService().logMediorderPickedUp(patient, articles));
