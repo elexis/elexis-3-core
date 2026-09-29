@@ -11,12 +11,15 @@ import java.util.Optional;
 import java.util.function.BiConsumer;
 
 import org.apache.commons.lang3.StringUtils;
+import org.eclipse.core.runtime.NullProgressMonitor;
+import org.slf4j.LoggerFactory;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
-import ch.elexis.core.mediorder.MediorderEntryState;
+import ch.elexis.core.common.ElexisEventTopics;
+import ch.elexis.core.lock.types.LockResponse;
 import ch.elexis.core.mediorder.MediorderUtil;
 import ch.elexis.core.model.IArticle;
 import ch.elexis.core.model.IMandator;
@@ -30,31 +33,16 @@ import ch.elexis.core.services.IContextService;
 import ch.elexis.core.services.IModelService;
 import ch.elexis.core.services.IOrderService;
 import ch.elexis.core.services.IStockService;
+import ch.elexis.core.services.holder.LocalLockServiceHolder;
 import ch.elexis.core.services.holder.MedicationServiceHolder;
 import ch.elexis.core.services.holder.StockServiceHolder;
 
 public class MediorderPartUtil {
 
-	/**
-	 * Resolve the {@link IPatient} owning the stock of the provided
-	 * {@link IStockEntry}.
-	 *
-	 * @param entry
-	 * @return the patient, or {@link Optional#empty()} if the entry has no stock or
-	 *         the stock is not owned by a patient
-	 */
 	public static Optional<IPatient> getPatient(IStockEntry entry) {
 		return entry != null ? getPatient(entry.getStock()) : Optional.empty();
 	}
 
-	/**
-	 * Resolve the {@link IPatient} owning the provided {@link IStock}. The owner of
-	 * a stock is not necessarily a patient, therefore the result may be empty.
-	 *
-	 * @param stock
-	 * @return the patient, or {@link Optional#empty()} if the stock has no owner or
-	 *         the owner is not a patient
-	 */
 	public static Optional<IPatient> getPatient(IStock stock) {
 		IPerson owner = stock != null ? stock.getOwner() : null;
 		if (owner == null || !owner.isPatient()) {
@@ -145,13 +133,6 @@ public class MediorderPartUtil {
 		return imageStockStates.computeIfAbsent(stock, MediorderUtil::calculateStockState);
 	}
 
-	/**
-	 * Filters the list of all available patient stocks based on the current filter
-	 * values. The filtering process is performed by calculating the stock state for
-	 * each {@link IStock} and comparing it to the current filter values.
-	 * 
-	 * @return
-	 */
 	public static List<IStock> calculateFilteredStocks(List<Integer> filterValues) {
 		Map<IStock, Integer> map = new HashMap<>();
 
@@ -170,76 +151,119 @@ public class MediorderPartUtil {
 	}
 
 	/**
-	 * transfers the given entry from the default stock to the patient stock if
-	 * entry is {@link MediorderEntryState#REQUESTED} and enough items are available
-	 * 
-	 * @param entry
-	 * @param stockService
-	 * @param coreModelService
-	 * @param contextService
+	 * Commissioning systems are excluded, as their current stock is managed by the
+	 * system itself.
 	 */
-	public static void automaticallyFromDefaultStock(IStockEntry entry, IStockService stockService,
-			IModelService coreModelService, IContextService contextService) {
-		IStockEntry defaultStockEntry = stockService.findStockEntryForArticleInStock(stockService.getDefaultStock(),
-				entry.getArticle());
-		if (defaultStockEntry == null || defaultStockEntry.getCurrentStock() == 0) {
-			return;
+	private static List<IStock> getSourceStocks(IStockService stockService, IContextService contextService) {
+		List<IStock> stocks = new ArrayList<>();
+		String mandatorId = contextService.getActiveMandatorId();
+		if (mandatorId != null) {
+			stockService.getAllStocks(false, false).stream()
+					.filter(stock -> stock.getOwner() != null && mandatorId.equals(stock.getOwner().getId()))
+					.forEach(stocks::add);
 		}
-		if (MediorderEntryState.REQUESTED.equals(MediorderUtil.determineState(entry))) {
-			int amount = Math.min(defaultStockEntry.getCurrentStock(), entry.getMinimumStock());
-			useFromDefaultStock(entry, defaultStockEntry, amount, stockService, coreModelService, contextService);
+		IStock defaultStock = stockService.getDefaultStock();
+		if (!defaultStock.isCommissioningSystem() && !stocks.contains(defaultStock)) {
+			stocks.add(defaultStock);
 		}
-	}
-
-	protected static String[] createValuesArray(IStockEntry entry, IStockService stockService) {
-		IStockEntry defaultStockEntry = stockService.findStockEntryForArticleInStock(stockService.getDefaultStock(),
-				entry.getArticle());
-		int maxValue = Math.min(
-				(defaultStockEntry != null ? defaultStockEntry.getCurrentStock() : 0) + entry.getCurrentStock(),
-				entry.getMaximumStock());
-
-		List<String> values = new ArrayList<>();
-		for (int i = 0; i <= maxValue; i++) {
-			values.add(String.valueOf(i));
-		}
-		return values.toArray(new String[0]);
+		return stocks;
 	}
 
 	/**
-	 * updating the stock entry by adjusting its current stock based on the given
-	 * amount
-	 * 
-	 * @param entry
-	 * @param article
-	 * @param amount
-	 * @param stockService
-	 * @param coreModelService
-	 * @param contextService
+	 * @return the first stock entry containing the amount, if there is none the
+	 *         first stock entry of the article even if it contains less,
+	 *         <code>null</code> if the article is not stored in any of the stocks
 	 */
-	public static void useFromDefaultStock(IStockEntry entry, IStockEntry article, int amount,
-			IStockService stockService, IModelService coreModelService, IContextService contextService) {
-		String mandatorId = contextService.getActiveMandator().map(IMandator::getId).orElse(null);
-		if (mandatorId == null) {
-			return;
+	public static IStockEntry findSourceStockEntry(IArticle article, int amount, IStockService stockService,
+			IContextService contextService) {
+		IStockEntry fallback = null;
+		for (IStock stock : getSourceStocks(stockService, contextService)) {
+			IStockEntry stockEntry = stockService.findStockEntryForArticleInStock(stock, article);
+			if (stockEntry != null) {
+				if (stockEntry.getCurrentStock() >= amount) {
+					return stockEntry;
+				}
+				if (fallback == null) {
+					fallback = stockEntry;
+				}
+			}
 		}
+		return fallback;
+	}
 
-		int difference = amount - entry.getCurrentStock();
-		if (difference > 0) {
-			stockService.performSingleDisposal(article.getArticle(), difference, mandatorId);
-		} else if (difference < 0) {
-			difference *= -1;
-			stockService.performSingleReturn(article.getArticle(), difference, mandatorId);
-		}
-
-		entry.setCurrentStock(amount);
-		coreModelService.save(article);
-		coreModelService.save(entry);
+	public static int getAvailableStockAmount(IStockEntry entry, IStockService stockService,
+			IContextService contextService) {
+		IStockEntry sourceStockEntry = findSourceStockEntry(entry.getArticle(), getMissingAmount(entry), stockService,
+				contextService);
+		return sourceStockEntry != null ? sourceStockEntry.getCurrentStock() : 0;
 	}
 
 	/**
-	 * extracts answer values from a list of FHIR QuestionnaireReponse items.
-	 * 
-	 * @param items
+	 * In a patient stock the minimum stock is the requested amount.
+	 */
+	public static int getMissingAmount(IStockEntry entry) {
+		return Math.max(0, entry.getMinimumStock() - entry.getCurrentStock());
+	}
+
+	/**
+	 * Taking only a part of the missing amount is not supported. An active
+	 * mandator is required, as the taken amount is billed. Entries with an open
+	 * order are excluded, as the article is already ordered from the supplier.
+	 */
+	public static boolean canTakeFromStock(List<IStockEntry> entries, IStockService stockService,
+			IContextService contextService, IOrderService orderService) {
+		if (entries == null || entries.isEmpty() || contextService.getActiveMandator().isEmpty()) {
+			return false;
+		}
+		Map<IArticle, Integer> missingByArticle = new HashMap<>();
+		for (IStockEntry entry : entries) {
+			int missing = getMissingAmount(entry);
+			if (entry.getArticle() == null || missing == 0 || entry.getMinimumStock() > entry.getMaximumStock()
+					|| orderService.findOpenOrderEntryForStockEntry(entry) != null) {
+				return false;
+			}
+			missingByArticle.merge(entry.getArticle(), missing, Integer::sum);
+		}
+		return missingByArticle.entrySet().stream().allMatch(e -> {
+			IStockEntry sourceStockEntry = findSourceStockEntry(e.getKey(), e.getValue(), stockService,
+					contextService);
+			return sourceStockEntry != null && sourceStockEntry.getCurrentStock() >= e.getValue();
+		});
+	}
+
+	public static int takeFromStock(IStockEntry entry, IStockService stockService, IModelService coreModelService,
+			IContextService contextService, IOrderService orderService) {
+		if (!canTakeFromStock(List.of(entry), stockService, contextService, orderService)) {
+			return 0;
+		}
+		IStockEntry sourceStockEntry = findSourceStockEntry(entry.getArticle(), getMissingAmount(entry),
+				stockService, contextService);
+		LockResponse lockResponse = LocalLockServiceHolder.get().acquireLockBlocking(sourceStockEntry, 1,
+				new NullProgressMonitor());
+		if (!lockResponse.isOk()) {
+			LoggerFactory.getLogger(MediorderPartUtil.class).warn("Could not acquire lock for stock entry [{}]", //$NON-NLS-1$
+					sourceStockEntry.getId());
+			return 0;
+		}
+		int missing = getMissingAmount(entry);
+		try {
+			// another user could have changed the source stock in the meantime
+			coreModelService.refresh(sourceStockEntry, true);
+			if (sourceStockEntry.getCurrentStock() < missing) {
+				return 0;
+			}
+			sourceStockEntry.setCurrentStock(sourceStockEntry.getCurrentStock() - missing);
+			entry.setCurrentStock(entry.getCurrentStock() + missing);
+			coreModelService.save(List.of(sourceStockEntry, entry));
+		} finally {
+			LocalLockServiceHolder.get().releaseLock(lockResponse.getLockInfo());
+		}
+		contextService.postEvent(ElexisEventTopics.EVENT_UPDATE, sourceStockEntry);
+		return missing;
+	}
+
+	/**
+	 * @param items of a FHIR QuestionnaireResponse
 	 * @return a map with the question text and answer
 	 */
 	public static Map<String, String> extractItemValues(JsonArray items) {
@@ -262,9 +286,9 @@ public class MediorderPartUtil {
 	}
 
 	/**
-	 * extracts medications from the medication group of FHIR QuestionnaireResponse
-	 * 
-	 * @param items
+	 * The medication group is the third item of the FHIR QuestionnaireResponse.
+	 *
+	 * @param items of a FHIR QuestionnaireResponse
 	 * @return a map with GTIN and order amount
 	 */
 	public static Map<String, Integer> extractMedications(JsonArray items) {
