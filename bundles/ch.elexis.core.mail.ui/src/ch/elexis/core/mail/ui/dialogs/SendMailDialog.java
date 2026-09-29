@@ -94,6 +94,7 @@ public class SendMailDialog extends TitleAreaDialog {
 	private String ccString = StringUtils.EMPTY;
 	private Text subjectText;
 	private String subjectString = StringUtils.EMPTY;
+	private String defaultSubject = StringUtils.EMPTY;
 	private Text textText;
 	private String textString = StringUtils.EMPTY;
 	private AttachmentsComposite attachments;
@@ -323,12 +324,13 @@ public class SendMailDialog extends TitleAreaDialog {
 
 						textText.setText(textReplacement.performReplacement(ContextServiceHolder.get().getRootContext(),
 								selectedTemplate.getTemplate()));
-						if (selectedTemplate.getExtInfo(MailConstants.TEXTTEMPLATE_SUBJECT) instanceof String subjTpl) {
+						if (selectedTemplate.getExtInfo(MailConstants.TEXTTEMPLATE_SUBJECT) instanceof String subjTpl
+								&& StringUtils.isNotBlank(subjTpl)) {
 							String ctx = textReplacement.performReplacement(ContextServiceHolder.get().getRootContext(),
 									subjTpl);
 							subjectText.setText(ctx);
 						} else {
-							subjectText.setText(StringUtils.EMPTY);
+							subjectText.setText(defaultSubject);
 						}
 					} else {
 						textText.setText(StringUtils.EMPTY);
@@ -462,6 +464,7 @@ public class SendMailDialog extends TitleAreaDialog {
 	public void setSubject(String subject) {
 		if (subject != null && !subject.isEmpty()) {
 			subjectString = subject;
+			defaultSubject = subject;
 		}
 	}
 
