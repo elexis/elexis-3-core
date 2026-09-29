@@ -132,6 +132,11 @@ public class BillingService implements IBillingService {
 
 	@Override
 	public Result<IBilled> bill(IBillable billable, IEncounter encounter, double amount) {
+		return bill(billable, encounter, amount, true);
+	}
+
+	@Override
+	public Result<IBilled> bill(IBillable billable, IEncounter encounter, double amount, boolean stockDisposal) {
 		Result<IEncounter> editable = isEditable(encounter);
 		if (!editable.isOK()) {
 			return translateResult(editable);
@@ -149,7 +154,7 @@ public class BillingService implements IBillingService {
 				IBillableOptifier optifier = billable.getOptifier();
 				Result<IBilled> optifierResult = optifier.add(billable, encounter, amount);
 
-				if (billable instanceof IArticle) {
+				if (stockDisposal && billable instanceof IArticle) {
 					IStatus status = stockService.performSingleDisposal((IArticle) billable, doubleToInt(amount),
 							contextService.getActiveMandatorId());
 					if (!status.isOK()) {
