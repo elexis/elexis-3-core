@@ -65,6 +65,7 @@ import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.util.Extensions;
 import ch.elexis.core.data.util.NoPoUtil;
+import ch.elexis.core.mediorder.MediorderBilling;
 import ch.elexis.core.model.IArticle;
 import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.IMandator;
@@ -98,6 +99,7 @@ import ch.elexis.core.ui.editors.ReflectiveEditingSupport;
 import ch.elexis.core.ui.exchange.IDataSender;
 import ch.elexis.core.ui.exchange.XChangeException;
 import ch.elexis.core.ui.icons.Images;
+import ch.elexis.core.ui.util.OrderManagementUtil;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.elexis.core.ui.util.TableViewerSorter;
 import ch.elexis.core.ui.util.TableViewerSorter.IColumnContentProvider;
@@ -559,10 +561,13 @@ public class BestellView extends ViewPart {
 										receiver.getId(), IWorkbenchPage.VIEW_CREATE);
 								bb.createOrder(receiver, entries);
 
+								List<IOrderEntry> openMediorderEntries = MediorderBilling
+										.getOpenPatientOrderEntries(entries);
 								entries.forEach(oe -> {
 									oe.setState(OrderEntryState.ORDERED);
 									CoreModelServiceHolder.get().save(oe);
 								});
+								OrderManagementUtil.billOrderedMediorderEntries(openMediorderEntries);
 
 								tv.refresh();
 							} catch (Exception e) {
@@ -610,6 +615,8 @@ public class BestellView extends ViewPart {
 					for (IConfigurationElement ic : list) {
 						String handler = ic.getAttribute("type"); //$NON-NLS-1$
 						if (handler != null && handler.contains(Bestellung.class.getName())) {
+							List<IOrderEntry> openMediorderEntries = MediorderBilling
+									.getOpenPatientOrderEntries(actOrder.getEntries());
 							try {
 								IDataSender sender = (IDataSender) ic
 										.createExecutableExtension(ExtensionPointConstantsUi.TRANSPORTER_EXPC);
@@ -627,6 +634,8 @@ public class BestellView extends ViewPart {
 								}
 								SWTHelper.showError(Messages.BestellView_OrderNotPossible,
 										Messages.BestellView_NoAutomaticOrderAvailable + xx.getLocalizedMessage());
+							} finally {
+								OrderManagementUtil.billOrderedMediorderEntries(openMediorderEntries);
 							}
 						}
 					}

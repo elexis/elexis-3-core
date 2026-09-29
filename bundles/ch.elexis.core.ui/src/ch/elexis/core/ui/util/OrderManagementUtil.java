@@ -14,6 +14,8 @@ import org.eclipse.core.commands.Command;
 import org.eclipse.core.commands.State;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.menus.IMenuStateIds;
@@ -33,6 +35,7 @@ import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.constants.Barcode;
 import ch.elexis.core.l10n.Messages;
+import ch.elexis.core.mediorder.MediorderBilling;
 import ch.elexis.core.model.IArticle;
 import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.IMandator;
@@ -41,12 +44,18 @@ import ch.elexis.core.model.IOrderEntry;
 import ch.elexis.core.model.OrderEntryState;
 import ch.elexis.core.model.builder.IOrderBuilder;
 import ch.elexis.core.services.IOrderService;
+import ch.elexis.core.services.holder.BillingServiceHolder;
 import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
+import ch.elexis.core.services.holder.CoverageServiceHolder;
+import ch.elexis.core.services.holder.OrderServiceHolder;
+import ch.elexis.core.services.holder.StockServiceHolder;
+import ch.elexis.core.services.rcp.holder.StickerServiceHolder;
 import ch.elexis.core.ui.constants.ExtensionPointConstantsUi;
 import ch.elexis.core.ui.constants.OrderConstants;
 import ch.elexis.core.ui.dialogs.ContactSelectionDialog;
 import ch.elexis.core.ui.dialogs.NeueBestellungDialog;
+import ch.elexis.core.ui.e4.dialog.StatusDialog;
 import ch.elexis.core.ui.exchange.IDataSender;
 import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.views.ordermanagement.OrderManagementView;
@@ -393,5 +402,21 @@ public class OrderManagementUtil {
 		if (dateTime == null)
 			return "";
 		return dateTime.format(FORMATTER);
+	}
+
+	public static void billOrderedMediorderEntries(List<IOrderEntry> openMediorderEntries) {
+		if (openMediorderEntries.isEmpty()) {
+			return;
+		}
+		IStatus status;
+		try {
+			status = new MediorderBilling(CoreModelServiceHolder.get(), ContextServiceHolder.get(),
+					StockServiceHolder.get(), StickerServiceHolder.get(), CoverageServiceHolder.get(),
+					BillingServiceHolder.get()).billOrderedEntries(openMediorderEntries, OrderServiceHolder.get());
+		} catch (RuntimeException e) {
+			logger.error("Error billing mediorder entries", e); //$NON-NLS-1$
+			status = Status.error(Messages.Mediorder_Billing_Failed, e);
+		}
+		StatusDialog.show(status, false);
 	}
 }

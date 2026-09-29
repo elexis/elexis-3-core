@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import ch.elexis.core.model.IEncounter;
 import ch.elexis.core.model.IOrderEntry;
+import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.ISticker;
 import ch.elexis.core.model.IStock;
 import ch.elexis.core.model.IStockEntry;
@@ -14,6 +15,7 @@ import ch.elexis.core.services.ICoverageService;
 import ch.elexis.core.services.IModelService;
 import ch.elexis.core.services.IOrderService;
 import ch.elexis.core.services.IStickerService;
+import ch.elexis.core.services.IStockService;
 
 public class MediorderUtil {
 
@@ -191,5 +193,17 @@ public class MediorderUtil {
 		if (allEnabledForPea)
 			return 0;
 		return 3;
+	}
+
+	public static void removeMailSticker(IPatient patient, IModelService coreModelService,
+			IStickerService stickerService, IStockService stockService) {
+		Optional<ISticker> sticker = coreModelService.load(Constants.MEDIORDER_MAIL_STICKER_ID, ISticker.class);
+		if (sticker.isEmpty() || !stickerService.hasSticker(patient, sticker.get())) {
+			return;
+		}
+		Optional<IStock> stock = stockService.getPatientStock(patient);
+		if (stock.isEmpty() || calculateStockState(stock.get()) != 1) {
+			stickerService.removeSticker(sticker.get(), patient);
+		}
 	}
 }

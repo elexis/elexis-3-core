@@ -31,7 +31,7 @@ public class MediorderKonsExtension implements IKonsExtension {
 	@Override
 	public boolean doLayout(StyleRange styleRange, String provider, String id) {
 		if (styleRange != null) {
-			styleRange.foreground = UiDesk.getColor(UiDesk.COL_BLUE);
+			styleRange.foreground = UiDesk.getColorFromRGB("FF8C00"); //$NON-NLS-1$
 			styleRange.underline = true;
 		}
 		return true;
