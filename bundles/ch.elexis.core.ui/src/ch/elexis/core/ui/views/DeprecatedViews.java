@@ -71,7 +71,7 @@ public class DeprecatedViews {
 		views.put("ch.elexis.archie.patientstatistik.view1", notice("Archie Statistik")); //$NON-NLS-1$ //$NON-NLS-2$
 		views.put("org.iatrix.messwerte.views.MesswerteView", notice("Befunde")); //$NON-NLS-1$ //$NON-NLS-2$
 		views.put("ch.elexis.views.ExterneDokumente", notice("Omnivore oder Dokumente")); //$NON-NLS-1$ //$NON-NLS-2$
-		views.put("at.medevit.elexis.impfplan.ui.ImpfplanViewPart", notice("Impfliste")); //$NON-NLS-1$ //$NON-NLS-2$
+		views.put("ch.elexis.impfplan.view", notice("Impfliste")); //$NON-NLS-1$ //$NON-NLS-2$
 		views.put("ch.elexis.privatrechnung.view", notice("PDF Rechnungsdruck")); //$NON-NLS-1$ //$NON-NLS-2$
 		views.put("ch.berchtold.privatrechung.view", notice("PDF Rechnungsdruck")); //$NON-NLS-1$ //$NON-NLS-2$
 
