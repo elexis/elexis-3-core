@@ -10,6 +10,15 @@
       </fragment>
    </extension>
    <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            category="ch.elexis.preferences.LagerverwaltungPrefs"
+            class="ch.elexis.core.ui.mediorder.internal.preferences.MediorderPreferencePage"
+            id="ch.elexis.core.ui.mediorder.preferences"
+            name="%mediorder_preference_page">
+      </page>
+   </extension>
+   <extension
          point="ch.elexis.core.ui.KonsExtension">
       <Link
             KonsExtension="ch.elexis.core.ui.mediorder.internal.MediorderKonsExtension"
