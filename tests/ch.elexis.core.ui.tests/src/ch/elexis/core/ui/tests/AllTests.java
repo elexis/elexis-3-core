@@ -4,11 +4,12 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
+import ch.elexis.core.ui.tests.util.Test_OrderEntryLabelPrinter;
 import ch.elexis.core.ui.tests.views.Test_DeprecatedViews;
 import ch.elexis.core.ui.tests.views.invoicelist.Test_InvoiceBillState;
 
 @RunWith(Suite.class)
-@SuiteClasses({ Test_InvoiceBillState.class, Test_DeprecatedViews.class })
+@SuiteClasses({ Test_InvoiceBillState.class, Test_DeprecatedViews.class, Test_OrderEntryLabelPrinter.class })
 // HistoryLoaderTests.class run local non parallel, running on build server in parallel fails
 public class AllTests {
 
