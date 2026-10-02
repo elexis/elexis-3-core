@@ -8,8 +8,6 @@ import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.e4.core.di.extensions.Service;
 import org.eclipse.e4.ui.model.application.ui.basic.MPart;
 
-import ch.elexis.core.mediorder.MediorderUtil;
-import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.IStockEntry;
 import ch.elexis.core.services.IModelService;
 import ch.elexis.core.services.IOrderService;
@@ -47,14 +45,7 @@ public class CloseMediorderEntryHandler {
 	public void execute(MPart part) {
 		MediorderPart mediOrderPart = (MediorderPart) part.getObject();
 		List<IStockEntry> entries = mediOrderPart.getSelectedStockEntries();
-		IPatient patient = entries.isEmpty() ? null : MediorderPartUtil.getPatient(entries.get(0)).orElse(null);
-		MediorderPartUtil.logPickedUp(orderService, entries);
-		for (IStockEntry entry : entries) {
-			coreModelService.remove(entry);
-		}
-		if (patient != null) {
-			MediorderUtil.removeMailSticker(patient, coreModelService, stickerService, stockService);
-		}
+		MediorderPartUtil.dispense(entries, coreModelService, orderService, stickerService, stockService);
 		mediOrderPart.refresh();
 	}
 }

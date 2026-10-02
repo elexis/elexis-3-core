@@ -128,6 +128,19 @@ public interface IOrderHistoryService {
 	void logMediorderPickedUp(IPatient patient, List<String> articles);
 
 	/**
+	 * Log that the label of a single package of a patient's medication order was
+	 * scanned when handing it out.
+	 *
+	 * @param patient   the patient the package is handed out to
+	 * @param article   the article of the package
+	 * @param labelCode the scanned code, see
+	 *                  {@link ch.elexis.core.mediorder.MediorderLabelCode}
+	 * @param scanned   number of scanned packages of the article
+	 * @param total     number of packages of the article
+	 */
+	void logMediorderLabelScanned(IPatient patient, IArticle article, String labelCode, int scanned, int total);
+
+	/**
 	 * Log that an article was manually added to a patient's mediorder stock.
 	 *
 	 * @param patient the patient whose stock was extended

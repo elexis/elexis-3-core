@@ -3081,6 +3081,15 @@ public class Messages extends NLS {
 	public static String MedicsPreferencePage_labelUploadDirimed;
 	public static String Medics_Page_Cannot_be_displayed;
 	public static String Mediorder_changeEmail_text;
+	public static String Mediorder_preferences_autoPrintLabels;
+	public static String Mediorder_labels_printed;
+	public static String Mediorder_labels_printed_skipped;
+	public static String Mediorder_scan_title;
+	public static String Mediorder_scan_dispensed;
+	public static String Mediorder_scan_already_dispensed;
+	public static String Mediorder_scan_incomplete;
+	public static String Mediorder_scan_partial;
+	public static String Mediorder_scan_label_already_scanned;
 	public static String MediportClientSetsPrefPage_btn_PartnerinfoAnzeigen;
 	public static String MediportClientSetsPrefPage_default_paramName;
 	public static String MediportClientSetsPrefPage_error_msg_PartnerdateiOeffnen;
@@ -5201,6 +5210,7 @@ public class Messages extends NLS {
 	public static String OrderHistory_Increased;
 	public static String OrderHistory_Decreased;
 	public static String OrderHistory_AmountAdjusted;
+	public static String OrderHistory_LabelScanned;
 	public static String OrderHistory_UnknownArticle;
 	public static String HttpOrderTransportService_OrderAlreadySent_Title;
 	public static String HttpOrderTransportService_OrderAlreadySent_Message;

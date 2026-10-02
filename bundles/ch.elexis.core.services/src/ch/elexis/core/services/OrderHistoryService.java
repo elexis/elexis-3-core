@@ -159,6 +159,16 @@ public class OrderHistoryService implements IOrderHistoryService {
 	}
 
 	@Override
+	public void logMediorderLabelScanned(IPatient patient, IArticle article, String labelCode, int scanned,
+			int total) {
+		if (article == null) {
+			return;
+		}
+		String details = article.getLabel() + " (" + scanned + "/" + total + ")"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		logMediorderStatus(patient, OrderHistoryAction.LABELSCANNED, details, labelCode);
+	}
+
+	@Override
 	public void logMediorderArticleAdded(IPatient patient, IArticle article) {
 		logMediorderArticle(patient, OrderHistoryAction.ADDMEDI, article);
 	}
