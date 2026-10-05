@@ -5,6 +5,7 @@ import java.text.MessageFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -276,6 +277,7 @@ public class OrderManagementUtil {
 		}
 
 		if (buttonText.equals(Messages.MedicationComposite_btnConfirm)) {
+			Map<IOrderEntry, Integer> bookedPatientStockEntries = new LinkedHashMap<>();
 			for (Map.Entry<IOrderEntry, Integer> entry : pendingDeliveredValues.entrySet()) {
 				IOrderEntry orderEntry = entry.getKey();
 				int currentDelivered = orderEntry.getDelivered();
@@ -300,6 +302,15 @@ public class OrderManagementUtil {
 				}
 
 				orderService.saveSingleDelivery(orderEntry, part);
+				if (part > 0 && OrderEntryLabelPrinter.isPatientStockEntry(orderEntry)) {
+					bookedPatientStockEntries.put(orderEntry, part);
+				}
+			}
+
+			if (!bookedPatientStockEntries.isEmpty() && OrderEntryLabelPrinter.isAutoPrintEnabled()) {
+				Map<String, Integer> printResult = OrderEntryLabelPrinter.print(bookedPatientStockEntries);
+				OrderEntryLabelPrinter.showStatus(view.getViewSite().getActionBars().getStatusLineManager(),
+						printResult);
 			}
 
 			pendingDeliveredValues.clear();
