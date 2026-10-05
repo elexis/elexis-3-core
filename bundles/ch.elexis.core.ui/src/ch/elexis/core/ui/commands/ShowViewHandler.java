@@ -54,6 +54,9 @@ public class ShowViewHandler extends AbstractHandler {
 			if (removeDescriptors.contains(DeprecatedViews.normalizeId(descriptor.getElementId()))) {
 				mApplication.getDescriptors().remove(descriptor);
 				LoggerFactory.getLogger(getClass()).info("model part descriptor: " + descriptor + " removed"); //$NON-NLS-1$ //$NON-NLS-2$
+			} else if (descriptor.getCategory() != null
+					&& descriptor.getTags().stream().noneMatch(tag -> tag.startsWith("categoryTag:"))) { //$NON-NLS-1$
+				descriptor.getTags().add("categoryTag:" + descriptor.getCategory()); //$NON-NLS-1$
 			}
 		}
 	}
