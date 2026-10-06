@@ -1,9 +1,8 @@
 package ch.elexis.core.findings.fhir.po.dataaccess;
 
-import java.time.LocalDate;
-import java.time.Month;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
@@ -19,9 +18,12 @@ import ch.elexis.core.findings.IAllergyIntolerance;
 import ch.elexis.core.findings.ICondition;
 import ch.elexis.core.findings.ICondition.ConditionCategory;
 import ch.elexis.core.findings.IFamilyMemberHistory;
+import ch.elexis.core.findings.IFinding;
 import ch.elexis.core.findings.IFindingsService;
 import ch.elexis.core.findings.IObservation;
 import ch.elexis.core.findings.codes.ICodingService;
+import ch.elexis.core.findings.util.FindingSortOrder;
+import ch.elexis.core.text.BulletConverter;
 import ch.elexis.core.text.RichTextMarker;
 import ch.elexis.data.Patient;
 import ch.elexis.data.PersistentObject;
@@ -125,68 +127,46 @@ public class FindingsDataAccessor implements IDataAccess {
 		List<IObservation> observations = findingsService.getPatientsFindings(patient.getId(), IObservation.class);
 		observations = observations.parallelStream().filter(iFinding -> TextUtil.isRiskfactor(iFinding))
 				.collect(Collectors.toList());
-		StringBuilder sb = new StringBuilder();
-		observations.stream().forEach(observation -> {
-			if (sb.length() > 0) {
-				sb.append(StringUtils.LF);
-			}
-			sb.append(TextUtil.getText(observation, codingService));
-		});
-		return new Result<>(sb.toString());
+		return getFindingsText(observations, observation -> TextUtil.getText(observation, codingService));
 	}
 
 	private Result<Object> getFamAnamText(Patient patient) {
 		List<IFamilyMemberHistory> famanams = findingsService.getPatientsFindings(patient.getId(),
 				IFamilyMemberHistory.class);
-		StringBuilder sb = new StringBuilder();
-		famanams.stream().forEach(famanam -> {
-			if (sb.length() > 0) {
-				sb.append(StringUtils.LF);
-			}
-			sb.append(TextUtil.getText(famanam, codingService));
-		});
-		return new Result<>(sb.toString());
+		return getFindingsText(famanams, famanam -> TextUtil.getText(famanam, codingService));
 	}
 
 	private Result<Object> getAllergiesText(Patient patient) {
 		List<IAllergyIntolerance> allergies = findingsService.getPatientsFindings(patient.getId(),
 				IAllergyIntolerance.class);
-		StringBuilder sb = new StringBuilder();
-		allergies.stream().forEach(allergy -> {
-			if (sb.length() > 0) {
-				sb.append(StringUtils.LF);
-			}
-			sb.append(TextUtil.getText(allergy, codingService));
-		});
-		return new Result<>(sb.toString());
+		return getFindingsText(allergies, allergy -> TextUtil.getText(allergy, codingService));
 	}
 
 	private Result<Object> getPersAnamText(Patient patient) {
 		List<IObservation> observations = findingsService.getPatientsFindings(patient.getId(), IObservation.class);
 		observations = observations.parallelStream().filter(iFinding -> TextUtil.isPersAnamnese(iFinding))
 				.collect(Collectors.toList());
-		StringBuilder sb = new StringBuilder();
-		observations.stream().forEach(observation -> {
-			if (sb.length() > 0) {
-				sb.append(StringUtils.LF);
-			}
-			sb.append(TextUtil.getText(observation, codingService));
-		});
-		return new Result<>(sb.toString());
+		return getFindingsText(observations, observation -> TextUtil.getText(observation, codingService));
 	}
 
 	private Result<Object> getSocialAnamText(Patient patient) {
 		List<IObservation> observations = findingsService.getPatientsFindings(patient.getId(), IObservation.class);
 		observations = observations.parallelStream().filter(iFinding -> TextUtil.isSocialAnamnese(iFinding))
 				.collect(Collectors.toList());
+		return getFindingsText(observations, observation -> TextUtil.getText(observation, codingService));
+	}
+
+	private <T extends IFinding> Result<Object> getFindingsText(List<T> findings, Function<T, String> getText) {
+		boolean wordFormat = ConfigServiceHolder.getLocal(Preferences.P_TEXT_DIAGNOSE_EXPORT_WORD_FORMAT, false);
 		StringBuilder sb = new StringBuilder();
-		observations.stream().forEach(observation -> {
-			if (sb.length() > 0) {
+		findings.stream().sorted(FindingSortOrder.comparator((left, right) -> 0)).forEach(finding -> {
+			if (!wordFormat && sb.length() > 0) {
 				sb.append(StringUtils.LF);
 			}
-			sb.append(TextUtil.getText(observation, codingService));
+			String text = getText.apply(finding);
+			sb.append(wordFormat ? BulletConverter.toHtmlLists(text) : text);
 		});
-		return new Result<>(sb.toString());
+		return new Result<>(wordFormat && sb.length() > 0 ? RichTextMarker.wrap(sb.toString()) : sb.toString());
 	}
 
 	private Result<Object> getDiagnosisText(Patient patient) {
@@ -216,17 +196,7 @@ public class FindingsDataAccessor implements IDataAccess {
 				ret.add(iCondition);
 			}
 		});
-		ret.sort((left, right) -> {
-			LocalDate lRecorded = left.getDateRecorded().orElse(LocalDate.of(1970, Month.JANUARY, 1));
-			LocalDate rRecorded = right.getDateRecorded().orElse(LocalDate.of(1970, Month.JANUARY, 1));
-			int byRecorded = rRecorded.compareTo(lRecorded);
-			if (byRecorded != 0) {
-				return byRecorded;
-			}
-			Long lUpdated = left.getLastupdate() != null ? left.getLastupdate() : Long.valueOf(0);
-			Long rUpdated = right.getLastupdate() != null ? right.getLastupdate() : Long.valueOf(0);
-			return rUpdated.compareTo(lUpdated);
-		});
+		ret.sort(FindingSortOrder.comparator(FindingSortOrder.BY_DATE_RECORDED_DESC));
 		return ret;
 	}
 
