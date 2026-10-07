@@ -5511,6 +5511,8 @@ public class Messages extends NLS {
 	public static String DiagnoseListComposite_StatusPrefix;
 	public static String DiagnoseListComposite_Create;
 	public static String DiagnoseListComposite_Remove;
+	public static String MoveFindingAction_MoveUp;
+	public static String MoveFindingAction_MoveDown;
 	public static String DeprecatedView_Title;
 	public static String DeprecatedView_TitlePlural;
 	public static String DeprecatedView_Message;

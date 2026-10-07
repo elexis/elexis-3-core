@@ -17,6 +17,7 @@ Require-Bundle: ch.elexis.core;bundle-version="3.13.0",
  ch.elexis.core.rcp;bundle-version="[3.13.0,4.0.0)"
 Bundle-ActivationPolicy: lazy
 Import-Package: ch.elexis.core.exceptions,
+ ch.elexis.core.findings.util,
  ch.elexis.core.findings.util.model,
  ch.elexis.core.services,
  ch.elexis.data,

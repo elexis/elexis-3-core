@@ -68,6 +68,7 @@ public abstract class AbstractFindingModelAdapter<T extends EntityWithId> extend
 			DomainResource domainResource = (DomainResource) resource.get();
 			Extension extension = new Extension(theUrl);
 			extension.setValue(new StringType().setValue(theValue));
+			domainResource.getExtension().removeIf(e -> theUrl.equals(e.getUrl()));
 			domainResource.addExtension(extension);
 			saveResource(domainResource);
 		}
@@ -80,7 +81,7 @@ public abstract class AbstractFindingModelAdapter<T extends EntityWithId> extend
 			List<Extension> extensions = ((DomainResource) resource.get()).getExtension();
 			return extensions.stream().filter(extension -> extension.getValue() instanceof StringType)
 					.collect(Collectors.toMap(extension -> extension.getUrl(),
-							extension -> ((StringType) extension.getValue()).getValueAsString()));
+							extension -> ((StringType) extension.getValue()).getValueAsString(), (first, last) -> last));
 		}
 		return Collections.emptyMap();
 	}
