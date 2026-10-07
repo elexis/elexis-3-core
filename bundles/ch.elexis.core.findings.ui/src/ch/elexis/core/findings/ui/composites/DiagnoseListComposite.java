@@ -10,12 +10,10 @@
  ******************************************************************************/
 package ch.elexis.core.findings.ui.composites;
 
-import java.time.LocalDate;
-import java.time.Month;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Consumer;
 
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.action.Action;
@@ -48,9 +46,11 @@ import ch.elexis.core.findings.ICondition;
 import ch.elexis.core.findings.ICondition.ConditionCategory;
 import ch.elexis.core.findings.ICondition.ConditionStatus;
 import ch.elexis.core.findings.migration.IMigratorService;
+import ch.elexis.core.findings.ui.action.MoveFindingAction;
 import ch.elexis.core.findings.ui.dialogs.ConditionEditDialog;
 import ch.elexis.core.findings.ui.services.CodingServiceComponent;
 import ch.elexis.core.findings.ui.services.FindingsServiceComponent;
+import ch.elexis.core.findings.util.FindingSortOrder;
 import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.services.LocalConfigService;
@@ -79,18 +79,6 @@ public class DiagnoseListComposite extends Composite {
 	private ToolBarManager toolbarManager;
 
 	private EventList<ICondition> dataList = new BasicEventList<>();
-
-	private static final Comparator<ICondition> BY_DATE_RECORDED_DESC = (left, right) -> {
-		LocalDate lRecorded = left.getDateRecorded().orElse(LocalDate.of(1970, Month.JANUARY, 1));
-		LocalDate rRecorded = right.getDateRecorded().orElse(LocalDate.of(1970, Month.JANUARY, 1));
-		int byRecorded = rRecorded.compareTo(lRecorded);
-		if (byRecorded != 0) {
-			return byRecorded;
-		}
-		Long lUpdated = left.getLastupdate() != null ? left.getLastupdate() : Long.valueOf(0);
-		Long rUpdated = right.getLastupdate() != null ? right.getLastupdate() : Long.valueOf(0);
-		return rUpdated.compareTo(lUpdated);
-	};
 
 	@SuppressWarnings("deprecation")
 	public DiagnoseListComposite(Composite parent, int style) {
@@ -282,7 +270,7 @@ public class DiagnoseListComposite extends Composite {
 
 	public void setInput(List<ICondition> conditions) {
 		dataList.clear();
-		conditions.sort(BY_DATE_RECORDED_DESC);
+		conditions.sort(FindingSortOrder.comparator(FindingSortOrder.BY_DATE_RECORDED_DESC));
 		dataList.addAll(conditions);
 		natTableWrapper.getNatTable().refresh();
 
@@ -326,6 +314,17 @@ public class DiagnoseListComposite extends Composite {
 				StructuredSelection sSelection = (StructuredSelection) currentSelection;
 				if (sSelection.size() == 1) {
 					ICondition selectedCondition = (ICondition) sSelection.getFirstElement();
+					int index = dataList.indexOf(selectedCondition);
+					Consumer<List<ICondition>> onMoved = conditions -> {
+						setInput(conditions);
+						natTableWrapper.setSelection(new StructuredSelection(selectedCondition));
+					};
+					if (index > 0) {
+						manager.add(new MoveFindingAction<>(dataList, selectedCondition, -1, onMoved));
+					}
+					if (index < dataList.size() - 1) {
+						manager.add(new MoveFindingAction<>(dataList, selectedCondition, 1, onMoved));
+					}
 					ConditionStatus selectionStatus = selectedCondition.getStatus();
 					if (selectionStatus != ConditionStatus.ACTIVE) {
 						manager.add(new ToggleStatusAction(selectedCondition, ConditionStatus.ACTIVE));
