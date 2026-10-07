@@ -72,7 +72,9 @@ import ch.elexis.core.model.IBilled;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.IPrescription;
 import ch.elexis.core.model.IRecipe;
+import ch.elexis.core.model.IStockEntry;
 import ch.elexis.core.model.Identifiable;
+import ch.elexis.core.model.prescription.EntryType;
 import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.services.holder.MedicationServiceHolder;
@@ -1134,6 +1136,9 @@ public class MedicationComposite extends Composite implements ISelectionProvider
 		@Override
 		public void dropped(List<Object> list, DropTargetEvent e) {
 			for (Object object : list) {
+				if (object instanceof IStockEntry) {
+					object = ((IStockEntry) object).getArticle();
+				}
 				if (object instanceof IArticle) {
 					IArticle article = (IArticle) object;
 					if (isVaccination(article)) {
@@ -1155,6 +1160,12 @@ public class MedicationComposite extends Composite implements ISelectionProvider
 						dropChangePrescription = null;
 					}
 					refresh();
+				} else if (isRecipePrescription(object)) {
+					IPrescription recipePrescription = (IPrescription) object;
+					CreatePrescriptionHelper prescriptionHelper = new CreatePrescriptionHelper(
+							recipePrescription.getArticle(), parentShell);
+					prescriptionHelper.createPrescription(recipePrescription);
+					refresh();
 				}
 			}
 		}
@@ -1163,9 +1174,20 @@ public class MedicationComposite extends Composite implements ISelectionProvider
 			return article.isVaccination();
 		}
 
+		private boolean isRecipePrescription(Object object) {
+			return object instanceof IPrescription && ((IPrescription) object).getEntryType() == EntryType.RECIPE
+					&& ((IPrescription) object).getArticle() != null;
+		}
+
 		@Override
 		public boolean accept(List<Object> list) {
 			for (Object object : list) {
+				if (object instanceof IStockEntry) {
+					object = ((IStockEntry) object).getArticle();
+				}
+				if (isRecipePrescription(object)) {
+					return !isVaccination(((IPrescription) object).getArticle());
+				}
 				if (!(object instanceof IArticle))
 					return false;
 				// we do not accept vaccination articles
