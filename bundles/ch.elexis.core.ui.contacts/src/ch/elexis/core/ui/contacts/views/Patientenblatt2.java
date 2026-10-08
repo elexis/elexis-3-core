@@ -54,7 +54,6 @@ import org.eclipse.swt.events.FocusAdapter;
 import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
-import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -965,7 +964,21 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 
 		for (int i = 0; i < lbExpandable.size(); i++) {
 			ec.add(WidgetFactory.createExpandableComposite(tk, form, lbExpandable.get(i)));
-			Text text = tk.createText(ec.get(i), StringUtils.EMPTY, SWT.MULTI | SWT.WRAP);
+			Text text = new Text(ec.get(i), tk.getBorderStyle() | SWT.MULTI | SWT.WRAP) {
+				@Override
+				protected void checkSubclass() {
+				}
+
+				@Override
+				public Point computeSize(int wHint, int hHint, boolean changed) {
+					Point size = super.computeSize(wHint, hHint, changed);
+					if (hHint == SWT.DEFAULT) {
+						size.y = Math.max(size.y, computeTrim(0, 0, 0, getLineCount() * getLineHeight()).height);
+					}
+					return size;
+				}
+			};
+			tk.adapt(text, true, false);
 			FilterNonPrintableModifyListener.addTo(text);
 			text.setData("index", Integer.valueOf(i)); //$NON-NLS-1$
 			text.addFocusListener(new FocusAdapter() {
@@ -998,19 +1011,13 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 					UserSettings.saveExpandedState(KEY_PATIENTENBLATT + src.getText(), e.getState());
 				}
 			});
-			txExpandable.get(i).addKeyListener(new KeyListener() {
-
-				@Override
-				public void keyReleased(KeyEvent e) {
-					Text tx = (Text) e.getSource();
-					tx.redraw();
-					form.getBody().layout(true);
-				}
-
-				@Override
-				public void keyPressed(KeyEvent e) {
+			txExpandable.get(i).addListener(SWT.Verify, e -> {
+				int newLines = StringUtils.countMatches(e.text, '\n');
+				if (newLines > 0) {
+					text.setSize(text.getSize().x, text.getSize().y + newLines * text.getLineHeight());
 				}
 			});
+			txExpandable.get(i).addModifyListener(e -> form.getBody().layout(new Control[] { text }));
 
 			ec.get(i).setClient(txExpandable.get(i));
 			ec.get(i).setExpanded(true);
