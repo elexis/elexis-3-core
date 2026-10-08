@@ -168,6 +168,7 @@ import jakarta.inject.Inject;
  */
 public class Patientenblatt2 extends Composite implements IUnlockable {
 	private static final String KEY_DBFIELD = "dbfield"; //$NON-NLS-1$
+	private static final String KEY_LINECOUNT = "lineCount"; //$NON-NLS-1$
 	private static final String KEY_PATIENTENBLATT = "Patientenblatt/"; //$NON-NLS-1$
 	private final FormToolkit tk;
 	private InputPanel ipp;
@@ -1017,7 +1018,13 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 					text.setSize(text.getSize().x, text.getSize().y + newLines * text.getLineHeight());
 				}
 			});
-			txExpandable.get(i).addModifyListener(e -> form.getBody().layout(new Control[] { text }));
+			txExpandable.get(i).addModifyListener(e -> {
+				form.getBody().layout(new Control[] { text });
+				if (!Integer.valueOf(text.getLineCount()).equals(text.getData(KEY_LINECOUNT))) {
+					text.setData(KEY_LINECOUNT, text.getLineCount());
+					form.reflow(true);
+				}
+			});
 
 			ec.get(i).setClient(txExpandable.get(i));
 			ec.get(i).setExpanded(true);
