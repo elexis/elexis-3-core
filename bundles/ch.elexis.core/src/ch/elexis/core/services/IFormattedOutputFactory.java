@@ -30,7 +30,7 @@ public interface IFormattedOutputFactory {
 	 *
 	 */
 	public enum OutputType {
-		PDF, PS, PNG, PCL
+		PDF, PDF_A, PS, PNG, PCL
 	}
 
 	/**
