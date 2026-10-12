@@ -22,6 +22,8 @@ public class LaborOrderViewerItem {
 
 	private StructuredViewer viewer;
 	private LabOrder order;
+	private LabItem labItem;
+	private LabResult labResult;
 
 	private String labItemLabel;
 	private String labResultString;
@@ -35,10 +37,14 @@ public class LaborOrderViewerItem {
 	public LaborOrderViewerItem(StructuredViewer viewer, LabOrder order) {
 		this.viewer = viewer;
 		this.order = order;
+		order.get(false, LabOrder.FLD_ITEM, LabOrder.FLD_RESULT, LabOrder.FLD_TIME,
+				LabOrder.FLD_OBSERVATIONTIME, LabOrder.FLD_STATE, LabOrder.FLD_ORDERID, LabOrder.FLD_GROUPNAME);
+		labItem = order.getLabItem();
+		labResult = (LabResult) order.getLabResult();
 	}
 
 	public LabResult getLabResult() {
-		return (LabResult) order.getLabResult();
+		return labResult;
 	}
 
 	public LabOrder getLabOrder() {
@@ -78,7 +84,7 @@ public class LaborOrderViewerItem {
 	public Optional<String> getLabItemPrio() {
 		if (hasLabItem()) {
 			if (itemPrio == null) {
-				itemPrio = order.getLabItem().getPrio();
+				itemPrio = labItem.getPrio();
 			}
 			return Optional.of(itemPrio);
 		}
@@ -96,12 +102,14 @@ public class LaborOrderViewerItem {
 
 	public LabResult createResult() {
 		LabResult ret = order.createResult();
+		labResult = ret;
 		viewer.refresh(this);
 		return ret;
 	}
 
 	public LabResult createResult(Kontakt origin) {
 		LabResult ret = order.createResult(origin);
+		labResult = ret;
 		viewer.refresh(this);
 		return ret;
 	}
@@ -112,11 +120,11 @@ public class LaborOrderViewerItem {
 	}
 
 	public boolean hasLabItem() {
-		return order.getLabItem() != null;
+		return labItem != null;
 	}
 
 	public LabItemTyp getLabItemTyp() {
-		return order.getLabItem().getTyp();
+		return labItem.getTyp();
 	}
 
 	public State getState() {
@@ -167,14 +175,14 @@ public class LaborOrderViewerItem {
 		}
 
 		private void resolveLabItemLabel() {
-			LabItem labItem = item.order.getLabItem();
+			LabItem labItem = item.labItem;
 			if (labItem != null) {
 				item.labItemLabel = labItem.getLabel();
 			}
 		}
 
 		private void resolveLabResultString() {
-			LabResult labResult = (LabResult) item.order.getLabResult();
+			LabResult labResult = item.labResult;
 			if (labResult != null) {
 				item.labResultString = getNonEmptyResultString(labResult);
 			}
