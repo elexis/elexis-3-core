@@ -12,6 +12,7 @@ import java.util.stream.Collectors;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,7 +28,6 @@ import ch.elexis.core.model.ILabMapping;
 import ch.elexis.core.model.ILabResult;
 import ch.elexis.core.model.IMandator;
 import ch.elexis.core.model.IPatient;
-import ch.elexis.core.model.IUser;
 import ch.elexis.core.model.ModelPackage;
 import ch.elexis.core.model.builder.ICoverageBuilder;
 import ch.elexis.core.model.builder.IEncounterBuilder;
@@ -266,16 +266,19 @@ public class BillLabResultOnCreationIdentifiedRunnable implements IIdentifiedRun
 	}
 
 	private IStatus sendMessageToOwner(IPatient patient) {
-		IUser owner = PortableServiceLoader.get(IContextService.class).getActiveUser().orElse(null);
-		TransientMessage transientMessage = PortableServiceLoader.get(IMessageService.class)
-				.prepare(getClass().getSimpleName(), IMessageService.INTERNAL_MESSAGE_URI_SCHEME + ":" + owner.getId());
-		transientMessage.addMessageCode(MessageCode.Key.MessageId,
-				MessageCodeMessageId.INFO_BILLING_AUTO_CREATE_ENCOUNTER.name());
-		transientMessage.addMessageCode(MessageCode.Key.MessageIdParam, patient.getPatientNr());
-		transientMessage.setSenderAcceptsAnswer(false);
-		transientMessage.setMessageText(
-				Messages.NO_BILLABLE_ENCOUNTER1 + patient.getPatientNr() + Messages.NO_BILLABLE_ENCOUNTER2);
-		return PortableServiceLoader.get(IMessageService.class).send(transientMessage);
+		String ownerId = PortableServiceLoader.get(IContextService.class).getActiveUserId();
+		if (ownerId != null) {
+			TransientMessage transientMessage = PortableServiceLoader.get(IMessageService.class)
+					.prepare(getClass().getSimpleName(), IMessageService.INTERNAL_MESSAGE_URI_SCHEME + ":" + ownerId);
+			transientMessage.addMessageCode(MessageCode.Key.MessageId,
+					MessageCodeMessageId.INFO_BILLING_AUTO_CREATE_ENCOUNTER.name());
+			transientMessage.addMessageCode(MessageCode.Key.MessageIdParam, patient.getPatientNr());
+			transientMessage.setSenderAcceptsAnswer(false);
+			transientMessage.setMessageText(
+					Messages.NO_BILLABLE_ENCOUNTER1 + patient.getPatientNr() + Messages.NO_BILLABLE_ENCOUNTER2);
+			return PortableServiceLoader.get(IMessageService.class).send(transientMessage);
+		}
+		return Status.error("No active user id found");
 	}
 
 	private Result<?> addTarifToKons(IBillable tarif, IEncounter kons,
