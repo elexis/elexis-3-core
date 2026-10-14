@@ -1,5 +1,6 @@
 package ch.elexis.core.ui.contacts.views.util;
 
+import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -63,7 +64,11 @@ public class FaceDetectionUtil {
 					fos.write(buf, 0, len);
 				}
 			}
-			return new CascadeClassifier(tmp.getAbsolutePath());
+			try {
+				return new CascadeClassifier(tmp.getAbsolutePath());
+			} finally {
+				tmp.delete();
+			}
 		} catch (IOException ex) {
 			logger.error("Error loading cascade XML '{}': {}", resourcePath, ex.getMessage(), ex);
 			throw new RuntimeException("Error loading cascade XML: " + resourcePath, ex);
@@ -87,47 +92,50 @@ public class FaceDetectionUtil {
 			logger.error("Error converting BufferedImage to Mat: {}", e.getMessage(), e);
 			return null;
 		}
-		Mat gray = new Mat();
-		opencv_imgproc.cvtColor(mat, gray, opencv_imgproc.COLOR_BGR2GRAY);
-		opencv_imgproc.equalizeHist(gray, gray);
+		try (mat; Mat gray = new Mat()) {
+			opencv_imgproc.cvtColor(mat, gray, opencv_imgproc.COLOR_BGR2GRAY);
+			opencv_imgproc.equalizeHist(gray, gray);
 
-		// Frontal face detection
-		RectVector fr = new RectVector();
-		faceCascade.detectMultiScale(gray, fr);
-		Rectangle r = pickLargest(fr);
-		if (r != null) {
-			return r;
-		}
+			// Frontal face detection
+			Rectangle r;
+			try (RectVector fr = new RectVector()) {
+				faceCascade.detectMultiScale(gray, fr);
+				r = pickLargest(fr);
+				if (r != null) {
+					return r;
+				}
+			}
 
-		// Profile face detection (original)
-		RectVector pr = new RectVector();
-		profileCascade.detectMultiScale(gray, pr);
-		r = pickLargest(pr);
-		if (r != null) {
-			return r;
-		}
+			// Profile face detection (original)
+			try (RectVector pr = new RectVector()) {
+				profileCascade.detectMultiScale(gray, pr);
+				r = pickLargest(pr);
+				if (r != null) {
+					return r;
+				}
+			}
 
-		// Profile face detection (mirrored)
-		Mat flipped = new Mat();
-		opencv_core.flip(gray, flipped, +1);
-		RectVector prF = new RectVector();
-		profileCascade.detectMultiScale(flipped, prF);
-		Rectangle best = null;
-		long maxA = 0;
-		for (int i = 0; i < prF.size(); i++) {
-			Rect rr = prF.get(i);
-			long area = (long) rr.width() * rr.height();
-			if (area > maxA) {
-				// Calculate mirrored X coordinate
-				int x = gray.cols() - rr.x() - rr.width();
-				best = new Rectangle(x, rr.y(), rr.width(), rr.height());
-				maxA = area;
+			// Profile face detection (mirrored)
+			try (Mat flipped = new Mat()) {
+				opencv_core.flip(gray, flipped, +1);
+				try (RectVector prF = new RectVector()) {
+					profileCascade.detectMultiScale(flipped, prF);
+					Rectangle best = null;
+					long maxA = 0;
+					for (int i = 0; i < prF.size(); i++) {
+						Rect rr = prF.get(i);
+						long area = (long) rr.width() * rr.height();
+						if (area > maxA) {
+							// Calculate mirrored X coordinate
+							int x = gray.cols() - rr.x() - rr.width();
+							best = new Rectangle(x, rr.y(), rr.width(), rr.height());
+							maxA = area;
+						}
+					}
+					return best;
+				}
 			}
 		}
-		if (best == null) {
-			logger.info("No face detected in image.");
-		}
-		return best;
 	}
 
 	/**
@@ -163,7 +171,9 @@ public class FaceDetectionUtil {
 		BufferedImage converted = bi;
 		if (bi.getType() != BufferedImage.TYPE_3BYTE_BGR) {
 			BufferedImage tmp = new BufferedImage(bi.getWidth(), bi.getHeight(), BufferedImage.TYPE_3BYTE_BGR);
-			tmp.getGraphics().drawImage(bi, 0, 0, null);
+			Graphics graphics = tmp.getGraphics();
+			graphics.drawImage(bi, 0, 0, null);
+			graphics.dispose();
 			converted = tmp;
 		}
 		byte[] pixels = ((java.awt.image.DataBufferByte) converted.getRaster().getDataBuffer()).getData();
