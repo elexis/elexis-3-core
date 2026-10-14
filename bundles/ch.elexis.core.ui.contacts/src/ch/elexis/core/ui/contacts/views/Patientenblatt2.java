@@ -633,9 +633,15 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 					MessageDialog.openError(getShell(), Messages.Patientenblatt2_PhotoOpen_GenericError_Title,
 							Messages.Patientenblatt2_PhotoOpen_GenericError + ex.getMessage());
 				}
-			} else {
-				CameraCaptureUtil.openCameraAndSavePhoto(actPatient, actPatient.getLabel(true), photoLabel,
-						this.getShell());
+			} else if (CameraCaptureUtil.openCameraAndSavePhoto(actPatient, actPatient.getLabel(true),
+					this.getShell())) {
+				showPatientPhoto(actPatient);
+			}
+		});
+		photoLabel.addListener(SWT.Dispose, e -> {
+			if (currentPhoto != null && currentPhoto != defaultMale && currentPhoto != defaultFemale
+					&& !currentPhoto.isDisposed()) {
+				currentPhoto.dispose();
 			}
 		});
 
@@ -1070,7 +1076,7 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 		});
 
 		photoLabel.addListener(SWT.MenuDetect, e -> {
-			boolean hasPhoto = actPatient != null && PatientImageUtil.getPatientImage(actPatient.getId()) != null;
+			boolean hasPhoto = actPatient != null && currentPhoto != defaultMale && currentPhoto != defaultFemale;
 			if (!hasPhoto) {
 				e.doit = false;
 			}
@@ -1146,8 +1152,7 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 		}
 	}
 
-	public void setPatient(final Patient p) {
-		actPatient = p;
+	private void showPatientPhoto(final Patient p) {
 		Image previousPhoto = currentPhoto;
 		Image patientImage = null;
 		if (p != null) {
@@ -1181,6 +1186,11 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 				&& !previousPhoto.isDisposed()) {
 			previousPhoto.dispose();
 		}
+	}
+
+	public void setPatient(final Patient p) {
+		actPatient = p;
+		showPatientPhoto(p);
 		refreshUi();
 		setUnlocked(LocalLockServiceHolder.get().isLockedLocal(p));
 		if (ipp != null) {
@@ -1873,9 +1883,9 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 
 			@Override
 			public void run() {
-				if (actPatient != null) {
-					CameraCaptureUtil.openCameraAndSavePhoto(actPatient, actPatient.getLabel(true), photoLabel,
-							getShell());
+				if (actPatient != null
+						&& CameraCaptureUtil.openCameraAndSavePhoto(actPatient, actPatient.getLabel(true), getShell())) {
+					showPatientPhoto(actPatient);
 				}
 			}
 
