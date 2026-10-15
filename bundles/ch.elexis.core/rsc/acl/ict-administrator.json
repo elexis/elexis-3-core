@@ -47,6 +47,7 @@
 		"ch.elexis.core.tasks.model.ITask":"cruvdxz",
 		"ch.elexis.core.tasks.model.ITaskDescriptor":"cruvdxz",
 		"ch.elexis.omnivore.model.IDocumentHandle":"cruvdx",
+		"ch.elexis.befunde.Messwert": "cruvdx",
 		"ch.elexis.data.Script": "cruvdx"			
 	}
 }
