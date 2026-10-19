@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.TableColumnLayout;
 import org.eclipse.jface.preference.PreferencePage;
@@ -181,7 +182,7 @@ public class LaborPrefs extends PreferencePage implements IWorkbenchPreferencePa
 					s1 = li1.getName();
 					s2 = li2.getName();
 				}
-				int res = s1.compareToIgnoreCase(s2);
+				int res = Strings.CI.compare(s1, s2);
 				if (res == 0) {
 					try {
 						Integer no1 = Integer.parseInt(li1.getPriority());
@@ -189,7 +190,7 @@ public class LaborPrefs extends PreferencePage implements IWorkbenchPreferencePa
 
 						return no1.compareTo(no2);
 					} catch (NumberFormatException nfe) {
-						return li1.getPriority().compareToIgnoreCase(li2.getPriority());
+						return Strings.CI.compare(li1.getPriority(), li2.getPriority());
 					}
 				}
 				return res;
