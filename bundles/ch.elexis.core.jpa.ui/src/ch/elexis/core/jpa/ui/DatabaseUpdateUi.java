@@ -97,6 +97,10 @@ public class DatabaseUpdateUi implements IDatabaseUpdateUi {
 
 	@Override
 	public void executeWithProgress(String message, Runnable updateRunnable) {
+		if (Display.getCurrent() == null) {
+			updateRunnable.run();
+			return;
+		}
 		openProgress(message);
 		execute(updateRunnable);
 		while (isExecuting()) {
@@ -122,6 +126,9 @@ public class DatabaseUpdateUi implements IDatabaseUpdateUi {
 
 	@Override
 	public void setMessage(String message) {
+		if (shell == null) {
+			return;
+		}
 		Display.getDefault().syncExec(() -> {
 			if (shell != null && !shell.isDisposed()) {
 				shell.setSize(500, 100);

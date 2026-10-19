@@ -50,6 +50,7 @@ public class LegacyApplication implements IApplication {
 	 */
 	@Override
 	public Object start(IApplicationContext context) throws Exception {
+		UiDesk.getDisplay();
 		// Check if we "are complete" - throws Error if not
 		ICoreOperationAdvisor cod = CoreOperationAdvisorHolder.get();
 
