@@ -158,7 +158,11 @@ public class KonsDetailView extends ViewPart implements IUnlockable {
 		public void partActivated(org.eclipse.ui.IWorkbenchPartReference partRef) {
 			if (isMatchingPart(partRef)) {
 				if (actEncounter != null && !text.isDirty()) {
-					setKonsText(actEncounter, actEncounter.getVersionedEntry().getHeadVersion());
+					IEncounter db_encounter = CoreModelServiceHolder.get()
+							.load(actEncounter.getId(), IEncounter.class, false, true).orElse(null);
+					if (db_encounter != null && db_encounter.getLastupdate() > actEncounter.getLastupdate()) {
+						setKons(db_encounter);
+					}
 				}
 			}
 		};
