@@ -176,7 +176,7 @@ public class FindingsDataAccessor implements IDataAccess {
 		StringBuilder sb = new StringBuilder();
 		conditions.stream().forEach(condition -> {
 			if (sb.length() > 0) {
-				sb.append(StringUtils.LF);
+				sb.append(wordFormat ? "<p>&nbsp;</p>" : StringUtils.LF);
 			}
 			sb.append(TextUtil.getText(condition, codingService, wordFormat));
 		});
