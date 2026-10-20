@@ -576,6 +576,7 @@ public class EncounterService implements IEncounterService {
 	@SuppressWarnings("rawtypes")
 	@Override
 	public Result<IEncounter> setEncounterDate(IEncounter encounter, LocalDate newDate) {
+		coreModelService.refresh(encounter, true);
 		// modify the date
 		encounter.setDate(newDate);
 		CoreModelServiceHolder.get().save(encounter);
