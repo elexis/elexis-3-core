@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.services.LocalConfigService;
 import ch.elexis.core.ui.views.controls.RichTextEditorComposite;
+import ch.elexis.core.utils.CoreUtil;
 
 /**
  * Starts the Chromium engine shortly after startup via
@@ -29,6 +30,12 @@ public class ChromiumWarmupHandler implements EventHandler {
 
 	@Override
 	public void handleEvent(Event event) {
+		// Disposing the warm up browser breaks keyboard input application-wide on
+		// Linux/GTK: the embedded Chromium window holds the native focus in a way SWT
+		// cannot see. Disable warmup on linux.
+		if(CoreUtil.isLinux()) {
+			return;
+		}
 		if (!Boolean.parseBoolean(System.getProperty(PROPERTY_ENABLED, Boolean.TRUE.toString()))) {
 			return;
 		}
