@@ -164,7 +164,7 @@ public class EditLabItem extends TitleAreaDialog {
 			if (li.getExport() != null && li.getExport().length() > 0 && !exportTags.contains(li.getExport())) {
 				exportTags.add(li.getExport());
 			}
-			if (!groups.contains(li.getGroup())) {
+			if (li.getGroup() != null && !groups.contains(li.getGroup())) {
 				groups.add(li.getGroup());
 			}
 		}
@@ -216,7 +216,7 @@ public class EditLabItem extends TitleAreaDialog {
 		cExportTag.setItems(exportTags.toArray(new String[0]));
 
 		if (actLabItem != null) {
-			iKuerzel.setText(actLabItem.getCode());
+			iKuerzel.setText(StringUtils.defaultString(actLabItem.getCode()));
 			iTitel.setText(actLabItem.getName());
 			if (actLabItem.getTyp() == LabItemTyp.NUMERIC) {
 				numeric.setSelection(true);
