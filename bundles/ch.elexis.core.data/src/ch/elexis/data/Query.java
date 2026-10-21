@@ -667,7 +667,8 @@ public class Query<T> {
 
 				if (selectVals.length > 1) {
 					for (int i = 1; i < selectVals.length; i++) {
-						Object prefetchVal = res.getObject(i + 1);
+						Object prefetchVal = po.map(cacheVals[i]).startsWith("S:") ? po.decode(cacheVals[i], res)
+								: res.getObject(i + 1);
 						po.putInCache(cacheVals[i], prefetchVal);
 					}
 				}
