@@ -97,6 +97,7 @@ public class BillingProposalWizardDialog extends TitleAreaDialog {
 	private DaysOrDateSelectionComposite beforeDaysOrDate;
 
 	private Button converageMarkedOnly;
+	private Button coverageMarkedFuture;
 
 	private Button mandatorOnly;
 	private GenericSelectionComposite mandatorSelector;
@@ -187,7 +188,16 @@ public class BillingProposalWizardDialog extends TitleAreaDialog {
 
 		converageMarkedOnly = new Button(content, SWT.CHECK);
 		converageMarkedOnly.setText(Messages.KonsZumVerrechnenWizardDialog_selectCasesToCharge);
-		new Label(content, SWT.NONE);
+		converageMarkedOnly.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				coverageMarkedFuture.setEnabled(converageMarkedOnly.getSelection());
+			}
+		});
+		coverageMarkedFuture = new Button(content, SWT.CHECK);
+		coverageMarkedFuture
+				.setText(ch.elexis.core.l10n.Messages.KonsZumVerrechnenWizardDialog_selectCasesToChargeFuture);
+		coverageMarkedFuture.setEnabled(false);
 
 		insurerOnly = new Button(content, SWT.CHECK);
 		insurerOnly.setText("nur von folgendem Versicherer");
@@ -325,6 +335,7 @@ public class BillingProposalWizardDialog extends TitleAreaDialog {
 		private Money filterSeriesByMoney;
 		private Money filterKonsByMoney;
 		private boolean filterByMoneyHigher;
+		private boolean includeFutureBillingDate;
 
 		public QueryProposalRunnable() {
 			query = new Query<>(Konsultation.class, "BEHANDLUNGEN", false, //$NON-NLS-1$
@@ -358,11 +369,14 @@ public class BillingProposalWizardDialog extends TitleAreaDialog {
 				}
 			}
 			if (converageMarkedOnly.getSelection()) {
+				includeFutureBillingDate = coverageMarkedFuture.getSelection();
 				Query<Fall> coverageQuery = new Query<>(Fall.class);
-				coverageQuery.add(Fall.FLD_RN_PLANUNG, Query.LESS_OR_EQUAL,
-						new TimeTool().toString(TimeTool.DATE_COMPACT));
 				coverageQuery.add(Fall.FLD_RN_PLANUNG, Query.NOT_EQUAL, StringUtils.EMPTY);
-				List<Fall> coverages = coverageQuery.execute();
+				TimeTool now = new TimeTool();
+				List<Fall> coverages = coverageQuery.execute().stream()
+						.filter(c -> c.getBillingDate() != null
+								&& (includeFutureBillingDate || !c.getBillingDate().isAfter(now)))
+						.collect(Collectors.toList());
 				if (coverages.isEmpty()) {
 					query.addToken("1 = 2");
 				} else {
@@ -544,7 +558,7 @@ public class BillingProposalWizardDialog extends TitleAreaDialog {
 			TimeTool now = new TimeTool();
 			proposalCopy.forEach(k -> {
 				TimeTool billingDate = k.getFall().getBillingDate();
-				if (billingDate != null && billingDate.isAfter(now)) {
+				if (!includeFutureBillingDate && billingDate != null && billingDate.isAfter(now)) {
 					proposal.remove(k);
 				}
 			});
