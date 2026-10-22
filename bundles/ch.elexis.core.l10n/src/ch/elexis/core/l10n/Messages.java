@@ -2521,6 +2521,7 @@ public class Messages extends NLS {
 	public static String KonsZumVerrechnenWizardDialog_createProposal;
 	public static String KonsZumVerrechnenWizardDialog_daysOrDate;
 	public static String KonsZumVerrechnenWizardDialog_selectCasesToCharge;
+	public static String KonsZumVerrechnenWizardDialog_selectCasesToChargeFuture;
 	public static String KonsZumVerrechnenWizardDialog_skipProposal;
 	public static String KonsZumVerrechnenWizardDialog_timespan;
 	public static String KontaktBlatt_Bez3;
