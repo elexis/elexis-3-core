@@ -3,10 +3,15 @@
         "eraser"
     ],
     "object": {
+		"ch.elexis.core.model.IArticle": "z",
+		"ch.elexis.core.model.IBilled": "z",
+		"ch.elexis.core.model.ICoverage": "z",
+		"ch.elexis.core.model.IEncounter": "z",
         "ch.elexis.core.model.IPatient": "z",
         "ch.elexis.core.model.IPerson": "z",
         "ch.elexis.core.model.IReminder": "z",
         "ch.elexis.core.model.IUserGroup": "z",
-        "ch.elexis.core.model.IOrganization": "z"
+        "ch.elexis.core.model.IOrganization": "z",
+		"ch.elexis.core.model.TypedArticle": "z"
     }
 }

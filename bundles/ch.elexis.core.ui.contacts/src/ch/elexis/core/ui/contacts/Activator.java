@@ -1,10 +1,8 @@
 package ch.elexis.core.ui.contacts;
 
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
-import ch.elexis.core.ui.contacts.dialogs.PatientCameraCaptureDialog;
 import ch.elexis.core.ui.contacts.extension.ContactGeonamesExtensionPoint;
 import ch.elexis.core.ui.contacts.views.util.MacOSCameraSupport;
 
@@ -38,7 +36,6 @@ public class Activator extends AbstractUIPlugin {
 		// Initialize geonames content proposal
 		ContactGeonamesExtensionPoint.init();
 		MacOSCameraSupport.disableOpenCvAuthRequest();
-		PatientCameraCaptureDialog.initCameraCacheAsync(Display.getDefault());
 	}
 
 	/*

@@ -75,6 +75,21 @@ public class CreatePrescriptionHelper {
 		}
 	}
 
+	public void createPrescription(IPrescription template) {
+		IArticleDefaultSignature signature = MedicationServiceHolder.get().getTransientDefaultSignature(article);
+		String[] dosage = MedicationServiceHolder.get().getSignatureAsStringArray(template.getDosageInstruction());
+		if (dosage[1].isEmpty()) {
+			signature.setFreeText(dosage[0]);
+		} else {
+			signature.setMorning(dosage[0]);
+			signature.setNoon(dosage[1]);
+			signature.setEvening(dosage[2]);
+			signature.setNight(dosage[3]);
+		}
+		signature.setComment(template.getRemark());
+		getSignatureWithDialog(Optional.of(signature)).ifPresent(s -> createPrescriptionFromSignature(s));
+	}
+
 	private Optional<IArticleDefaultSignature> getSignatureWithDialog(
 			Optional<IArticleDefaultSignature> preSelectedSignature) {
 		PrescriptionSignatureTitleAreaDialog dialog = new PrescriptionSignatureTitleAreaDialog(parentShell, article);

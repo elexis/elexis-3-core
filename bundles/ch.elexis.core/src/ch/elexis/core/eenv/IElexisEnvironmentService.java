@@ -27,6 +27,11 @@ public interface IElexisEnvironmentService {
 	static final String ES_STATION_ID_DEFAULT = "ELEXIS-SERVER";
 
 	/**
+	 * Default station id of the myElexis-Server
+	 */
+	static final String MYES_STATION_ID_DEFAULT = "MYELEXIS-SERVER";
+
+	/**
 	 * The ID of the keycloak realm
 	 */
 	static final String EE_KEYCLOAK_REALM_ID = "ElexisEnvironment";

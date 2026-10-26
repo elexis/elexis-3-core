@@ -84,7 +84,9 @@ import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.services.holder.EncounterServiceHolder;
 import ch.elexis.core.services.holder.XidServiceHolder;
+import ch.elexis.core.text.BulletConverter;
 import ch.elexis.core.text.ReplaceCallback;
+import ch.elexis.core.text.RichTextMarker;
 import ch.elexis.core.text.XRefExtensionConstants;
 import ch.elexis.core.text.model.Samdas;
 import ch.elexis.core.ui.UiDesk;
@@ -366,8 +368,12 @@ public class TextContainer {
 			if (structuredValue.isPresent()) {
 				return structuredValue.get();
 			}
-		    String formattedText = formatTextField((String) fieldValue, maxLineLength);
-		    return formattedText;
+			String value = (String) fieldValue;
+			if ("Patient.Diagnosen".equals(b)) {
+				return formatTextField(value, maxLineLength);
+			}
+			return StringUtils.isBlank(value) ? StringUtils.EMPTY
+					: RichTextMarker.wrap(BulletConverter.toHtmlLists(value));
 		}
 		return readFromPo(o, q[1], showErrors);
 	}

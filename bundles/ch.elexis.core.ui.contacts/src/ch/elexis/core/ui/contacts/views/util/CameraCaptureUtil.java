@@ -1,11 +1,5 @@
 package ch.elexis.core.ui.contacts.views.util;
 
-import java.io.ByteArrayInputStream;
-
-import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.graphics.ImageData;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,30 +18,20 @@ public class CameraCaptureUtil {
 	private static Logger logger = LoggerFactory.getLogger(CameraCaptureUtil.class);
 
 	/**
-	 * Opens the camera dialog for capturing a new patient photo, saves the photo,
-	 * and updates the {@link Label} with the scaled image.
+	 * Opens the camera dialog for capturing a new patient photo and saves the
+	 * photo.
 	 *
 	 * @param patientId   the patient ID
 	 * @param patientName the patient name (for metadata)
-	 * @param photoLabel  the SWT label to update with the new photo
 	 * @param shell       the parent shell
 	 */
-	public static void openCameraAndSavePhoto(Patient patient, String patientName, Label photoLabel, Shell shell) {
+	public static boolean openCameraAndSavePhoto(Patient patient, String patientName, Shell shell) {
 		byte[] imageBytes = new PatientCameraCaptureDialog().openAndCaptureImage(shell);
 		if (imageBytes == null || imageBytes.length == 0) {
 			logger.warn("No photo captured or photo data is empty for patientId {}", patient);
-			return;
+			return false;
 		}
 		PatientImageUtil.savePatientImage(patient.getId(), imageBytes, patientName, MimeType.png);
-		Display.getDefault().asyncExec(() -> {
-			try {
-				Image scaledImage = PatientImageUtil.scaleSwtImage(
-						new Image(Display.getDefault(), new ImageData(new ByteArrayInputStream(imageBytes))), 130, 130,
-						photoLabel.getDisplay());
-				photoLabel.setImage(scaledImage);
-			} catch (Exception e) {
-				logger.error("Error displaying captured photo for patientId {}: {}", patient, e.getMessage(), e);
-			}
-		});
+		return true;
 	}
 }

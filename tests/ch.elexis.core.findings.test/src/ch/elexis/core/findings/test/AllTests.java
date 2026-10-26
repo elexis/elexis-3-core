@@ -21,6 +21,7 @@ import ch.elexis.core.findings.EncounterTest;
 import ch.elexis.core.findings.FamilyMemberHistoryTest;
 import ch.elexis.core.findings.FindingsServiceComponent;
 import ch.elexis.core.findings.FindingsServiceTest;
+import ch.elexis.core.findings.FindingSortOrderTest;
 import ch.elexis.core.findings.IFinding;
 import ch.elexis.core.findings.MigratorServiceTest;
 import ch.elexis.core.findings.ObservationTest;
@@ -32,7 +33,7 @@ import ch.elexis.data.PersistentObject;
 @RunWith(Suite.class)
 @SuiteClasses({ FindingsServiceTest.class, CreateFindingsTest.class, EncounterTest.class, ConditionTest.class,
 		CodingServiceTest.class, ProcedureRequestTest.class, ObservationTest.class, FamilyMemberHistoryTest.class,
-		AllergyIntoleranceTest.class, DocumentReferenceTest.class, MigratorServiceTest.class })
+		AllergyIntoleranceTest.class, DocumentReferenceTest.class, MigratorServiceTest.class, FindingSortOrderTest.class })
 public class AllTests {
 	public static final String PATIENT_ID = "defaultPatient";
 	public static final String CONSULTATION_ID = "defaultConsultation";
