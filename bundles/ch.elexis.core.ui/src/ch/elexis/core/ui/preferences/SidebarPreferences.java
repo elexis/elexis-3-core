@@ -31,6 +31,7 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
 
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.services.LocalConfigService;
 import ch.elexis.core.ui.constants.ExtensionPointConstantsUi;
 import ch.elexis.core.ui.util.SWTHelper;
 import ch.rgw.tools.StringTool;
@@ -66,6 +67,15 @@ public class SidebarPreferences extends FieldEditorPreferencePage implements IWo
 	public void init(IWorkbench workbench) {
 		// TODO Automatisch erstellter Methoden-Stub
 
+	}
+
+	@Override
+	public boolean performOk() {
+		if (super.performOk()) {
+			LocalConfigService.flush();
+			return true;
+		}
+		return false;
 	}
 
 	/*

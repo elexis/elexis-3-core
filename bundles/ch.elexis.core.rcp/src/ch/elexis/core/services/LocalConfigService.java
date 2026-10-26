@@ -19,8 +19,7 @@ public class LocalConfigService {
 	}
 
 	public static void flush() {
-		// TODO Auto-generated method stub
-
+		LocalConfigServiceImpl.flush();
 	}
 
 	public static void clear() {
