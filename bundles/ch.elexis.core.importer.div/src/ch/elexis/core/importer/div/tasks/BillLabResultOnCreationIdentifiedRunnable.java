@@ -286,7 +286,6 @@ public class BillLabResultOnCreationIdentifiedRunnable implements IIdentifiedRun
 		// see RochePreferencePage.LABORRESULTS_BILL_ADDCONS
 		if (autoBillTarmed00_0010IfNotAlreadyBilledOnEncounter) {
 			synchronized (kons) {
-				String tardocConsCode = getTardocConsCode(kons.getMandator());
 				List<IBilled> leistungen = kons.getBilled();
 				boolean addCons = true;
 				for (IBilled verrechnet : leistungen) {
