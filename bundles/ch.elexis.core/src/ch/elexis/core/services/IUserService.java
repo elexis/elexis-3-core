@@ -35,7 +35,7 @@ public interface IUserService {
 	 * Returns all executive doctors (i.e. Practitioners)
 	 * 
 	 * @return
-	 * @since 3.14
+	 * @since 3.13
 	 */
 	public List<IMandator> findAllExecutiveDoctors();
 
@@ -112,7 +112,7 @@ public interface IUserService {
 	 * Retrieve the default executive doctors this contact is working for.
 	 * 
 	 * @return
-	 * @since 3.14
+	 * @since 3.13
 	 */
 	public Optional<IMandator> getDefaultExecutiveDoctorWorkingFor(IContact contact);
 
