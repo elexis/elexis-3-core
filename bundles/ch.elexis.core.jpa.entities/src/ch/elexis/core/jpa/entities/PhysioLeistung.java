@@ -55,6 +55,12 @@ public class PhysioLeistung extends AbstractEntityWithId implements EntityWithId
 	@Lob
 	private String description;
 
+	@Column(length = 255)
+	private String kapitel;
+
+	@Lob
+	private String interpretation;
+
 	public LocalDate getValidFrom() {
 		return validFrom;
 	}
@@ -101,6 +107,22 @@ public class PhysioLeistung extends AbstractEntityWithId implements EntityWithId
 
 	public void setDescription(String description) {
 		this.description = description;
+	}
+
+	public String getKapitel() {
+		return kapitel;
+	}
+
+	public void setKapitel(String kapitel) {
+		this.kapitel = kapitel;
+	}
+
+	public String getInterpretation() {
+		return interpretation;
+	}
+
+	public void setInterpretation(String interpretation) {
+		this.interpretation = interpretation;
 	}
 
 	public String getCodeSystemName() {

@@ -114,4 +114,16 @@ ALTER TABLE konto RENAME COLUMN BetragInt TO Betrag;
 	<changeSet id="manual_update_usergroupuserjoint_userid_len" author="thomas">
 		<modifyDataType tableName="USERGROUP_USER_JOINT" columnName="ID" newDataType="VARCHAR(80)"/>
 	</changeSet>
+
+	<changeSet id="manual_update_CH_ELEXIS_ARZTTARIFE_CH_PHYSIO_kapitel_interpretation" author="thomas">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<columnExists tableName="CH_ELEXIS_ARZTTARIFE_CH_PHYSIO" columnName="KAPITEL" />
+			</not>
+		</preConditions>
+		<addColumn tableName="CH_ELEXIS_ARZTTARIFE_CH_PHYSIO">
+			<column name="KAPITEL" type="VARCHAR(255)"/>
+			<column name="INTERPRETATION" type="CLOB"/>
+		</addColumn>
+	</changeSet>
 </databaseChangeLog>
