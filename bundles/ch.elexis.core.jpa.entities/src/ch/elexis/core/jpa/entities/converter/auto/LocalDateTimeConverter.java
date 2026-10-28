@@ -5,14 +5,14 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
-import jakarta.persistence.AttributeConverter;
-import jakarta.persistence.Converter;
-
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ch.rgw.tools.TimeTool;
 import ch.rgw.tools.TimeTool.TimeFormatException;
+import jakarta.persistence.AttributeConverter;
+import jakarta.persistence.Converter;
 
 @Converter(autoApply = true)
 public class LocalDateTimeConverter implements AttributeConverter<LocalDateTime, String> {
@@ -33,9 +33,11 @@ public class LocalDateTimeConverter implements AttributeConverter<LocalDateTime,
 
 	@Override
 	public LocalDateTime convertToEntityAttribute(String dateValue) {
-		if (dateValue == null || dateValue.length() == 0) {
+		if (StringUtils.isBlank(dateValue)) {
 			return null;
 		}
+
+		dateValue = dateValue.trim();
 
 		try {
 			switch (dateValue.length()) {

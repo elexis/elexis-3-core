@@ -3083,6 +3083,9 @@ public class Messages extends NLS {
 	public static String MedicsPreferencePage_labelUploadDirimed;
 	public static String Medics_Page_Cannot_be_displayed;
 	public static String Mediorder_changeEmail_text;
+	public static String Mediorder_preferences_autoPrintLabels;
+	public static String Mediorder_labels_printed;
+	public static String Mediorder_labels_printed_skipped;
 	public static String MediportClientSetsPrefPage_btn_PartnerinfoAnzeigen;
 	public static String MediportClientSetsPrefPage_default_paramName;
 	public static String MediportClientSetsPrefPage_error_msg_PartnerdateiOeffnen;
@@ -5546,6 +5549,8 @@ public class Messages extends NLS {
 	public static String DiagnoseListComposite_StatusPrefix;
 	public static String DiagnoseListComposite_Create;
 	public static String DiagnoseListComposite_Remove;
+	public static String MoveFindingAction_MoveUp;
+	public static String MoveFindingAction_MoveDown;
 	public static String DeprecatedView_Title;
 	public static String DeprecatedView_TitlePlural;
 	public static String DeprecatedView_Message;

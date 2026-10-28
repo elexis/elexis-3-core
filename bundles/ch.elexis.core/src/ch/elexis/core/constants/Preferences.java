@@ -213,6 +213,10 @@ public class Preferences {
 	public static final String INVENTORY_ACTIVE_MANDATOR_STOCK_ONLY_ON_AUTO_ORDER = "inventory/active_mandator_stock_auto_order"; //$NON-NLS-1$
 	public static final boolean INVENTORY_ACTIVE_MANDATOR_STOCK_ONLY_ON_AUTO_ORDER_DEFAULT = false;
 
+	// Mediorder
+	public static final String MEDIORDER_AUTO_PRINT_LABELS = "mediorder/autoPrintMedicationLabels"; //$NON-NLS-1$
+	public static final boolean MEDIORDER_AUTO_PRINT_LABELS_DEFAULT = false;
+
 	// Labor
 	public static final String DAYS_TO_KEEP_UNSEEN_LAB_RESULTS = "3"; //$NON-NLS-1$
 

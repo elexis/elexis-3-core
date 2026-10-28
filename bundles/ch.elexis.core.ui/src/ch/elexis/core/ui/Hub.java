@@ -52,6 +52,7 @@ import ch.elexis.core.ui.commands.sourceprovider.PatientSelectionStatus;
 import ch.elexis.core.ui.dialogs.ReminderListSelectionDialog;
 import ch.elexis.core.ui.e4.util.CoreUiUtil;
 import ch.elexis.core.ui.preferences.PreferenceInitializer;
+import ch.elexis.core.utils.CoreUtil;
 import ch.elexis.data.Anwender;
 import ch.elexis.data.Mandant;
 import ch.elexis.data.Patient;
@@ -183,7 +184,10 @@ public class Hub extends AbstractUIPlugin {
 
 		// set unique chromium cache path to support multiple running instances #27014
 		System.setProperty("chromium.cache_path", Files.createTempDirectory("chromium").toFile().getAbsolutePath());
-
+		// set chromium multi_threaded_message_loop #28567
+		if (CoreUtil.isLinux() && System.getProperty("chromium.multi_threaded_message_loop") == null) { //$NON-NLS-1$
+			System.setProperty("chromium.multi_threaded_message_loop", Boolean.TRUE.toString()); //$NON-NLS-1$
+		}
 		CoreUiUtil.injectServicesWithContext(this);
 
 		// add UI ClassLoader to default Script Interpreter

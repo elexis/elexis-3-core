@@ -121,6 +121,7 @@ public class SelectOrCreateOpenKonsDialog extends TitleAreaDialog {
 					fallCombo.setSelection(selection);
 				}
 				openKonsCombo.setInput(getOpenKons());
+				openKonsCombo.setSelection(new StructuredSelection(kons));
 			}
 		});
 		ToolBar toolbar = tbManager.createControl(areaComposite);

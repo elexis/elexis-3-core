@@ -406,6 +406,7 @@ public class StockManagementPreferencePage extends PreferencePage implements IWo
 					s.setDriverUuid(null);
 					lblMachineuuid.setText(StringConstants.EMPTY);
 				}
+				CoreModelServiceHolder.get().save(s);
 			}
 		});
 

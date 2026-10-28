@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.MessageFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -188,7 +189,10 @@ public class DocumentCrudHandler extends AbstractHandler implements IHandler {
 			try {
 				if (file != null) {
 					try (InputStream fin = new FileInputStream(file)) {
+						Date lastchanged = document.getLastchanged();
 						IDocument savedDocument = DocumentStoreServiceHolder.getService().saveDocument(document, fin);
+						savedDocument.setLastchanged(lastchanged);
+						DocumentStoreServiceHolder.getService().saveDocument(savedDocument);
 						ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_UPDATE, savedDocument);
 						return Optional.of(savedDocument);
 					}

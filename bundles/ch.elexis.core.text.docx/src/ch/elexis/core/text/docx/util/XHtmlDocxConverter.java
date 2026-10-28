@@ -74,6 +74,7 @@ public class XHtmlDocxConverter {
 				.charset(StandardCharsets.UTF_8) //
 				.prettyPrint(false);
 		removeInvalidAttributes(doc);
+		doc.head().appendElement("style").text("body, p { margin: 0 }");
 		return doc.html();
 	}
 

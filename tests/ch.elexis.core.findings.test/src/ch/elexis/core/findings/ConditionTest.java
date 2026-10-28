@@ -126,4 +126,23 @@ public class ConditionTest {
 		assertTrue(extensions.containsKey("test"));
 		assertEquals("testValue", extensions.get("test"));
 	}
+
+	@Test
+	public void replaceStringExtension() {
+		ICondition condition = FindingsServiceComponent.getService().create(ICondition.class);
+		assertNotNull(condition);
+		condition.setPatientId(AllTests.PATIENT_ID);
+		condition.setDateRecorded(LocalDate.of(2016, Month.OCTOBER, 19));
+		condition.setCategory(ConditionCategory.PROBLEMLISTITEM);
+		condition.setStatus(ConditionStatus.ACTIVE);
+		condition.addStringExtension("test", "first");
+		condition.addStringExtension("test", "second");
+		FindingsServiceComponent.getService().saveFinding(condition);
+
+		List<ICondition> conditions = FindingsServiceComponent.getService().getPatientsFindings(AllTests.PATIENT_ID,
+				ICondition.class);
+		assertEquals(1, conditions.size());
+		Map<String, String> extensions = conditions.get(0).getStringExtensions();
+		assertEquals(Collections.singletonMap("test", "second"), extensions);
+	}
 }

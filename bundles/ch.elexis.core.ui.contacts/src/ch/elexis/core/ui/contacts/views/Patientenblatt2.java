@@ -54,7 +54,6 @@ import org.eclipse.swt.events.FocusAdapter;
 import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
-import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -169,6 +168,7 @@ import jakarta.inject.Inject;
  */
 public class Patientenblatt2 extends Composite implements IUnlockable {
 	private static final String KEY_DBFIELD = "dbfield"; //$NON-NLS-1$
+	private static final String KEY_LINECOUNT = "lineCount"; //$NON-NLS-1$
 	private static final String KEY_PATIENTENBLATT = "Patientenblatt/"; //$NON-NLS-1$
 	private final FormToolkit tk;
 	private InputPanel ipp;
@@ -633,9 +633,15 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 					MessageDialog.openError(getShell(), Messages.Patientenblatt2_PhotoOpen_GenericError_Title,
 							Messages.Patientenblatt2_PhotoOpen_GenericError + ex.getMessage());
 				}
-			} else {
-				CameraCaptureUtil.openCameraAndSavePhoto(actPatient, actPatient.getLabel(true), photoLabel,
-						this.getShell());
+			} else if (CameraCaptureUtil.openCameraAndSavePhoto(actPatient, actPatient.getLabel(true),
+					this.getShell())) {
+				showPatientPhoto(actPatient);
+			}
+		});
+		photoLabel.addListener(SWT.Dispose, e -> {
+			if (currentPhoto != null && currentPhoto != defaultMale && currentPhoto != defaultFemale
+					&& !currentPhoto.isDisposed()) {
+				currentPhoto.dispose();
 			}
 		});
 
@@ -965,7 +971,21 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 
 		for (int i = 0; i < lbExpandable.size(); i++) {
 			ec.add(WidgetFactory.createExpandableComposite(tk, form, lbExpandable.get(i)));
-			Text text = tk.createText(ec.get(i), StringUtils.EMPTY, SWT.MULTI | SWT.WRAP);
+			Text text = new Text(ec.get(i), tk.getBorderStyle() | SWT.MULTI | SWT.WRAP) {
+				@Override
+				protected void checkSubclass() {
+				}
+
+				@Override
+				public Point computeSize(int wHint, int hHint, boolean changed) {
+					Point size = super.computeSize(wHint, hHint, changed);
+					if (hHint == SWT.DEFAULT) {
+						size.y = Math.max(size.y, computeTrim(0, 0, 0, getLineCount() * getLineHeight()).height);
+					}
+					return size;
+				}
+			};
+			tk.adapt(text, true, false);
 			FilterNonPrintableModifyListener.addTo(text);
 			text.setData("index", Integer.valueOf(i)); //$NON-NLS-1$
 			text.addFocusListener(new FocusAdapter() {
@@ -998,17 +1018,17 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 					UserSettings.saveExpandedState(KEY_PATIENTENBLATT + src.getText(), e.getState());
 				}
 			});
-			txExpandable.get(i).addKeyListener(new KeyListener() {
-
-				@Override
-				public void keyReleased(KeyEvent e) {
-					Text tx = (Text) e.getSource();
-					tx.redraw();
-					form.getBody().layout(true);
+			txExpandable.get(i).addListener(SWT.Verify, e -> {
+				int newLines = StringUtils.countMatches(e.text, '\n');
+				if (newLines > 0) {
+					text.setSize(text.getSize().x, text.getSize().y + newLines * text.getLineHeight());
 				}
-
-				@Override
-				public void keyPressed(KeyEvent e) {
+			});
+			txExpandable.get(i).addModifyListener(e -> {
+				form.getBody().layout(new Control[] { text });
+				if (!Integer.valueOf(text.getLineCount()).equals(text.getData(KEY_LINECOUNT))) {
+					text.setData(KEY_LINECOUNT, text.getLineCount());
+					form.reflow(true);
 				}
 			});
 
@@ -1056,7 +1076,7 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 		});
 
 		photoLabel.addListener(SWT.MenuDetect, e -> {
-			boolean hasPhoto = actPatient != null && PatientImageUtil.getPatientImage(actPatient.getId()) != null;
+			boolean hasPhoto = actPatient != null && currentPhoto != defaultMale && currentPhoto != defaultFemale;
 			if (!hasPhoto) {
 				e.doit = false;
 			}
@@ -1132,8 +1152,7 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 		}
 	}
 
-	public void setPatient(final Patient p) {
-		actPatient = p;
+	private void showPatientPhoto(final Patient p) {
 		Image previousPhoto = currentPhoto;
 		Image patientImage = null;
 		if (p != null) {
@@ -1167,6 +1186,11 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 				&& !previousPhoto.isDisposed()) {
 			previousPhoto.dispose();
 		}
+	}
+
+	public void setPatient(final Patient p) {
+		actPatient = p;
+		showPatientPhoto(p);
 		refreshUi();
 		setUnlocked(LocalLockServiceHolder.get().isLockedLocal(p));
 		if (ipp != null) {
@@ -1859,9 +1883,9 @@ public class Patientenblatt2 extends Composite implements IUnlockable {
 
 			@Override
 			public void run() {
-				if (actPatient != null) {
-					CameraCaptureUtil.openCameraAndSavePhoto(actPatient, actPatient.getLabel(true), photoLabel,
-							getShell());
+				if (actPatient != null
+						&& CameraCaptureUtil.openCameraAndSavePhoto(actPatient, actPatient.getLabel(true), getShell())) {
+					showPatientPhoto(actPatient);
 				}
 			}
 

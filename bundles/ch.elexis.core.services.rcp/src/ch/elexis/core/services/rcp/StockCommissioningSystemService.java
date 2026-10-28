@@ -1,6 +1,5 @@
 package ch.elexis.core.services.rcp;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -32,14 +31,12 @@ public class StockCommissioningSystemService implements IStockCommissioningSyste
 
 	@Override
 	public List<UUID> listAllAvailableDrivers() {
-		return Collections.emptyList();
-//		return StockCommissioningSystemDriverFactories.getAllDriverUuids();
+		return StockCommissioningSystemDriverFactories.getAllDriverUuids();
 	}
 
 	@Override
 	public String getInfoStringForDriver(UUID driverUuid, boolean extended) {
-		return "not supported on Elexis RCP";
-//		return StockCommissioningSystemDriverFactories.getInfoStringForDriver(driverUuid, extended);
+		return StockCommissioningSystemDriverFactories.getInfoStringForDriver(driverUuid, extended);
 	}
 
 	@Override

@@ -75,6 +75,7 @@ import ch.elexis.core.model.IEncounter;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.IPrescription;
 import ch.elexis.core.model.IRecipe;
+import ch.elexis.core.model.IStockEntry;
 import ch.elexis.core.model.builder.IPrescriptionBuilder;
 import ch.elexis.core.model.builder.IRecipeBuilder;
 import ch.elexis.core.model.prescription.EntryType;
@@ -288,6 +289,9 @@ public class RezepteView extends ViewPart implements IRefreshable {
 						return;
 					}
 
+					if (obj instanceof IStockEntry) {
+						obj = ((IStockEntry) obj).getArticle();
+					}
 					if (obj instanceof IArticle) {
 						IArticle art = (IArticle) obj;
 						IPrescription ret = new IPrescriptionBuilder(CoreModelServiceHolder.get(),
