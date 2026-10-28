@@ -9,7 +9,8 @@ public enum OrderHistoryAction {
 	COMPLETEDELIVERY("✅", Messages.OrderHistory_CompleteDelivery), ADDED("🆕", Messages.OrderHistory_Added),
 	INCREASED("🔼", Messages.OrderHistory_Increased), DECREASED("🔽", Messages.OrderHistory_Decreased),
 	BILLED("💰", Messages.OrderHistory_Billed), PICKEDUP("🤝", Messages.OrderHistory_PickedUp),
-	AMOUNTADJUSTED("🔢", Messages.OrderHistory_AmountAdjusted);
+	AMOUNTADJUSTED("🔢", Messages.OrderHistory_AmountAdjusted),
+	LABELSCANNED("🏷️", Messages.OrderHistory_LabelScanned);
 
 	private final String icon;
 	private final String translation;

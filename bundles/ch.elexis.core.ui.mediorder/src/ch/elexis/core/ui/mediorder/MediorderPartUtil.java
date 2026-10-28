@@ -29,6 +29,7 @@ import ch.elexis.core.model.prescription.EntryType;
 import ch.elexis.core.services.IContextService;
 import ch.elexis.core.services.IModelService;
 import ch.elexis.core.services.IOrderService;
+import ch.elexis.core.services.IStickerService;
 import ch.elexis.core.services.IStockService;
 import ch.elexis.core.services.holder.MedicationServiceHolder;
 import ch.elexis.core.services.holder.StockServiceHolder;
@@ -93,6 +94,21 @@ public class MediorderPartUtil {
 	public static void logPickedUp(IOrderService orderService, List<IStockEntry> entries) {
 		forEachPatient(entries,
 				(patient, articles) -> orderService.getHistoryService().logMediorderPickedUp(patient, articles));
+	}
+
+	public static void dispense(List<IStockEntry> entries, IModelService coreModelService, IOrderService orderService,
+			IStickerService stickerService, IStockService stockService) {
+		if (entries == null || entries.isEmpty()) {
+			return;
+		}
+		List<IPatient> patients = entries.stream().map(MediorderPartUtil::getPatient).flatMap(Optional::stream)
+				.distinct().toList();
+		logPickedUp(orderService, entries);
+		for (IStockEntry entry : entries) {
+			coreModelService.remove(entry);
+		}
+		patients.forEach(
+				patient -> MediorderUtil.removeMailSticker(patient, coreModelService, stickerService, stockService));
 	}
 
 	private static void forEachPatient(List<IStockEntry> entries, BiConsumer<IPatient, List<String>> consumer) {

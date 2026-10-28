@@ -147,7 +147,7 @@ public class ElexisTypeMap {
 		stsToClassMap.put(TYPE_BESTELLUNG, Bestellung.class);
 		classToStsMap.put(Bestellung.class, TYPE_BESTELLUNG);
 		stsToClassMap.put(TYPE_BESTELLUNGENTRY, BestellungEntry.class);
-		classToStsMap.put(BestellungEntry.class, TYPE_LEISTUNGSBLOCK);
+		classToStsMap.put(BestellungEntry.class, TYPE_BESTELLUNGENTRY);
 		stsToClassMap.put(TYPE_AUF, AUF.class);
 		classToStsMap.put(AUF.class, TYPE_AUF);
 		stsToClassMap.put(TYPE_STICKER, Sticker.class);
