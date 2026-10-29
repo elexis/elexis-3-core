@@ -86,7 +86,10 @@ public class MediorderBilling {
 					.ifPresent(patient -> amountsByPatient.computeIfAbsent(patient, p -> new LinkedHashMap<>())
 							.merge(entry.getArticle(), entry.getAmount(), Integer::sum));
 		}
+		return bill(amountsByPatient, orderService);
+	}
 
+	public IStatus bill(Map<IPatient, Map<IArticle, Integer>> amountsByPatient, IOrderService orderService) {
 		MultiStatus multiStatus = new MultiStatus(getClass(), IStatus.OK, Messages.Mediorder_Billing_Failed);
 		amountsByPatient.forEach((patient, amounts) -> {
 			IStatus status = bill(patient, amounts);
@@ -140,7 +143,7 @@ public class MediorderBilling {
 		}
 		setBillingText(encounter.get(), patient);
 		for (Map.Entry<IArticle, Integer> amount : amounts.entrySet()) {
-			Result<IBilled> result = billingService.bill(amount.getKey(), encounter.get(), amount.getValue());
+			Result<IBilled> result = billingService.bill(amount.getKey(), encounter.get(), amount.getValue(), false);
 			if (!result.isOK()) {
 				return Status.error(result.getCombinedMessages());
 			}
