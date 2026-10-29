@@ -23,6 +23,17 @@ public class PreferencesUtil {
 		return defaultPreference;
 	}
 
+	/**
+	 * Read an OS specific value from the global configuration. Lookup order:
+	 * <ol>
+	 * <li>global <code>&lt;key&gt;_&lt;OS&gt;</code></li>
+	 * <li>global <code>&lt;key&gt;</code></li>
+	 * </ol>
+	 *
+	 * @param defaultPreference the key without OS suffix
+	 * @param configService
+	 * @return the value found, or an empty String
+	 */
 	public static String getOsSpecificPreference(String defaultPreference, IConfigService configService) {
 		String osSpecificPreference = getOsSpecificPreferenceName(CoreUtil.getOperatingSystemType(), defaultPreference);
 		String value = configService.get(osSpecificPreference, null);
@@ -34,42 +45,120 @@ public class PreferencesUtil {
 		return value;
 	}
 
+	/**
+	 * Same as {@link #getOsSpecificGlobalPreference(String, IConfigService, boolean)}
+	 * with <code>fallbackToLocal</code> <code>true</code>.
+	 */
 	public static String getOsSpecificGlobalPreference(String defaultPreference, IConfigService configService) {
+		return getOsSpecificGlobalPreference(defaultPreference, configService, true);
+	}
+
+	/**
+	 * Read an OS specific value from the global configuration. Lookup order:
+	 * <ol>
+	 * <li>global <code>&lt;key&gt;_&lt;OS&gt;</code></li>
+	 * <li>global <code>&lt;key&gt;</code></li>
+	 * <li>local <code>&lt;key&gt;</code>, only if <code>fallbackToLocal</code>
+	 * is <code>true</code></li>
+	 * </ol>
+	 *
+	 * @param defaultPreference the key without OS suffix
+	 * @param configService
+	 * @param fallbackToLocal   read the local configuration if nothing is set
+	 *                          globally
+	 * @return the value found, or <code>null</code>
+	 */
+	public static String getOsSpecificGlobalPreference(String defaultPreference, IConfigService configService,
+			boolean fallbackToLocal) {
 		String osSpecificPreference = osSpecificName(defaultPreference);
 		String value = read(osSpecificPreference, ConfigurationScope.GLOBAL, null, configService);
 		if (StringUtils.isBlank(value)) {
 			value = read(defaultPreference, ConfigurationScope.GLOBAL, null, configService);
 		}
-		if (StringUtils.isBlank(value)) {
+		if (fallbackToLocal && StringUtils.isBlank(value)) {
 			value = read(defaultPreference, ConfigurationScope.LOCAL, null, configService);
 		}
 
 		return blankToNull(value);
 	}
 
+	/**
+	 * Same as {@link #getOsSpecificLocalPreference(String, IConfigService, boolean)}
+	 * with <code>fallbackToGlobal</code> <code>true</code>.
+	 */
 	public static String getOsSpecificLocalPreference(String defaultPreference, IConfigService configService) {
+		return getOsSpecificLocalPreference(defaultPreference, configService, true);
+	}
+
+	/**
+	 * Read an OS specific value from the local configuration. Lookup order:
+	 * <ol>
+	 * <li>local <code>&lt;key&gt;_&lt;OS&gt;</code></li>
+	 * <li>local <code>&lt;key&gt;</code></li>
+	 * <li>global <code>&lt;key&gt;</code>, only if <code>fallbackToGlobal</code>
+	 * is <code>true</code></li>
+	 * </ol>
+	 *
+	 * @param defaultPreference the key without OS suffix
+	 * @param configService
+	 * @param fallbackToGlobal  read the global configuration if nothing is set
+	 *                          locally
+	 * @return the value found, or <code>null</code>
+	 */
+	public static String getOsSpecificLocalPreference(String defaultPreference, IConfigService configService,
+			boolean fallbackToGlobal) {
 		String osSpecificPreference = osSpecificName(defaultPreference);
 		String value = read(osSpecificPreference, ConfigurationScope.LOCAL, null, configService);
 		if (StringUtils.isBlank(value)) {
 			value = read(defaultPreference, ConfigurationScope.LOCAL, null, configService);
 		}
-		if (StringUtils.isBlank(value)) {
+		if (fallbackToGlobal && StringUtils.isBlank(value)) {
 			value = read(defaultPreference, ConfigurationScope.GLOBAL, null, configService);
 		}
 
 		return blankToNull(value);
 	}
 
-	public static String getOsSpecificContactPreference(String defaultPreference, IContact contact, IConfigService configService) {
+	/**
+	 * Same as
+	 * {@link #getOsSpecificContactPreference(String, IContact, IConfigService, boolean)}
+	 * with <code>fallbackToGlobal</code> <code>true</code>.
+	 */
+	public static String getOsSpecificContactPreference(String defaultPreference, IContact contact,
+			IConfigService configService) {
+		return getOsSpecificContactPreference(defaultPreference, contact, configService, true);
+	}
+
+	/**
+	 * Read an OS specific value from the configuration of a contact. Lookup
+	 * order:
+	 * <ol>
+	 * <li>contact <code>&lt;key&gt;_&lt;OS&gt;</code></li>
+	 * <li>contact <code>&lt;key&gt;</code></li>
+	 * <li>global <code>&lt;key&gt;_&lt;OS&gt;</code>, only if
+	 * <code>fallbackToGlobal</code> is <code>true</code></li>
+	 * <li>global <code>&lt;key&gt;</code>, only if <code>fallbackToGlobal</code>
+	 * is <code>true</code></li>
+	 * </ol>
+	 *
+	 * @param defaultPreference the key without OS suffix
+	 * @param contact
+	 * @param configService
+	 * @param fallbackToGlobal  read the global configuration if nothing is set for
+	 *                          the contact
+	 * @return the value found, or <code>null</code>
+	 */
+	public static String getOsSpecificContactPreference(String defaultPreference, IContact contact,
+			IConfigService configService, boolean fallbackToGlobal) {
 		String osSpecificPreference = osSpecificName(defaultPreference);
 		String value = read(osSpecificPreference, ConfigurationScope.CONTACT, contact, configService);
 		if (StringUtils.isBlank(value)) {
 			value = read(defaultPreference, ConfigurationScope.CONTACT, contact, configService);
 		}
-		if (StringUtils.isBlank(value)) {
+		if (fallbackToGlobal && StringUtils.isBlank(value)) {
 			value = read(osSpecificPreference, ConfigurationScope.GLOBAL, null, configService);
 		}
-		if (StringUtils.isBlank(value)) {
+		if (fallbackToGlobal && StringUtils.isBlank(value)) {
 			value = read(defaultPreference, ConfigurationScope.GLOBAL, null, configService);
 		}
 
