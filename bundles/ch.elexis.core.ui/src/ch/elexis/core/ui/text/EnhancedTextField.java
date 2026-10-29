@@ -14,6 +14,7 @@ package ch.elexis.core.ui.text;
 
 import java.util.ArrayList;
 import java.util.Hashtable;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -490,18 +491,19 @@ public class EnhancedTextField extends Composite implements IRichTextDisplay {
 				StyleRange n = new StyleRange();
 				n.start = xref.getPos();
 				n.length = xref.getLength();
-				if (xProvider.doLayout(n, xref.getProvider(), xref.getID()) == true) {
-					links.add(xref);
-				}
+				boolean isLink = xProvider.doLayout(n, xref.getProvider(), xref.getID());
 
 				if ((n.start + n.length) > text.getCharCount()) {
 					n.length = text.getCharCount() - n.start;
 				}
 				if ((n.length > 0) && (n.start >= 0)) {
+					if (isLink) {
+						links.add(xref);
+					}
 					text.setStyleRange(n);
 					ranges.add(xref);
 				} else {
-					xref.setPos(0);
+					record.remove(xref);
 				}
 			}
 		}
@@ -813,12 +815,17 @@ public class EnhancedTextField extends Composite implements IRichTextDisplay {
 				int len = event.length;
 				String text = event.replacedText;
 				int diff = len - text.length();
-				for (Samdas.Range r : ranges) {
+				for (Iterator<Samdas.Range> iterator = ranges.iterator(); iterator.hasNext();) {
+					Samdas.Range r = iterator.next();
 					int spos = r.getPos();
 					if (updateXRefMode) {
 						if (spos > pos) {
 							r.setPos(spos + diff);
 						}
+					} else if (!text.isEmpty() && spos >= pos && spos + r.getLength() <= pos + text.length()) {
+						iterator.remove();
+						links.remove(r);
+						record.remove(r);
 					} else {
 						if (spos >= pos) {
 							r.setPos(spos + diff);
