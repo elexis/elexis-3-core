@@ -59,13 +59,7 @@ public class TableUtil {
 
 			for (int columnIndex = 0; columnIndex < contents[0].length; columnIndex++) {
 				Tc column = (Tc) headerRow.getContent().get(columnIndex);
-				P columnPara = (P) column.getContent().get(0);
-				Text text = wmlObjectFactory.createText();
-				text.setValue(contents[0][columnIndex]);
-				R run = wmlObjectFactory.createR();
-				run.setRPr(r.getRPr());
-				run.getContent().add(text);
-				columnPara.getContent().add(run);
+				setCellText(column, r, contents[0][columnIndex]);
 			}
 		}
 		int rowIndex = properties == ITextPlugin.FIRST_ROW_IS_HEADER ? 1 : 0;
@@ -74,13 +68,7 @@ public class TableUtil {
 
 			for (int columnIndex = 0; columnIndex < contents[0].length; columnIndex++) {
 				Tc column = (Tc) row.getContent().get(columnIndex);
-				P columnPara = (P) column.getContent().get(0);
-				Text text = wmlObjectFactory.createText();
-				text.setValue(contents[rowIndex][columnIndex]);
-				R run = wmlObjectFactory.createR();
-				run.setRPr(r.getRPr());
-				run.getContent().add(text);
-				columnPara.getContent().add(run);
+				setCellText(column, r, contents[rowIndex][columnIndex]);
 			}
 		}
 		P p = DocxUtil.getParentP(r);
@@ -91,6 +79,41 @@ public class TableUtil {
 			parentContent.add(index, table);
 		}
 		return table;
+	}
+
+	/**
+	 * Write the content into a table cell. Line breaks (\n, \r\n, \r) are converted
+	 * to additional paragraphs within the cell and tabs (\t) to tab elements, since
+	 * a literal newline or tab character inside a w:t is not rendered as such by
+	 * Word or LibreOffice (a literal CR even makes LibreOffice drop the whole
+	 * table).
+	 *
+	 * @param column      the table cell
+	 * @param templateRun run providing the run properties (rPr) to use
+	 * @param content     the cell content, may contain line breaks and tabs
+	 */
+	private static void setCellText(Tc column, R templateRun, String content) {
+		P columnPara = (P) column.getContent().get(0);
+		R run = wmlObjectFactory.createR();
+		run.setRPr(templateRun.getRPr());
+		columnPara.getContent().add(run);
+
+		String[] lines = (content == null ? "" : content).replace("\r\n", "\n").replace('\r', '\n').split("\n", -1);
+		for (int i = 0; i < lines.length; i++) {
+			if (i > 0) {
+				// additional line within the cell as a new paragraph
+				columnPara = DocxUtil.appendParagraph(run);
+				run = DocxUtil.getOrCreateRun(columnPara);
+				run.setRPr(templateRun.getRPr());
+			}
+			String[] tabs = lines[i].split("\t", -1);
+			Text text = DocxUtil.getOrCreateText(run);
+			text.setValue(tabs[0]);
+			for (int j = 1; j < tabs.length; j++) {
+				text = DocxUtil.appendTabbedText(run);
+				text.setValue(tabs[j]);
+			}
+		}
 	}
 
 	private static Tbl createTable(int rows, int cols, int[] columnSizes, int totalWidthTwips,
