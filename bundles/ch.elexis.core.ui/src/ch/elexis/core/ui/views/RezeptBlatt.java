@@ -211,27 +211,19 @@ public class RezeptBlatt extends ViewPart implements ICallback, IActivationListe
 	}
 
 	public String[][] createRezeptListFields(List<Prescription> lines) {
-		String[][] fields = new String[lines.size() + 1][];
+		String[][] fields = new String[lines.size()][];
 
-		fields[0] = new String[4];
-		fields[0][0] = StringUtils.EMPTY;
-		fields[0][1] = "";
-		fields[0][2] = "";
-		fields[0][3] = "";
-
-		for (int i = 1; i < fields.length; i++) {
-			Prescription p = lines.get(i - 1);
-			fields[i] = new String[4];
+		for (int i = 0; i < fields.length; i++) {
+			Prescription p = lines.get(i);
+			fields[i] = new String[3];
 			if (p.getEntryType() != null && p.getEntryType() != EntryType.RECIPE
 					&& p.getEntryType() != EntryType.UNKNOWN) {
 				fields[i][0] = p.getEntryType().name().substring(0, 1);
 			} else {
 				fields[i][0] = StringUtils.EMPTY;
 			}
-			fields[i][1] = StringUtils.defaultString(getPrescriptionLabel(p));
+			fields[i][1] = StringUtils.defaultString(getPrescriptionLabel(p, true));
 			fields[i][2] = StringUtils.defaultString(p.getDosis());
-			fields[i][3] = StringUtils.defaultString(p.getBemerkung());
-			// fields[i][4] = StringUtils.defaultString(p.getDisposalComment());
 		}
 		return fields;
 	}
@@ -262,13 +254,12 @@ public class RezeptBlatt extends ViewPart implements ICallback, IActivationListe
 	public String[][] createExtendedTakingListFields(List<Prescription> lines) {
 		String[][] fields = new String[lines.size() + 1][];
 
-		fields[0] = new String[6];
+		fields[0] = new String[5];
 		fields[0][0] = StringUtils.EMPTY;
 		fields[0][1] = "Medikament";
 		fields[0][2] = "Einnahme";
 		fields[0][3] = "Von bis und mit";
 		fields[0][4] = "Anwendungsinstruktion";
-		fields[0][5] = "Anwendungsgrund";
 
 		for (int i = 1; i < fields.length; i++) {
 			Prescription p = lines.get(i - 1);
@@ -279,18 +270,32 @@ public class RezeptBlatt extends ViewPart implements ICallback, IActivationListe
 			} else {
 				fields[i][0] = StringUtils.EMPTY;
 			}
-			fields[i][1] = StringUtils.defaultString(getPrescriptionLabel(p));
+			fields[i][1] = StringUtils.defaultString(getPrescriptionLabel(p, false));
 			fields[i][2] = StringUtils.defaultString(p.getDosis());
-			fields[i][3] = StringUtils.defaultString(p.getBeginDate());
+			fields[i][3] = StringUtils.defaultString(getStartEndLabel(p));
 			fields[i][4] = StringUtils.defaultString(p.getBemerkung());
-			fields[i][5] = StringUtils.defaultString(p.getDisposalComment());
 		}
 		return fields;
 	}
 
-	private String getPrescriptionLabel(Prescription prescription) {
+	private String getStartEndLabel(Prescription prescription) {
+		if (prescription != null) {
+			String ret = prescription.getBeginDate();
+			if (StringUtils.isNotBlank(prescription.getEndDate())
+					&& !prescription.getEndDate().equals(prescription.getBeginDate())) {
+				ret = ret + " - " + prescription.getEndDate();
+			}
+			return ret;
+		}
+		return null;
+	}
+
+	private String getPrescriptionLabel(Prescription prescription, boolean addRemark) {
 		if (prescription != null) {
 			String ret = prescription.getSimpleLabel();
+			if (addRemark && StringUtils.isNotBlank(prescription.getBemerkung())) {
+				ret = ret + ", " + prescription.getBemerkung();
+			}
 			if (prescription.getExtInfoStoredObjectByKey(Constants.FLD_EXT_INDICATIONCODE) instanceof String) {
 				ret = ret + "\nSLIndication="
 						+ prescription.getExtInfoStoredObjectByKey(Constants.FLD_EXT_INDICATIONCODE);
