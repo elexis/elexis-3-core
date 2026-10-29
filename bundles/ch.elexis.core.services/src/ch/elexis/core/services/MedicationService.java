@@ -257,7 +257,11 @@ public class MedicationService implements IMedicationService {
 			IPrescription iPrescription = prescRecipes.get(i);
 			IPrescription copy = createPrescriptionCopy(iPrescription);
 			copy.setEntryType(EntryType.RECIPE);
-			copy.setDateTo(now);
+			if (iPrescription.getDateTo() != null) {
+				copy.setDateTo(iPrescription.getDateTo());
+			} else {
+				copy.setDateTo(now);
+			}
 			copy.setRecipe(ret);
 			copy.setExtInfo(Constants.FLD_EXT_RECIPE_ORDER, Integer.toString(i));
 			copy.setExtInfo(Constants.FLD_EXT_INDICATIONCODE,
