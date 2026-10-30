@@ -130,7 +130,7 @@ public class RezeptBlatt extends ViewPart implements ICallback, IActivationListe
 		updateTextLock();
 		List<Prescription> lines = rp.getLines();
 		String[][] fields = new String[lines.size()][];
-		int[] wt = new int[] { 4, 56, 18, 22 };
+		int[] wt = new int[] { 10, 70, 20 };
 		if (replace.equals(Messages.RezeptBlatt_4)) {
 			fields = createRezeptListFields(lines);
 		}
@@ -192,14 +192,14 @@ public class RezeptBlatt extends ViewPart implements ICallback, IActivationListe
 			if (replace.equals(Messages.RezeptBlatt_4)) {
 				replace = Messages.RezeptBlatt_4_Extended;
 				fields = createExtendedTakingListFields(lines);
-				wt = new int[] { 5, 45, 10, 10, 15, 15 };
+				wt = new int[] { 5, 45, 10, 10, 15 };
 				if (insertTable(replace, fields, wt, Brief.RP)) {
 					// save and open
 				}
 			} else if (replace.equals(Messages.RezeptBlatt_6)) {
 				replace = Messages.RezeptBlatt_6_Extended;
 				fields = createExtendedTakingListFields(lines);
-				wt = new int[] { 5, 45, 10, 10, 15, 15 };
+				wt = new int[] { 5, 45, 10, 10, 15 };
 				if (insertTable(replace, fields, wt, Brief.UNKNOWN)) {
 					// save and open
 				}
