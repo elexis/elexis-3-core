@@ -11,6 +11,7 @@ import java.net.URL;
 import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.utils.CoreUtil;
 
@@ -58,6 +59,45 @@ public interface IVirtualFilesystemService {
 	IVirtualFilesystemHandle of(String urlString, boolean performVariableReplacement) throws IOException;
 
 	IVirtualFilesystemHandle of(File file) throws IOException;
+
+	/**
+	 * Resolve a configured path or URL to a local file. A plain path, absolute or
+	 * relative, is used as is. A URL is resolved with {@link #of(String)}.
+	 *
+	 * @param pathOrUrl
+	 * @return the file, or {@link Optional#empty()} if the value is blank, an
+	 *         invalid URL or a URL not located on the local file system, e.g. smb
+	 * @since 3.14
+	 */
+	default Optional<File> toLocalFile(String pathOrUrl) {
+		if (StringUtils.isBlank(pathOrUrl)) {
+			return Optional.empty();
+		}
+		if (!isUrl(pathOrUrl)) {
+			return Optional.of(new File(pathOrUrl));
+		}
+		try {
+			return of(pathOrUrl).toFile();
+		} catch (IOException e) {
+			LoggerFactory.getLogger(IVirtualFilesystemService.class).warn("Invalid url [{}]",
+					hidePasswordInUrlString(pathOrUrl), e);
+			return Optional.empty();
+		}
+	}
+
+	/**
+	 * Test if the value starts with a URL scheme, e.g. <code>file:</code> or
+	 * <code>smb:</code>. A Windows drive letter like <code>C:</code> is no scheme.
+	 *
+	 * @param value
+	 * @return <code>true</code> if the value is a URL, <code>false</code> if it is
+	 *         a plain path
+	 * @since 3.14
+	 */
+	static boolean isUrl(String value) {
+		int colon = value.indexOf(':');
+		return colon > 1 && StringUtils.isAlpha(value.substring(0, colon));
+	}
 
 	/**
 	 * Hide the password that may be part of the URL, accepts UNCs or unix paths

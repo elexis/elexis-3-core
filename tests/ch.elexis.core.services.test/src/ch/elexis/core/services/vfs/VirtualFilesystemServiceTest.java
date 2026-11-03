@@ -1,6 +1,8 @@
 package ch.elexis.core.services.vfs;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.io.IOException;
@@ -93,6 +95,34 @@ public class VirtualFilesystemServiceTest {
 
 		hidePasswordInUrlString = IVirtualFilesystemService.hidePasswordInUrlString("C:/Windows/Test");
 		assertEquals("C:/Windows/Test", hidePasswordInUrlString);
+	}
+
+	@Test
+	public void toLocalFile() throws IOException {
+		assertFalse(service.toLocalFile(null).isPresent());
+		assertFalse(service.toLocalFile(" ").isPresent());
+		assertEquals(new File("labtop/download"), service.toLocalFile("labtop/download").get());
+
+		File tempFile = File.createTempFile("toLocalFile", ".txt");
+		tempFile.deleteOnExit();
+		assertEquals(tempFile, service.toLocalFile(tempFile.getAbsolutePath()).get());
+		assertEquals(tempFile, service.toLocalFile(tempFile.toURI().toString()).get());
+
+		assertFalse(service.toLocalFile("smb://server/share/folder").isPresent());
+	}
+
+	@Test
+	public void isUrl() {
+		assertTrue(IVirtualFilesystemService.isUrl("file:/C:/Windows/Test"));
+		assertTrue(IVirtualFilesystemService.isUrl("file:///tmp/test.txt"));
+		assertTrue(IVirtualFilesystemService.isUrl("smb://server/share/folder"));
+		assertTrue(IVirtualFilesystemService.isUrl("davs://my.nextcloud.ch/cloud/"));
+
+		assertFalse(IVirtualFilesystemService.isUrl("C:\\Windows\\Test"));
+		assertFalse(IVirtualFilesystemService.isUrl("C:/Windows/Test"));
+		assertFalse(IVirtualFilesystemService.isUrl("\\\\medeserv\\elexisdata\\folder_name"));
+		assertFalse(IVirtualFilesystemService.isUrl("/tmp/test.txt"));
+		assertFalse(IVirtualFilesystemService.isUrl("labtop/download"));
 	}
 
 	@Test
