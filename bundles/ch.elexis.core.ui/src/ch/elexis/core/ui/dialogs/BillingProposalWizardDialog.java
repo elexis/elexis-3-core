@@ -371,12 +371,12 @@ public class BillingProposalWizardDialog extends TitleAreaDialog {
 			if (converageMarkedOnly.getSelection()) {
 				includeFutureBillingDate = coverageMarkedFuture.getSelection();
 				Query<Fall> coverageQuery = new Query<>(Fall.class);
+				if (!includeFutureBillingDate) {
+					coverageQuery.add(Fall.FLD_RN_PLANUNG, Query.LESS_OR_EQUAL,
+							new TimeTool().toString(TimeTool.DATE_COMPACT));
+				}
 				coverageQuery.add(Fall.FLD_RN_PLANUNG, Query.NOT_EQUAL, StringUtils.EMPTY);
-				TimeTool now = new TimeTool();
-				List<Fall> coverages = coverageQuery.execute().stream()
-						.filter(c -> c.getBillingDate() != null
-								&& (includeFutureBillingDate || !c.getBillingDate().isAfter(now)))
-						.collect(Collectors.toList());
+				List<Fall> coverages = coverageQuery.execute();
 				if (coverages.isEmpty()) {
 					query.addToken("1 = 2");
 				} else {
