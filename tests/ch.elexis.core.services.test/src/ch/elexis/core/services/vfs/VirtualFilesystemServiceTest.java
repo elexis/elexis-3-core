@@ -107,18 +107,22 @@ public class VirtualFilesystemServiceTest {
 		tempFile.deleteOnExit();
 		assertEquals(tempFile, service.toLocalFile(tempFile.getAbsolutePath()).get());
 		assertEquals(tempFile, service.toLocalFile(tempFile.toURI().toString()).get());
+
+		assertFalse(service.toLocalFile("smb://server/share/folder").isPresent());
 	}
 
 	@Test
-	public void ofExisting() throws IOException {
-		assertFalse(service.ofExisting(null).isPresent());
-		assertFalse(service.ofExisting(" ").isPresent());
+	public void isUrl() {
+		assertTrue(IVirtualFilesystemService.isUrl("file:/C:/Windows/Test"));
+		assertTrue(IVirtualFilesystemService.isUrl("file:///tmp/test.txt"));
+		assertTrue(IVirtualFilesystemService.isUrl("smb://server/share/folder"));
+		assertTrue(IVirtualFilesystemService.isUrl("davs://my.nextcloud.ch/cloud/"));
 
-		File tempFile = File.createTempFile("ofExisting", ".txt");
-		tempFile.deleteOnExit();
-		assertTrue(service.ofExisting(tempFile.getAbsolutePath()).isPresent());
-		assertTrue(service.ofExisting(tempFile.toURI().toString()).isPresent());
-		assertFalse(service.ofExisting(tempFile.getAbsolutePath() + ".missing").isPresent());
+		assertFalse(IVirtualFilesystemService.isUrl("C:\\Windows\\Test"));
+		assertFalse(IVirtualFilesystemService.isUrl("C:/Windows/Test"));
+		assertFalse(IVirtualFilesystemService.isUrl("\\\\medeserv\\elexisdata\\folder_name"));
+		assertFalse(IVirtualFilesystemService.isUrl("/tmp/test.txt"));
+		assertFalse(IVirtualFilesystemService.isUrl("labtop/download"));
 	}
 
 	@Test

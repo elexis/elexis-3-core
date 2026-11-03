@@ -11,6 +11,7 @@ import java.net.URL;
 import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.utils.CoreUtil;
 
@@ -60,56 +61,42 @@ public interface IVirtualFilesystemService {
 	IVirtualFilesystemHandle of(File file) throws IOException;
 
 	/**
-	 * Resolve a configured path or URL to an existing handle. If the value can not
-	 * be resolved as URL, e.g. a relative path of an older configuration, it is
-	 * resolved as plain file.
+	 * Resolve a configured path or URL to a local file. A plain path, absolute or
+	 * relative, is used as is. A URL is resolved with {@link #of(String)}.
 	 *
 	 * @param pathOrUrl
-	 * @return the handle if it exists, {@link Optional#empty()} otherwise
-	 * @since 3.14
-	 */
-	default Optional<IVirtualFilesystemHandle> ofExisting(String pathOrUrl) {
-		if (StringUtils.isBlank(pathOrUrl)) {
-			return Optional.empty();
-		}
-		try {
-			IVirtualFilesystemHandle handle = of(pathOrUrl);
-			if (handle.exists()) {
-				return Optional.of(handle);
-			}
-		} catch (IOException | IllegalArgumentException e) {
-		}
-		try {
-			IVirtualFilesystemHandle handle = of(new File(pathOrUrl));
-			if (handle.exists()) {
-				return Optional.of(handle);
-			}
-		} catch (IOException e) {
-		}
-		return Optional.empty();
-	}
-
-	/**
-	 * Resolve a configured path or URL to a local file. If the value can not be
-	 * resolved as local file URL, e.g. a relative path of an older configuration,
-	 * it is used as plain file path.
-	 *
-	 * @param pathOrUrl
-	 * @return the file, or {@link Optional#empty()} if the value is blank
+	 * @return the file, or {@link Optional#empty()} if the value is blank, an
+	 *         invalid URL or a URL not located on the local file system, e.g. smb
 	 * @since 3.14
 	 */
 	default Optional<File> toLocalFile(String pathOrUrl) {
 		if (StringUtils.isBlank(pathOrUrl)) {
 			return Optional.empty();
 		}
-		try {
-			Optional<File> file = of(pathOrUrl).toFile();
-			if (file.isPresent()) {
-				return file;
-			}
-		} catch (IOException e) {
+		if (!isUrl(pathOrUrl)) {
+			return Optional.of(new File(pathOrUrl));
 		}
-		return Optional.of(new File(pathOrUrl));
+		try {
+			return of(pathOrUrl).toFile();
+		} catch (IOException e) {
+			LoggerFactory.getLogger(IVirtualFilesystemService.class).warn("Invalid url [{}]",
+					hidePasswordInUrlString(pathOrUrl), e);
+			return Optional.empty();
+		}
+	}
+
+	/**
+	 * Test if the value starts with a URL scheme, e.g. <code>file:</code> or
+	 * <code>smb:</code>. A Windows drive letter like <code>C:</code> is no scheme.
+	 *
+	 * @param value
+	 * @return <code>true</code> if the value is a URL, <code>false</code> if it is
+	 *         a plain path
+	 * @since 3.14
+	 */
+	static boolean isUrl(String value) {
+		int colon = value.indexOf(':');
+		return colon > 1 && StringUtils.isAlpha(value.substring(0, colon));
 	}
 
 	/**
