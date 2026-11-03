@@ -1,6 +1,8 @@
 package ch.elexis.core.services.vfs;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.io.IOException;
@@ -93,6 +95,30 @@ public class VirtualFilesystemServiceTest {
 
 		hidePasswordInUrlString = IVirtualFilesystemService.hidePasswordInUrlString("C:/Windows/Test");
 		assertEquals("C:/Windows/Test", hidePasswordInUrlString);
+	}
+
+	@Test
+	public void toLocalFile() throws IOException {
+		assertFalse(service.toLocalFile(null).isPresent());
+		assertFalse(service.toLocalFile(" ").isPresent());
+		assertEquals(new File("labtop/download"), service.toLocalFile("labtop/download").get());
+
+		File tempFile = File.createTempFile("toLocalFile", ".txt");
+		tempFile.deleteOnExit();
+		assertEquals(tempFile, service.toLocalFile(tempFile.getAbsolutePath()).get());
+		assertEquals(tempFile, service.toLocalFile(tempFile.toURI().toString()).get());
+	}
+
+	@Test
+	public void ofExisting() throws IOException {
+		assertFalse(service.ofExisting(null).isPresent());
+		assertFalse(service.ofExisting(" ").isPresent());
+
+		File tempFile = File.createTempFile("ofExisting", ".txt");
+		tempFile.deleteOnExit();
+		assertTrue(service.ofExisting(tempFile.getAbsolutePath()).isPresent());
+		assertTrue(service.ofExisting(tempFile.toURI().toString()).isPresent());
+		assertFalse(service.ofExisting(tempFile.getAbsolutePath() + ".missing").isPresent());
 	}
 
 	@Test

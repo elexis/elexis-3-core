@@ -60,6 +60,59 @@ public interface IVirtualFilesystemService {
 	IVirtualFilesystemHandle of(File file) throws IOException;
 
 	/**
+	 * Resolve a configured path or URL to an existing handle. If the value can not
+	 * be resolved as URL, e.g. a relative path of an older configuration, it is
+	 * resolved as plain file.
+	 *
+	 * @param pathOrUrl
+	 * @return the handle if it exists, {@link Optional#empty()} otherwise
+	 * @since 3.14
+	 */
+	default Optional<IVirtualFilesystemHandle> ofExisting(String pathOrUrl) {
+		if (StringUtils.isBlank(pathOrUrl)) {
+			return Optional.empty();
+		}
+		try {
+			IVirtualFilesystemHandle handle = of(pathOrUrl);
+			if (handle.exists()) {
+				return Optional.of(handle);
+			}
+		} catch (IOException | IllegalArgumentException e) {
+		}
+		try {
+			IVirtualFilesystemHandle handle = of(new File(pathOrUrl));
+			if (handle.exists()) {
+				return Optional.of(handle);
+			}
+		} catch (IOException e) {
+		}
+		return Optional.empty();
+	}
+
+	/**
+	 * Resolve a configured path or URL to a local file. If the value can not be
+	 * resolved as local file URL, e.g. a relative path of an older configuration,
+	 * it is used as plain file path.
+	 *
+	 * @param pathOrUrl
+	 * @return the file, or {@link Optional#empty()} if the value is blank
+	 * @since 3.14
+	 */
+	default Optional<File> toLocalFile(String pathOrUrl) {
+		if (StringUtils.isBlank(pathOrUrl)) {
+			return Optional.empty();
+		}
+		try {
+			Optional<File> file = of(pathOrUrl).toFile();
+			if (file.isPresent()) {
+				return file;
+			}
+		} catch (IOException e) {
+		}
+		return Optional.of(new File(pathOrUrl));
+	}
+
+	/**
 	 * Hide the password that may be part of the URL, accepts UNCs or unix paths
 	 * simply returning them
 	 *
