@@ -15,6 +15,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicReference;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Strings;
@@ -581,26 +582,40 @@ public class TaskServiceImpl implements ITaskService {
 	 * @throws TaskException if the ITaskDescriptor could not be loaded
 	 */
 	private ITaskDescriptor checkForTaskDescriptorChanges(ITaskDescriptor taskDescriptor) throws TaskException {
-		Optional<?> lastUpdate = taskModelService
-				.executeNativeQuery("SELECT lastupdate FROM TASKDESCRIPTOR WHERE ID = '" + taskDescriptor.getId() + "'")
-				.findFirst();
-		if (lastUpdate.isPresent() && lastUpdate.get().equals(taskDescriptor.getLastupdate())) {
-			// no changes detected
+		AtomicReference<ITaskDescriptor> resultRef = new AtomicReference<>();
+		resultRef.set(taskDescriptor);
+
+		accessControl.doPrivileged(() -> {
+			Optional<?> lastUpdate = taskModelService
+					.executeNativeQuery(
+							"SELECT lastupdate FROM TASKDESCRIPTOR WHERE ID = '" + taskDescriptor.getId() + "'")
+					.findFirst();
+			if (lastUpdate.isPresent() && lastUpdate.get().equals(taskDescriptor.getLastupdate())) {
+				// no changes detected
+				resultRef.set(null);
+			}
+		});
+
+		if (resultRef.get() == null) {
 			return null;
 		}
 
 		logger.info("[{}] detected taskDesc change [{}/{}], reloading", taskDescriptor.getTriggerType(),
 				taskDescriptor.getReferenceId(), taskDescriptor.getId());
-		ITaskDescriptor changedTaskDescriptor = taskModelService
-				.load(taskDescriptor.getId(), ITaskDescriptor.class, true, true).orElse(null);
-		if (changedTaskDescriptor == null || changedTaskDescriptor.isDeleted()) {
+		accessControl.doPrivileged(() -> {
+			ITaskDescriptor changedTaskDescriptor = taskModelService
+					.load(taskDescriptor.getId(), ITaskDescriptor.class, true, true).orElse(null);
+			resultRef.set(changedTaskDescriptor);
+		});
+
+		if (resultRef.get() == null || resultRef.get().isDeleted()) {
 			logger.warn("[{}] taskDesc not loadable or deleted [{} -> {}], releasing", taskDescriptor.getTriggerType(),
-					taskDescriptor.getId(), changedTaskDescriptor != null ? changedTaskDescriptor.getId() : "null");
+					taskDescriptor.getId(), resultRef.get() != null ? resultRef.get().getId() : "null");
 			release(taskDescriptor);
 			throw new TaskException(TaskException.PERSISTENCE_ERROR,
 					"TaskDescriptor not loadable or deleted, releasing it");
 		}
-		return changedTaskDescriptor;
+		return resultRef.get();
 	}
 
 	@Override
