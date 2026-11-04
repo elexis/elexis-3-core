@@ -9,6 +9,7 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -21,6 +22,8 @@ import org.eclipse.core.databinding.observable.value.WritableValue;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtensionRegistry;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.e4.core.di.annotations.Optional;
 import org.eclipse.e4.core.di.extensions.Service;
@@ -38,7 +41,6 @@ import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.ColumnPixelData;
 import org.eclipse.jface.viewers.ColumnWeightData;
-import org.eclipse.jface.viewers.ComboBoxCellEditor;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.EditingSupport;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -52,6 +54,8 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.SWTError;
 import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.browser.LocationListener;
+import org.eclipse.swt.custom.CTabFolder;
+import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.custom.StackLayout;
 import org.eclipse.swt.events.KeyAdapter;
@@ -67,6 +71,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
@@ -85,6 +90,7 @@ import com.google.i18n.phonenumbers.Phonenumber;
 
 import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.l10n.Messages;
+import ch.elexis.core.mediorder.MediorderBilling;
 import ch.elexis.core.mediorder.MediorderBlobId;
 import ch.elexis.core.mediorder.MediorderEntryState;
 import ch.elexis.core.mediorder.MediorderUtil;
@@ -98,10 +104,12 @@ import ch.elexis.core.model.IStock;
 import ch.elexis.core.model.IStockEntry;
 import ch.elexis.core.model.builder.IContactBuilder;
 import ch.elexis.core.model.prescription.EntryType;
+import ch.elexis.core.services.IBillingService;
 import ch.elexis.core.services.ICodeElementService;
 import ch.elexis.core.services.IConfigService;
 import ch.elexis.core.services.IContactService;
 import ch.elexis.core.services.IContextService;
+import ch.elexis.core.services.ICoverageService;
 import ch.elexis.core.services.IMedicationService;
 import ch.elexis.core.services.IModelService;
 import ch.elexis.core.services.IOrderService;
@@ -114,6 +122,7 @@ import ch.elexis.core.services.ITextReplacementService;
 import ch.elexis.core.types.Gender;
 import ch.elexis.core.ui.constants.ExtensionPointConstantsUi;
 import ch.elexis.core.ui.e4.dialog.IContactSelectorDialog;
+import ch.elexis.core.ui.e4.dialog.StatusDialog;
 import ch.elexis.core.ui.e4.dnd.GenericObjectDropTarget;
 import ch.elexis.core.ui.e4.parts.IRefreshablePart;
 import ch.elexis.core.ui.e4.util.CoreUiUtil;
@@ -170,14 +179,14 @@ public class MediorderPart implements IRefreshablePart {
 	@Inject
 	ITextReplacementService textReplacementService;
 
-	public enum MediorderActiveView {
-		DETAILS, HISTORY
-	}
+	@Inject
+	ICoverageService coverageService;
 
-	private MediorderActiveView mediorderActiveView = MediorderActiveView.DETAILS;
+	@Inject
+	IBillingService billingService;
 
-	private SashForm mainSashForm;
 	private SashForm orderSashForm;
+	private CTabFolder detailTabFolder;
 
 	private TableViewer tableViewer;
 	private TableViewer tableViewerDetails;
@@ -192,12 +201,9 @@ public class MediorderPart implements IRefreshablePart {
 	private Composite cDetails_table;
 	private Composite cHistory_table;
 	private Composite cHistory_timeline;
-	private Composite cPatientorder_area;
 	private Composite cPatientError_table;
 	private Composite cPatientList;
-	private StackLayout stackLayout;
 	private StackLayout topStackLayout;
-	private Composite viewComposite;
 	private Composite topViewComposite;
 
 	private StockComparator stockComparator;
@@ -215,7 +221,6 @@ public class MediorderPart implements IRefreshablePart {
 	private List<IStock> filteredStocks = new ArrayList<>();
 	private List<Integer> currentFilterValue = List.of();
 	private boolean filterActive = false;
-	private boolean isDetailsViewActive = true;
 
 	private Preferences preferences = InstanceScope.INSTANCE.getNode("ch.elexis.core.ui.mediorder");
 
@@ -235,7 +240,7 @@ public class MediorderPart implements IRefreshablePart {
 
 	private static final String CURRENT_FILTER_VALUE = "currentFilterValues";
 	private static final String IS_FILTER_ACTIVE = "isFilterActive";
-	private static final String LAST_ACTIVE_TABLEVIEWER = "lastActiveView";
+	private static final String LAST_ACTIVE_TAB = "lastActiveTab";
 	private static final String ONLY_NUMBER_REGEX = "\\d*";
 
 	private static final String FILTER_STATES_KEY = "mediorder.filterStates"; //$NON-NLS-1$
@@ -349,14 +354,10 @@ public class MediorderPart implements IRefreshablePart {
 			topStackLayout.topControl = cPatientError_table;
 			getImportedPatients();
 			refreshImportedPatientsTable();
-			orderSashForm.setWeights(new int[] { 100, 0 });
-			viewComposite.setVisible(false);
-			showHistoryTimeline(false);
+			orderSashForm.setMaximizedControl(topViewComposite);
 		} else {
 			topStackLayout.topControl = cPatientList;
-			viewComposite.setVisible(true);
-			orderSashForm.setWeights(new int[] { 50, 50 });
-			showHistoryTimeline(isDetailsViewActive);
+			orderSashForm.setMaximizedControl(null);
 			refreshStockTable();
 		}
 		topViewComposite.layout();
@@ -389,14 +390,7 @@ public class MediorderPart implements IRefreshablePart {
 		btnReady = createFilterButton(filterComposite, LABEL_FILTER_READY, FILTER_READY);
 		btnFinished = createFilterButton(filterComposite, LABEL_FILTER_FINISHED, FILTER_FINISHED);
 
-		mainSashForm = new SashForm(parent, SWT.VERTICAL);
-		mainSashForm.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-		mainSashForm.setSashWidth(10);
-
-		createPatientorderArea(mainSashForm, extensionRegistry);
-		createPatientorderTimeline(mainSashForm);
-
-		mainSashForm.setWeights(new int[] { 65, 35 });
+		createPatientorderArea(parent, extensionRegistry);
 		addDragAndDrop();
 
 		menuService.registerContextMenu(tableViewer.getTable(), "ch.elexis.core.ui.mediorder.popupmenu.viewer"); //$NON-NLS-1$
@@ -413,13 +407,7 @@ public class MediorderPart implements IRefreshablePart {
 	}
 
 	private void createPatientorderArea(Composite parent, IExtensionRegistry extensionRegistry) {
-		cPatientorder_area = new Composite(parent, SWT.BORDER);
-		GridLayout glOrder = new GridLayout(1, false);
-		glOrder.marginWidth = 2;
-		glOrder.marginHeight = 2;
-		cPatientorder_area.setLayout(glOrder);
-
-		orderSashForm = new SashForm(cPatientorder_area, SWT.VERTICAL);
+		orderSashForm = new SashForm(parent, SWT.VERTICAL);
 		orderSashForm.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		orderSashForm.setSashWidth(5);
 
@@ -432,17 +420,31 @@ public class MediorderPart implements IRefreshablePart {
 		topStackLayout.topControl = cPatientList;
 		topViewComposite.layout();
 
-		viewComposite = new Composite(orderSashForm, SWT.NONE);
-		stackLayout = new StackLayout();
-		viewComposite.setLayout(stackLayout);
+		detailTabFolder = new CTabFolder(orderSashForm, SWT.BORDER | SWT.TOP);
+		detailTabFolder.setTabHeight(30);
+		createPatientorderDetailViewer(detailTabFolder);
+		createPatientorderTimeline(detailTabFolder);
+		createPatientorderHistory(detailTabFolder);
 
-		createPatientorderDetailViewer(viewComposite);
-		createPatientorderHistory(viewComposite);
+		createTabItem(Messages.Mediorder_details, cDetails_table);
+		createTabItem(Messages.Mediorder_history_timeline, cHistory_timeline);
+		createTabItem(Messages.Mediorder_history, cHistory_table);
 
-		stackLayout.topControl = cDetails_table;
-		viewComposite.layout();
+		detailTabFolder.setSelection(0);
+		detailTabFolder.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				saveFilterStatus();
+			}
+		});
 
 		orderSashForm.setWeights(new int[] { 50, 50 });
+	}
+
+	private void createTabItem(String title, Control control) {
+		CTabItem tabItem = new CTabItem(detailTabFolder, SWT.NONE);
+		tabItem.setText(title);
+		tabItem.setControl(control);
 	}
 
 	private void createPatientorderTimeline(Composite parent) {
@@ -451,11 +453,6 @@ public class MediorderPart implements IRefreshablePart {
 		glTimeline.marginWidth = 2;
 		glTimeline.marginHeight = 0;
 		cHistory_timeline.setLayout(glTimeline);
-
-		setCompositeTitle(cHistory_timeline, Messages.Mediorder_history_timeline);
-
-		Label separator = new Label(cHistory_timeline, SWT.SEPARATOR | SWT.HORIZONTAL);
-		separator.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false));
 
 		historyRenderer = new MediorderHistoryRenderer();
 		historyBuilder = new MediorderHistoryBuilder(coreModelService, orderService, codeElementService, contextService,
@@ -473,13 +470,6 @@ public class MediorderPart implements IRefreshablePart {
 		selectedDetailStock.addChangeListener(sel -> updateHistoryTimeline(selectedDetailStock.getValue()));
 	}
 
-	private void showHistoryTimeline(boolean show) {
-		if (cHistory_timeline == null || cHistory_timeline.isDisposed()) {
-			return;
-		}
-		mainSashForm.setMaximizedControl(show ? null : cPatientorder_area);
-	}
-
 	private Button createFilterButton(Composite parent, String text, List<Integer> states) {
 		Button button = new Button(parent, SWT.TOGGLE);
 		button.setText(text);
@@ -492,19 +482,6 @@ public class MediorderPart implements IRefreshablePart {
 		});
 		filterButtons.add(button);
 		return button;
-	}
-
-	public MediorderActiveView toggleViews(MediorderActiveView view) {
-		mediorderActiveView = (mediorderActiveView == view) ? MediorderActiveView.DETAILS : view;
-		stackLayout.topControl = switch (mediorderActiveView) {
-		case DETAILS -> cDetails_table;
-		case HISTORY -> cHistory_table;
-		};
-		isDetailsViewActive = mediorderActiveView == MediorderActiveView.DETAILS;
-		viewComposite.layout();
-		showHistoryTimeline(isDetailsViewActive);
-		saveFilterStatus();
-		return mediorderActiveView;
 	}
 
 	private void createSearchBar(Composite parent) {
@@ -1327,8 +1304,6 @@ public class MediorderPart implements IRefreshablePart {
 		cDetails_table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		cDetails_table.setLayout(new GridLayout(1, false));
 
-		setCompositeTitle(cDetails_table, Messages.Mediorder_details);
-
 		Composite tableComposite = new Composite(cDetails_table, SWT.NONE);
 		tableComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		TableColumnLayout tcLayout_cDetails = new TableColumnLayout();
@@ -1341,10 +1316,7 @@ public class MediorderPart implements IRefreshablePart {
 		selectedDetailStock.addChangeListener(sel -> {
 			IStock stock = selectedDetailStock.getValue();
 			if (stock != null) {
-				List<IStockEntry> lStocks = stock.getStockEntries();
-				tableViewerDetails.setInput(lStocks);
-				lStocks.forEach(entry -> MediorderPartUtil.automaticallyFromDefaultStock(entry, stockService,
-						coreModelService, contextService));
+				tableViewerDetails.setInput(stock.getStockEntries());
 			} else {
 				tableViewerDetails.setInput(null);
 			}
@@ -1563,52 +1535,14 @@ public class MediorderPart implements IRefreshablePart {
 		tblclmntvcMedicationClearance.setText(Messages.Mediorder_approved);
 		tblclmntvcMedicationClearance.setToolTipText(Messages.Mediorder_approved_Tooltip);
 
-		// use from default stock
-		TableViewerColumn tvcArticleFromDefaultStock = new TableViewerColumn(tableViewerDetails, SWT.NONE);
-		TableColumn tblclmntvcArticleFromDefaultStock = tvcArticleFromDefaultStock.getColumn();
-		tcLayout_cDetails.setColumnData(tblclmntvcArticleFromDefaultStock, new ColumnPixelData(70, true));
-		tblclmntvcArticleFromDefaultStock.setText(Messages.Mediorder_from_stock);
-		tblclmntvcArticleFromDefaultStock.setToolTipText(Messages.Mediorder_from_stock_Tooltip);
-		tvcArticleFromDefaultStock.setLabelProvider(ColumnLabelProvider.createTextProvider(element -> {
-			IStockEntry entry = (IStockEntry) element;
-			return stockService.findStockEntryForArticleInStock(stockService.getDefaultStock(),
-					entry.getArticle()) != null ? String.valueOf(entry.getCurrentStock()) : String.valueOf(0);
-		}));
-		tvcArticleFromDefaultStock.setEditingSupport(new EditingSupport(tableViewerDetails) {
-			@Override
-			protected CellEditor getCellEditor(Object element) {
-				return new ComboBoxCellEditor(tableViewerDetails.getTable(),
-						MediorderPartUtil.createValuesArray(((IStockEntry) element), stockService), SWT.READ_ONLY);
-			}
-
-			@Override
-			protected boolean canEdit(Object element) {
-				return stockService.findStockEntryForArticleInStock(stockService.getDefaultStock(),
-						((IStockEntry) element).getArticle()) != null;
-			}
-
-			@Override
-			protected Object getValue(Object element) {
-				return ((IStockEntry) element).getCurrentStock();
-			}
-
-			@Override
-			protected void setValue(Object element, Object value) {
-				IStockEntry entry = (IStockEntry) element;
-				IStockEntry defaultStockEntry = stockService
-						.findStockEntryForArticleInStock(stockService.getDefaultStock(), entry.getArticle());
-				if (defaultStockEntry == null) {
-					return;
-				}
-				int previous = entry.getCurrentStock();
-				MediorderPartUtil.useFromDefaultStock(entry, defaultStockEntry, (int) value, stockService,
-						coreModelService, contextService);
-				logAmountChange(entry, Messages.Mediorder_from_stock, previous, entry.getCurrentStock());
-				MediorderPartUtil.updateStockImageState(imageStockStates, entry.getStock());
-				tableViewerDetails.refresh();
-				tableViewer.refresh();
-			}
-		});
+		// available amount in mandator or default stock, taking from it is done via context menu
+		TableViewerColumn tvcArticleInStock = new TableViewerColumn(tableViewerDetails, SWT.NONE);
+		TableColumn tblclmntvcArticleInStock = tvcArticleInStock.getColumn();
+		tcLayout_cDetails.setColumnData(tblclmntvcArticleInStock, new ColumnPixelData(70, true));
+		tblclmntvcArticleInStock.setText(Messages.Mediorder_default_stock);
+		tblclmntvcArticleInStock.setToolTipText(Messages.Mediorder_default_stock_Tooltip);
+		tvcArticleInStock.setLabelProvider(ColumnLabelProvider.createTextProvider(element -> String.valueOf(
+				MediorderPartUtil.getAvailableStockAmount((IStockEntry) element, stockService, contextService))));
 
 		TableViewerColumn tvcOrderDate = new TableViewerColumn(tableViewerDetails, SWT.NONE);
 		TableColumn tblclmntvcOrderDate = tvcOrderDate.getColumn();
@@ -1634,8 +1568,6 @@ public class MediorderPart implements IRefreshablePart {
 		cHistory_table = new Composite(parent, SWT.NONE);
 		cHistory_table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		cHistory_table.setLayout(new GridLayout(1, false));
-
-		setCompositeTitle(cHistory_table, Messages.Mediorder_history);
 
 		Composite searchComposite = new Composite(cHistory_table, SWT.NONE);
 		searchComposite.setLayout(new GridLayout(2, false));
@@ -1932,6 +1864,41 @@ public class MediorderPart implements IRefreshablePart {
 		return selectedDetailStock.getValue();
 	}
 
+	public void takeFromStock(List<IStockEntry> entries) {
+		Map<IPatient, Map<IArticle, Integer>> takenByPatient = new LinkedHashMap<>();
+		for (IStockEntry entry : entries) {
+			int previous = entry.getCurrentStock();
+			int taken = MediorderPartUtil.takeFromStock(entry, stockService, coreModelService, contextService,
+					orderService);
+			if (taken > 0) {
+				logAmountChange(entry, Messages.Mediorder_from_stock, previous, entry.getCurrentStock());
+				MediorderPartUtil.updateStockImageState(imageStockStates, entry.getStock());
+				MediorderPartUtil.getPatient(entry)
+						.ifPresent(patient -> takenByPatient.computeIfAbsent(patient, p -> new LinkedHashMap<>())
+								.merge(entry.getArticle(), taken, Integer::sum));
+			}
+		}
+		billTakenFromStock(takenByPatient);
+		tableViewerDetails.refresh();
+		tableViewer.refresh();
+		updateHistoryTimeline(selectedDetailStock.getValue());
+	}
+
+	private void billTakenFromStock(Map<IPatient, Map<IArticle, Integer>> takenByPatient) {
+		if (takenByPatient.isEmpty()) {
+			return;
+		}
+		IStatus status;
+		try {
+			status = new MediorderBilling(coreModelService, contextService, stockService, stickerService,
+					coverageService, billingService).bill(takenByPatient, orderService);
+		} catch (RuntimeException e) {
+			LoggerFactory.getLogger(getClass()).error("Error billing articles taken from stock", e); //$NON-NLS-1$
+			status = Status.error(Messages.Mediorder_Billing_Failed, e);
+		}
+		StatusDialog.show(status, false);
+	}
+
 	private void logAmountChange(IStockEntry entry, String amountLabel, int oldValue, int newValue) {
 		if (oldValue == newValue || entry.getStock() == null || entry.getStock().getOwner() == null) {
 			return;
@@ -1967,7 +1934,7 @@ public class MediorderPart implements IRefreshablePart {
 
 		preferences.put(CURRENT_FILTER_VALUE, filterValue);
 		preferences.putBoolean(IS_FILTER_ACTIVE, isStockFilterApplied());
-		preferences.putBoolean(LAST_ACTIVE_TABLEVIEWER, isDetailsViewActive);
+		preferences.putInt(LAST_ACTIVE_TAB, detailTabFolder.getSelectionIndex());
 
 		try {
 			preferences.flush();
@@ -2012,11 +1979,7 @@ public class MediorderPart implements IRefreshablePart {
 
 		restoreFilterButtonSelection();
 
-		isDetailsViewActive = preferences.getBoolean(LAST_ACTIVE_TABLEVIEWER, true);
-		mediorderActiveView = isDetailsViewActive ? MediorderActiveView.DETAILS : MediorderActiveView.HISTORY;
-		stackLayout.topControl = isDetailsViewActive ? cDetails_table : cHistory_table;
-		viewComposite.layout();
-		showHistoryTimeline(isDetailsViewActive);
+		detailTabFolder.setSelection(preferences.getInt(LAST_ACTIVE_TAB, 0));
 	}
 
 	private void applyStockFilter(Button source, List<Integer> states) {
