@@ -1,9 +1,13 @@
 package ch.elexis.core.ui.dbcheck.contributions;
 
 import org.apache.commons.lang3.StringUtils;
+import java.text.MessageFormat;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 
@@ -11,9 +15,12 @@ import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.constants.StringConstants;
 import ch.elexis.core.data.activator.CoreHub;
 import ch.elexis.core.data.util.NoPoUtil;
+import ch.elexis.core.events.MessageEvent;
+import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.model.IDiagnosis;
 import ch.elexis.core.model.IEncounter;
 import ch.elexis.core.model.Identifiable;
+import ch.elexis.core.services.IStoreToStringContribution;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
 import ch.elexis.core.services.holder.StoreToStringServiceHolder;
 import ch.elexis.core.ui.dbcheck.external.ExternalMaintenance;
@@ -25,11 +32,13 @@ import ch.elexis.data.Query;
 public class FixEmptyDiagnoseKonsultation extends ExternalMaintenance {
 	private HashMap<Mandant, Integer> missingMap;
 	private HashMap<Mandant, String> mandantDiagnoseMap;
+	private Set<Mandant> invalidMandants;
 
 	@Override
 	public String executeMaintenance(IProgressMonitor pm, String DBVersion) {
 		missingMap = new HashMap<>();
 		mandantDiagnoseMap = new HashMap<>();
+		invalidMandants = new HashSet<>();
 		StringBuilder output = new StringBuilder();
 		pm.beginTask("Fixing consultations with no diagnose", 3);
 
@@ -51,13 +60,14 @@ public class FixEmptyDiagnoseKonsultation extends ExternalMaintenance {
 				// add the diagnose if default diagnose is defined
 				if (diagnoseId != null && !diagnoseId.isEmpty()) {
 					Optional<Identifiable> diagnose = StoreToStringServiceHolder.get().loadFromString(diagnoseId);
-					if (diagnose.isPresent()) {
+					if (diagnose.isPresent() && StoreToStringServiceHolder.get().storeToString(diagnose.get()).isPresent()) {
 						IEncounter encounter = NoPoUtil.loadAsIdentifiable(k, IEncounter.class).get();
 						encounter.addDiagnosis((IDiagnosis) diagnose.get());
 						CoreModelServiceHolder.get().save(encounter);
 						diagnoseLabel = diagnose.get().getLabel();
 					} else {
-						diagnoseLabel = diagnoseId + " existiert nicht";
+						diagnoseLabel = StringUtils.substringAfter(diagnoseId, IStoreToStringContribution.DOUBLECOLON);
+						invalidMandants.add(mandant);
 					}
 				}
 
@@ -84,12 +94,22 @@ public class FixEmptyDiagnoseKonsultation extends ExternalMaintenance {
 			if (diagnose == null) {
 				output.append(mandant.getVorname() + StringUtils.SPACE + mandant.getName() + " (" + mandant.getLabel()
 						+ "): " + result + " Konsultationen ohne Diagnose (keine Standarddiagnose definiert)\n");
+			} else if (invalidMandants.contains(mandant)) {
+				output.append(mandant.getVorname() + StringUtils.SPACE + mandant.getName() + " (" + mandant.getLabel()
+						+ "): " + result + " Konsultationen ohne Diagnose (Standarddiagnose " + diagnose
+						+ " ungültig)\n");
 			} else {
 				output.append(mandant.getVorname() + StringUtils.SPACE + mandant.getName() + " (" + mandant.getLabel()
 						+ "): " + result + " Konsultationen mit Standarddiagnose (" + diagnose + ") vervollständigt\n");
 			}
 		}
 		pm.worked(1);
+
+		if (!invalidMandants.isEmpty()) {
+			MessageEvent.fireWarninig(Messages.UserCasePreferences_DefaultDiagnose,
+					MessageFormat.format(Messages.Core_DefaultDiagnosis_Invalid, invalidMandants.stream()
+							.map(mandantDiagnoseMap::get).distinct().collect(Collectors.joining(", "))));
+		}
 
 		pm.done();
 		return output.toString();
