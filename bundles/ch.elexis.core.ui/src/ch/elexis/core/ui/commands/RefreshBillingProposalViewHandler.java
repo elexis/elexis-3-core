@@ -16,6 +16,7 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.IHandler;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.handlers.HandlerUtil;
@@ -34,9 +35,15 @@ public class RefreshBillingProposalViewHandler extends AbstractHandler implement
 	}
 
 	private BillingProposalView getOpenView(ExecutionEvent event) {
+		// try active part
+		IWorkbenchPart activePart = HandlerUtil.getActivePart(event);
+		if (activePart instanceof BillingProposalView view) {
+			return view;
+		}
+		// try open a new instance
 		try {
-			IWorkbenchWindow window = HandlerUtil.getActiveWorkbenchWindow(event);
-			IWorkbenchPage page = window.getActivePage();
+			IWorkbenchWindow wbWindow = HandlerUtil.getActiveWorkbenchWindow(event);
+			IWorkbenchPage page = wbWindow.getActivePage();
 			return (BillingProposalView) page.showView(BillingProposalView.ID);
 		} catch (PartInitException e) {
 			MessageDialog.openError(HandlerUtil.getActiveShell(event), "Fehler",

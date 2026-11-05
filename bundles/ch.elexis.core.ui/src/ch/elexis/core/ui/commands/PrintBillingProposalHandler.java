@@ -21,6 +21,7 @@ import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.swt.program.Program;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.handlers.HandlerUtil;
@@ -104,9 +105,15 @@ public class PrintBillingProposalHandler extends AbstractHandler implements IHan
 	}
 
 	private BillingProposalView getOpenView(ExecutionEvent event) {
+		// try active part
+		IWorkbenchPart activePart = HandlerUtil.getActivePart(event);
+		if (activePart instanceof BillingProposalView view) {
+			return view;
+		}
+		// try open a new instance
 		try {
-			IWorkbenchWindow window = HandlerUtil.getActiveWorkbenchWindow(event);
-			IWorkbenchPage page = window.getActivePage();
+			IWorkbenchWindow wbWindow = HandlerUtil.getActiveWorkbenchWindow(event);
+			IWorkbenchPage page = wbWindow.getActivePage();
 			return (BillingProposalView) page.showView(BillingProposalView.ID);
 		} catch (PartInitException e) {
 			MessageDialog.openError(HandlerUtil.getActiveShell(event), "Fehler",
