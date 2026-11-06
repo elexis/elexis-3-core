@@ -173,10 +173,13 @@ public class ClaimVerrechnetTransformer implements IFhirTransformer<Claim, List<
 		public List<IBilled> bill() {
 			List<IBilled> ret = new ArrayList<>();
 			ICoverage coverage = getFall(coverages.get(0));
-			List<IDiagnosis> diagnose = getDiagnose(diagnosis);
 			Optional<ch.elexis.core.model.IEncounter> behandlung = getOrCreateBehandlung(claim, coverage, providerRef);
 			if (behandlung.isPresent()) {
 				ch.elexis.core.model.IEncounter cons = behandlung.get();
+				Map<Object, Object> context = new HashMap<>();
+				context.put(ICodeElementService.ContextKeys.COVERAGE, coverage);
+				context.put(ICodeElementService.ContextKeys.CONSULTATION, cons);
+				List<IDiagnosis> diagnose = getDiagnose(diagnosis, context);
 				Optional<IMandator> mandator = modelService.load(providerRef.getReferenceElement().getIdPart(),
 						IMandator.class);
 				if (mandator.isPresent()) {
@@ -193,7 +196,7 @@ public class ClaimVerrechnetTransformer implements IFhirTransformer<Claim, List<
 						cons.addDiagnosis(diag);
 					}
 
-					List<BillableContext> billables = getBillableContexts(items, cons);
+					List<BillableContext> billables = getBillableContexts(items, context);
 					for (BillableContext billable : billables) {
 						List<IBilled> billed = billable.bill(cons, mandator.get(), mandator.get());
 						if (billed.size() < billable.getAmount()) {
@@ -212,14 +215,13 @@ public class ClaimVerrechnetTransformer implements IFhirTransformer<Claim, List<
 			return ret;
 		}
 
-		private List<BillableContext> getBillableContexts(List<ItemComponent> items,
-				ch.elexis.core.model.IEncounter cons) {
+		private List<BillableContext> getBillableContexts(List<ItemComponent> items, Map<Object, Object> context) {
 			List<BillableContext> ret = new ArrayList<>();
 			for (ItemComponent itemComponent : items) {
 				CodeableConcept serviceCoding = itemComponent.getProductOrService();
 				if (serviceCoding != null) {
 					for (Coding coding : serviceCoding.getCoding()) {
-						Optional<IBillable> billable = getBillable(coding.getSystem(), coding.getCode(), cons);
+						Optional<IBillable> billable = getBillable(coding.getSystem(), coding.getCode(), context);
 						Optional<Integer> amount = getAmount(itemComponent);
 						if (billable.isPresent() && amount.isPresent()) {
 							ret.add(new BillableContext(billable.get(), amount.get()));
@@ -239,9 +241,7 @@ public class ClaimVerrechnetTransformer implements IFhirTransformer<Claim, List<
 			return Optional.empty();
 		}
 
-		private Optional<IBillable> getBillable(String system, String code, ch.elexis.core.model.IEncounter cons) {
-			Map<Object, Object> context = new HashMap<>();
-			context.put(ICodeElementService.ContextKeys.CONSULTATION, cons);
+		private Optional<IBillable> getBillable(String system, String code, Map<Object, Object> context) {
 			if (system.equals(CodingSystem.ELEXIS_TARMED_CODESYSTEM.getSystem())) {
 				Optional<ICodeElement> tarmed = codeElementService.loadFromString("Tarmed", code, context);
 				if (tarmed.isPresent()) {
@@ -258,29 +258,50 @@ public class ClaimVerrechnetTransformer implements IFhirTransformer<Claim, List<
 			return Optional.empty();
 		}
 
-		private List<IDiagnosis> getDiagnose(List<DiagnosisComponent> diagnosis) {
+		private List<IDiagnosis> getDiagnose(List<DiagnosisComponent> diagnosis, Map<Object, Object> context) {
 			List<IDiagnosis> ret = new ArrayList<>();
 			for (DiagnosisComponent diagnosisComponent : diagnosis) {
 				if (diagnosisComponent.hasDiagnosisCodeableConcept()) {
 					CodeableConcept diagnoseCoding = (CodeableConcept) diagnosisComponent.getDiagnosis();
 					if (diagnoseCoding != null) {
 						for (Coding coding : diagnoseCoding.getCoding()) {
-							IDiagnosisReference diag = modelService.create(IDiagnosisReference.class);
-							diag.setCode(coding.getCode());
-							diag.setText((coding.getDisplay() != null) ? coding.getDisplay() : coding.getCode());
-							if (CodingSystem.ELEXIS_DIAGNOSE_TESSINERCODE.getSystem().equals(coding.getSystem())) {
-								diag.setReferredClass("ch.elexis.data.TICode");
-							} else if (CodingSystem.ICD_DE_CODESYSTEM.getSystem().equals(coding.getSystem())) {
-								diag.setReferredClass("ch.elexis.data.ICD10");
+							String system = getDiagnosisCodeSystem(coding.getSystem());
+							if (system != null) {
+								// lookup the code in the code system; addDiagnosis resolves the
+								// matching IDiagnosisReference on the encounter
+								Optional<ICodeElement> code = codeElementService.loadFromString(system,
+										coding.getCode(), context);
+								if (code.isPresent() && code.get() instanceof IDiagnosis) {
+									ret.add((IDiagnosis) code.get());
+								} else {
+									LoggerFactory.getLogger(ClaimVerrechnetTransformer.class).warn(
+											"Could not find diagnosis for system [" + coding.getSystem() + "] code ["
+													+ coding.getCode() + "]");
+								}
 							} else {
+								// no code system for this coding (e.g. freetext)
+								IDiagnosisReference diag = modelService.create(IDiagnosisReference.class);
+								diag.setCode(coding.getCode());
+								diag.setText((coding.getDisplay() != null) ? coding.getDisplay() : coding.getCode());
 								diag.setReferredClass("ch.elexis.data.FreeTextDiagnose");
+								ret.add(diag);
 							}
-							ret.add(diag);
 						}
 					}
 				}
 			}
 			return ret;
+		}
+
+		private String getDiagnosisCodeSystem(String fhirSystem) {
+			if (CodingSystem.ELEXIS_DIAGNOSE_TESSINERCODE.getSystem().equals(fhirSystem)) {
+				return "TI-Code";
+			} else if (CodingSystem.ICD_DE_CODESYSTEM.getSystem().equals(fhirSystem)) {
+				return "ICD-10";
+			} else if (CodingSystem.ICPC2_CODESYSTEM.getSystem().equals(fhirSystem)) {
+				return "ICPC";
+			}
+			return null;
 		}
 
 		private ICoverage getFall(InsuranceComponent insuranceComponent) {
