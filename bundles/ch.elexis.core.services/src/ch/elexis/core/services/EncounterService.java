@@ -2,6 +2,7 @@ package ch.elexis.core.services;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.text.MessageFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -24,6 +25,7 @@ import ch.elexis.core.ac.Right;
 import ch.elexis.core.cdi.PortableServiceLoader;
 import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.constants.Preferences;
+import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.lock.types.LockResponse;
 import ch.elexis.core.model.IArticle;
 import ch.elexis.core.model.IBillable;
@@ -545,9 +547,16 @@ public class EncounterService implements IEncounterService {
 		if (diagnosisSts.length() > 1) {
 			Optional<Identifiable> diagnose = PortableServiceLoader.get(IStoreToStringService.class)
 					.loadFromString(diagnosisSts);
-			if (diagnose.isPresent()) {
+			if (diagnose.isPresent() && storeToStringService.storeToString(diagnose.get()).isPresent()) {
 				encounter.addDiagnosis((IDiagnosis) diagnose.get());
 				coreModelService.save(encounter);
+			} else {
+				PortableServiceLoader.get(IContextService.class).postEvent(ElexisEventTopics.NOTIFICATION_WARN,
+						encounter,
+						Map.of(ElexisEventTopics.NOTIFICATION_PROPKEY_TITLE, Messages.UserCasePreferences_DefaultDiagnose,
+								ElexisEventTopics.NOTIFICATION_PROPKEY_MESSAGE,
+								MessageFormat.format(Messages.Core_DefaultDiagnosis_Invalid, StringUtils
+										.substringAfter(diagnosisSts, IStoreToStringContribution.DOUBLECOLON))));
 			}
 		}
 	}
