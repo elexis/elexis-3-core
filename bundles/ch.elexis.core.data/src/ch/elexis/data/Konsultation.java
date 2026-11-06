@@ -728,13 +728,14 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 			return;
 		}
 
-		String dgid = prepareDiagnoseSelectWithCodeAndClass(dg.getCode(), dg.getClass().getName());
+		String dgid = prepareDiagnoseSelectWithCodeAndClass(dg.getCode(), dg.getClass().getName(), dg.getText());
 		if (dgid != null) {
 			return;
 		}
 
 		String diagnosisEntryExists = getDBConnection().queryString("SELECT ID FROM DIAGNOSEN WHERE KLASSE="
-				+ JdbcLink.wrap(dg.getClass().getName()) + " AND DG_CODE=" + JdbcLink.wrap(dg.getCode()));
+				+ JdbcLink.wrap(dg.getClass().getName()) + " AND DG_CODE=" + JdbcLink.wrap(dg.getCode())
+				+ " AND DG_TXT=" + JdbcLink.wrap(dg.getText()));
 		StringBuilder sql = new StringBuilder(200);
 		if (StringTool.isNothing(diagnosisEntryExists)) {
 			diagnosisEntryExists = ElexisIdGenerator.generateId();
@@ -765,14 +766,14 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 	/** Eine Diagnose aus der Diagnoseliste entfernen */
 	public void removeDiagnose(IDiagnose dg) {
 		if (isEditable(true)) {
-			String dgid = prepareDiagnoseSelectWithCodeAndClass(dg.getCode(), dg.getClass().getName());
+			String dgid = prepareDiagnoseSelectWithCodeAndClass(dg.getCode(), dg.getClass().getName(), dg.getText());
 
 			if (dgid == null) {
 				String code = dg.getCode();
 				// chapter of a TI-Code
 				if (code != null && code.length() == 2 && code.charAt(1) == '0') {
 					code = code.substring(0, 1);
-					dgid = prepareDiagnoseSelectWithCodeAndClass(code, dg.getClass().getName());
+					dgid = prepareDiagnoseSelectWithCodeAndClass(code, dg.getClass().getName(), dg.getText());
 				}
 			}
 
@@ -791,14 +792,15 @@ public class Konsultation extends PersistentObject implements Comparable<Konsult
 	}
 
 	private final String STM_S_BDJ = "SELECT BDJ.DiagnoseId FROM BEHDL_DG_JOINT BDJ, DIAGNOSEN D"
-			+ " WHERE BDJ.BehandlungsID=? AND D.ID = BDJ.DiagnoseID AND D.DG_CODE=? AND D.KLASSE=?;";
+			+ " WHERE BDJ.BehandlungsID=? AND D.ID = BDJ.DiagnoseID AND D.DG_CODE=? AND D.KLASSE=? AND D.DG_TXT=?;";
 
-	private String prepareDiagnoseSelectWithCodeAndClass(String code, String classname) {
+	private String prepareDiagnoseSelectWithCodeAndClass(String code, String classname, String text) {
 		PreparedStatement pst = getDBConnection().getPreparedStatement(STM_S_BDJ);
 		try {
 			pst.setString(1, getId());
 			pst.setString(2, code);
 			pst.setString(3, classname);
+			pst.setString(4, text);
 			ResultSet rs = pst.executeQuery();
 			if (rs.next()) {
 				return rs.getString(1);
