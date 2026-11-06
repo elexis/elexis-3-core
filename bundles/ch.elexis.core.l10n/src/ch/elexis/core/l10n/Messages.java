@@ -831,6 +831,7 @@ public class Messages extends NLS {
 	public static String Core_Date_of_original;
 	public static String Core_Date_with_colon;
 	public static String Core_Day_of_month;
+	public static String Core_DefaultDiagnosis_Invalid;
 	public static String Core_Delete;
 	public static String Core_Delete_All;
 	public static String Core_Delete_Cross_Reference;
