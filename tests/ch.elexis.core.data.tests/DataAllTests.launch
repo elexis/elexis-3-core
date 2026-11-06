@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <launchConfiguration type="org.eclipse.pde.ui.JunitLaunchConfig">
+    <booleanAttribute key="add_console" value="false"/>
     <setAttribute key="additional_plugins"/>
     <booleanAttribute key="append.args" value="true"/>
     <stringAttribute key="application" value="org.eclipse.pde.junit.runtime.coretestapplication"/>
@@ -129,6 +130,7 @@
         <setEntry value="org.glassfish.jersey.media.jersey-media-multipart@default:default"/>
         <setEntry value="org.hamcrest@default:default"/>
         <setEntry value="org.jdom.2@default:default"/>
+        <setEntry value="org.jsoup@default:default"/>
         <setEntry value="org.junit@default:default"/>
         <setEntry value="org.jvnet.mimepull@default:default"/>
         <setEntry value="org.objectweb.asm*9.7.1@default:default"/>
@@ -176,7 +178,7 @@
         <setEntry value="ch.rgw.utility.legacy@default:default"/>
         <setEntry value="ch.rgw.utility@default:default"/>
     </setAttribute>
-    <booleanAttribute key="show_selected_only" value="true"/>
+    <booleanAttribute key="show_selected_only" value="false"/>
     <stringAttribute key="templateConfig" value="${target_home}/configuration/config.ini"/>
     <booleanAttribute key="tracing" value="false"/>
     <booleanAttribute key="useCustomFeatures" value="false"/>
