@@ -9,6 +9,7 @@ import org.junit.Test;
 
 import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.data.activator.CoreHub;
+import ch.elexis.core.data.interfaces.IDiagnose;
 import ch.elexis.core.data.service.ContextServiceHolder;
 import ch.elexis.core.data.service.CoreModelServiceHolder;
 import ch.elexis.core.model.IUser;
@@ -80,6 +81,74 @@ public class Test_Konsultation extends AbstractPersistentObjectTest {
 
 		kons.removeDiagnose(ftd);
 		assertEquals(0, kons.getDiagnosen().size());
+	}
+
+	@Test
+	public void testDiagnosisWithChangedTextCreatesAdditionalEntry() {
+		TestDiagnose dgOld = new TestDiagnose("P3", "Augenmuskeln / Strabismus");
+		kons.addDiagnose(dgOld);
+		kons.addDiagnose(dgOld);
+		String count = countDiagnosen(dgOld);
+		assertEquals(Integer.toString(1), count);
+
+		// same code and class, but changed text -> an additional DIAGNOSEN entry is created
+		TestDiagnose dgNew = new TestDiagnose("P3", "Iris / Glaukom");
+		kons.addDiagnose(dgNew);
+		assertEquals(Integer.toString(2), countDiagnosen(dgNew));
+		assertEquals(Integer.toString(2), countJointEntries());
+
+		// re-adding the original text reuses the existing entry
+		kons.addDiagnose(dgOld);
+		assertEquals(Integer.toString(2), countDiagnosen(dgOld));
+		assertEquals(Integer.toString(2), countJointEntries());
+
+		kons.removeDiagnose(dgNew);
+		assertEquals(Integer.toString(1), countJointEntries());
+	}
+
+	private String countDiagnosen(TestDiagnose dg) {
+		return kons.getDBConnection().queryString("SELECT COUNT(*) FROM DIAGNOSEN WHERE KLASSE="
+				+ JdbcLink.wrap(dg.getClass().getName()) + " AND DG_CODE=" + JdbcLink.wrap(dg.getCode()));
+	}
+
+	private String countJointEntries() {
+		return kons.getDBConnection().queryString(
+				"SELECT COUNT(*) FROM BEHDL_DG_JOINT WHERE BEHANDLUNGSID=" + kons.getWrappedId());
+	}
+
+	private static class TestDiagnose implements IDiagnose {
+		private final String code;
+		private final String text;
+
+		TestDiagnose(String code, String text) {
+			this.code = code;
+			this.text = text;
+		}
+
+		@Override
+		public String getCodeSystemName() {
+			return "test";
+		}
+
+		@Override
+		public String getId() {
+			return code;
+		}
+
+		@Override
+		public String getCode() {
+			return code;
+		}
+
+		@Override
+		public String getText() {
+			return text;
+		}
+
+		@Override
+		public String getLabel() {
+			return code + " " + text;
+		}
 	}
 
 }

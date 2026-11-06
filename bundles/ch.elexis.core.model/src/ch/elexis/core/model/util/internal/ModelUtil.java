@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
@@ -208,6 +209,12 @@ public class ModelUtil {
 		return StoreToStringServiceHolder.get().storeToString(identifiable);
 	}
 
+	/**
+	 * Get the {@link IDiagnosisReference} for the given {@link IDiagnosis},
+	 * creating it if no matching entry exists. Multiple entries per code/class are
+	 * allowed (e.g. if the meaning of a code changed); the entry with matching text
+	 * is reused.
+	 */
 	public static IDiagnosisReference getOrCreateDiagnosisReference(IDiagnosis diagnosis) {
 		Optional<String> storeToString = StoreToStringServiceHolder.get().storeToString(diagnosis);
 		if (storeToString.isPresent()) {
@@ -216,8 +223,11 @@ public class ModelUtil {
 					.getNamedQuery(IDiagnosisReference.class, true, "code", "diagnosisClass");
 			List<IDiagnosisReference> existing = query.executeWithParameters(
 					query.getParameterMap("code", diagnosis.getCode(), "diagnosisClass", parts[0]));
-			if (!existing.isEmpty()) {
-				return existing.get(0);
+			Optional<IDiagnosisReference> matching = existing.stream()
+					.filter(ref -> Objects.equals(normalizeText(ref.getText()), normalizeText(diagnosis.getText())))
+					.findFirst();
+			if (matching.isPresent()) {
+				return matching.get();
 			} else {
 				IDiagnosisReference reference = CoreModelServiceHolder.get().create(IDiagnosisReference.class);
 				reference.setCode(diagnosis.getCode());
@@ -228,6 +238,14 @@ public class ModelUtil {
 			}
 		}
 		return null;
+	}
+
+
+	private static String normalizeText(String text) {
+		if (text == null) {
+			return null;
+		}
+		return text.trim().replaceAll("\\s+", " ");
 	}
 
 	public static String toString(LocalDate date) {
