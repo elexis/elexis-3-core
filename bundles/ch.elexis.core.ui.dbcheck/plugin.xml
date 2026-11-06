@@ -67,9 +67,6 @@
       <ExternalMaintenance
             MaintenanceCode="ch.elexis.core.ui.dbcheck.contributions.BillAllOpenCons">
       </ExternalMaintenance>
-      <ExternalMaintenance
-            MaintenanceCode="ch.elexis.core.ui.dbcheck.contributions.FixMultipleDiagnosis">
-      </ExternalMaintenance>
             <ExternalMaintenance
                   MaintenanceCode="ch.elexis.core.ui.dbcheck.contributions.ReChargeTarmedOpenCons">
             </ExternalMaintenance>
