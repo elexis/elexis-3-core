@@ -126,4 +126,18 @@ ALTER TABLE konto RENAME COLUMN BetragInt TO Betrag;
 			<column name="INTERPRETATION" type="CLOB"/>
 		</addColumn>
 	</changeSet>
+
+	<changeSet id="manual_update_faelle_betriebsnummer_date_compact" author="dalibor">
+		<preConditions onFail="MARK_RAN">
+			<columnExists tableName="FAELLE" columnName="BETRIEBSNUMMER" />
+		</preConditions>
+		<sql><![CDATA[
+			UPDATE FAELLE
+			SET BETRIEBSNUMMER = CONCAT(
+				SUBSTRING(BETRIEBSNUMMER, 7, 4),
+				SUBSTRING(BETRIEBSNUMMER, 4, 2),
+				SUBSTRING(BETRIEBSNUMMER, 1, 2))
+			WHERE BETRIEBSNUMMER LIKE '__.__.____';
+		]]></sql>
+	</changeSet>
 </databaseChangeLog>
