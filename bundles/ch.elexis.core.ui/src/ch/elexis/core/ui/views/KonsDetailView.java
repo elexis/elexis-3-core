@@ -828,6 +828,8 @@ public class KonsDetailView extends ViewPart implements IUnlockable {
 							if (!changeToCoverage.isOpen()) {
 								SWTHelper.alert(Messages.Core_Case_is_closed, // $NON-NLS-1$
 										Messages.KonsDetailView_CaseClosedBody); // $NON-NLS-1$
+								ignoreSelectionEventOnce();
+								tableComboViewerFall.setSelection(new StructuredSelection(actCoverage));
 							} else {
 								MessageDialog msd = new MessageDialog(getViewSite().getShell(),
 										Messages.KonsDetailView_ChangeCaseCaption, // $NON-NLS-1$
