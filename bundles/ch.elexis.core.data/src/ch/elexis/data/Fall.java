@@ -155,7 +155,7 @@ public class Fall extends PersistentObject implements IFall, ITransferable<FallD
 	 */
 	@Override
 	public void setBillingDate(TimeTool dat) {
-		set(FLD_RN_PLANUNG, dat == null ? null : dat.toString(TimeTool.DATE_GER));
+		set(FLD_RN_PLANUNG, dat == null ? null : dat.toString(TimeTool.DATE_COMPACT));
 	}
 
 	@Override
