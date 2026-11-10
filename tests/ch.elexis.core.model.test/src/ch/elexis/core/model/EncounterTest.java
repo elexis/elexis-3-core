@@ -194,6 +194,8 @@ public class EncounterTest extends AbstractTest {
 						"Administrator")) {
 					fail();
 				}
+				encounter.setVersionedEntry(encounter.getVersionedEntry()
+						.withUpdate("Test consultation\nmulti billing " + number, "Administrator"));
 				coreModelService.save(encounter);
 			});
 		}
@@ -254,7 +256,7 @@ public class EncounterTest extends AbstractTest {
 		coreModelService.save(encounter);
 		assertEquals("TESTME", encounter.getVersionedEntry().getHead());
 
-		encounter.getVersionedEntry().update("changed", "");
+		encounter.setVersionedEntry(encounter.getVersionedEntry().withUpdate("changed", ""));
 		coreModelService.save(encounter);
 
 		assertEquals("changed", encounter.getVersionedEntry().getHead());

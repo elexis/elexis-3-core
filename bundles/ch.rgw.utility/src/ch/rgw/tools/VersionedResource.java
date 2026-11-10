@@ -7,7 +7,6 @@
  *
  * Contributors:
  *    G. Weirich - initial implementation
- *
  *******************************************************************************/
 
 package ch.rgw.tools;
@@ -39,6 +38,42 @@ import ch.rgw.compress.CompEx;
  */
 public class VersionedResource {
 	ArrayList<ResourceItem> items;
+
+	/**
+	 * @since 3.13
+	 */
+	private VersionedResource(VersionedResource other) {
+		this.items = new ArrayList<>(other.items);
+	}
+
+	/**
+	 * Liefert eine Kopie dieser VersionedResource mit angehängter neuer Version.
+	 * Damit kann der Eintrag immutable-style behandelt werden (neue Instanz statt
+	 * in-place update), sodass JPA-Provider die Änderung am Referenzwechsel
+	 * erkennen.
+	 *
+	 * @param newValue der neue String
+	 * @param remark   Ein kurzer Beschreibungstext für diese Version
+	 * @return eine neue VersionedResource mit angehängter Version
+	 * @since 3.13
+	 */
+	public VersionedResource withUpdate(String newValue, String remark) {
+		VersionedResource copy = new VersionedResource(this);
+		copy.update(newValue, remark);
+		return copy;
+	}
+
+	/**
+	 * @return eine Kopie dieser VersionedResource, in der alle Einträge ausser dem
+	 *         Neuesten entfernt sind
+	 * @see #purge()
+	 * @since 3.13
+	 */
+	public VersionedResource withPurge() {
+		VersionedResource copy = new VersionedResource(this);
+		copy.purge();
+		return copy;
+	}
 
 	@SuppressWarnings("unchecked")
 	private VersionedResource(byte[] in) {
@@ -167,4 +202,5 @@ public class VersionedResource {
 			return sb.toString();
 		}
 	}
+
 }

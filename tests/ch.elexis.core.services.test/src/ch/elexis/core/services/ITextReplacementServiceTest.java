@@ -90,7 +90,7 @@ public class ITextReplacementServiceTest extends AbstractServiceTest {
 		replaced = textReplacementService.performReplacement(contextService.getRootContext(), template);
 		assertEquals("Herr\n" + "Test Mandant\n" + "Street 100\n" + "123 City\n", replaced);
 	}
-	
+
 	@Test
 	public void terminReplacement() {
 		contextService.getRootContext().setTyped(appointment);
@@ -105,7 +105,8 @@ public class ITextReplacementServiceTest extends AbstractServiceTest {
 		createTestMandantPatientFallBehandlung();
 
 		IEncounter encounter = testEncounters.get(0);
-		encounter.getVersionedEntry().update("Test consultation\ndone by user", "user");
+		encounter
+				.setVersionedEntry(encounter.getVersionedEntry().withUpdate("Test consultation\ndone by user", "user"));
 		CoreModelServiceHolder.get().save(encounter);
 		contextService.getRootContext().setTyped(encounter);
 
@@ -183,7 +184,7 @@ public class ITextReplacementServiceTest extends AbstractServiceTest {
 		String template = "[AUF.von]";
 		String replaced = textReplacementService.performReplacement(contextService.getRootContext(), template);
 		assertEquals("12.01.2000", replaced);
-		
+
 		template = "[AUF.bis]";
 		replaced = textReplacementService.performReplacement(contextService.getRootContext(), template);
 		assertEquals("19.01.2000", replaced);

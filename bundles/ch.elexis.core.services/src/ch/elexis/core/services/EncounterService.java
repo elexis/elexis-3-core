@@ -469,7 +469,7 @@ public class EncounterService implements IEncounterService {
 	public synchronized void updateVersionedEntry(IEncounter encounter, String entryXml, String remark) {
 		// make sure we are working with latest info from the database
 		coreModelService.refresh(encounter, true);
-		encounter.getVersionedEntry().update(entryXml, remark);
+		encounter.setVersionedEntry(encounter.getVersionedEntry().withUpdate(entryXml, remark));
 		coreModelService.save(encounter);
 	}
 

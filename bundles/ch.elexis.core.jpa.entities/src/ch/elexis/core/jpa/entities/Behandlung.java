@@ -4,12 +4,9 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.persistence.annotations.Mutable;
-
 import ch.elexis.core.ac.AoboEntity;
 import ch.elexis.core.ac.AoboEntityColumn;
 import ch.elexis.core.jpa.entities.converter.BooleanCharacterConverterSafe;
-import ch.elexis.core.jpa.entities.converter.VersionedResourceConverter;
 import ch.elexis.core.jpa.entities.listener.EntityWithIdListener;
 import ch.elexis.core.model.util.ElexisIdGenerator;
 import ch.rgw.tools.VersionedResource;
@@ -22,6 +19,7 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
+import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.NamedQuery;
 import jakarta.persistence.OneToMany;
@@ -83,9 +81,8 @@ public class Behandlung extends AbstractEntityWithId implements EntityWithId, En
 	@OrderBy("klasse ASC, leistungenCode ASC")
 	private List<Verrechnet> billed;
 
-	@Mutable
-	@Convert(converter = VersionedResourceConverter.class)
-	private VersionedResource eintrag;
+	@Lob
+	private byte[] eintrag;
 
 	public Fall getFall() {
 		return fall;
@@ -137,14 +134,11 @@ public class Behandlung extends AbstractEntityWithId implements EntityWithId, En
 	}
 
 	public VersionedResource getEintrag() {
-		if (eintrag == null) {
-			eintrag = VersionedResource.load(null);
-		}
-		return eintrag;
+		return VersionedResource.load(eintrag);
 	}
 
 	public void setEintrag(VersionedResource eintrag) {
-		this.eintrag = eintrag;
+		this.eintrag = (eintrag != null) ? eintrag.serialize() : null;
 	}
 
 	@Override

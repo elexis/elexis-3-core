@@ -709,7 +709,7 @@ public class KonsDetailView extends ViewPart implements IUnlockable {
 
 			@Override
 			public void doRun(IEncounter element) {
-				element.getVersionedEntry().purge();
+				element.setVersionedEntry(element.getVersionedEntry().withPurge());
 				ElexisEventDispatcher.fireSelectionEvent(Konsultation.load(element.getId()));
 			}
 
