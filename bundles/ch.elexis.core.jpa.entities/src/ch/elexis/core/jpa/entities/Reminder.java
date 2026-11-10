@@ -61,7 +61,7 @@ public class Reminder extends AbstractEntityWithId implements EntityWithId, Enti
 	@JoinColumn(name = "GroupID")
 	private UserGroup userGroup;
 
-	@OneToMany(fetch = FetchType.LAZY)
+	@OneToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "reminders_responsible_link", joinColumns = @JoinColumn(name = "ReminderID"), inverseJoinColumns = @JoinColumn(name = "ResponsibleID"))
 	private List<Kontakt> responsible;
 

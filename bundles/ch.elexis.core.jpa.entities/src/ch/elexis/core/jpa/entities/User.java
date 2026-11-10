@@ -72,6 +72,10 @@ public class User extends AbstractEntityWithId implements EntityWithId, EntityWi
 	@JoinTable(name = "USER_ROLE_JOINT", joinColumns = @JoinColumn(name = "USER_ID"), inverseJoinColumns = @JoinColumn(name = "ID"))
 	protected Collection<Role> roles = new HashSet<>();
 
+	@ManyToMany(fetch = FetchType.EAGER)
+	@JoinTable(name = "USERGROUP_USER_JOINT", joinColumns = @JoinColumn(name = "ID"), inverseJoinColumns = @JoinColumn(name = "USERGROUP_ID"))
+	protected Collection<UserGroup> groups = new HashSet<>();
+
 	public Kontakt getKontakt() {
 		return kontakt;
 	}
@@ -142,6 +146,14 @@ public class User extends AbstractEntityWithId implements EntityWithId, EntityWi
 
 	public void setRoles(Collection<Role> roles) {
 		this.roles = roles;
+	}
+
+	public Collection<UserGroup> getGroups() {
+		return groups;
+	}
+
+	public void setGroups(Collection<UserGroup> groups) {
+		this.groups = groups;
 	}
 
 	@Override

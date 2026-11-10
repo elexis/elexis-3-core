@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>ch.elexis.core</groupId>
+	<artifactId>ch.elexis.core.jpa.entities</artifactId>
+	<packaging>jar</packaging>
+	<version>${elexis.version}</version>
+	<name>[bundle] Elexis Core JPA</name>
+	<organization>
+		<name>elexis.info</name>
+	</organization>
+
+	<properties>
+		<elexis.version>3.14.0-SNAPSHOT</elexis.version>
+		<jandex-plugin.version>3.6.0</jandex-plugin.version>
+		<hibernate.version>7.4.9.Final</hibernate.version>
+		<maven.jar.plugin.version>3.5.1</maven.jar.plugin.version>
+		<jakarta.persistence.api.version>3.2.0</jakarta.persistence.api.version>
+		<maven.antrun.plugin.version>3.1.0</maven.antrun.plugin.version>
+		<slf4j.api.version>2.0.20</slf4j.api.version>
+	</properties>
+
+
+	<build>
+		<sourceDirectory>src</sourceDirectory>
+		<resources>
+			<resource>
+				<directory>.</directory>
+				<includes>
+					<include>META-INF/MANIFEST.MF</include>
+				</includes>
+			</resource>
+		</resources>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<annotationProcessorPaths>
+						<path>
+							<groupId>org.hibernate.orm</groupId>
+							<artifactId>hibernate-processor</artifactId>
+							<version>${hibernate.version}</version>
+						</path>
+					</annotationProcessorPaths>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>io.smallrye</groupId>
+				<artifactId>jandex-maven-plugin</artifactId>
+				<version>${jandex-plugin.version}</version>
+				<executions>
+					<execution>
+						<id>make-index</id>
+						<goals>
+							<goal>jandex</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<artifactId>maven-clean-plugin</artifactId>
+				<configuration>
+					<filesets>
+						<fileset>
+							<directory>src/main/resources/target/</directory>
+						</fileset>
+					</filesets>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<version>${maven.antrun.plugin.version}</version>
+				<executions>
+					<execution>
+						<id>copy-orm-hibernate-to-orm</id>
+						<phase>process-resources</phase>
+						<configuration>
+							<target>
+								<copy file="${project.basedir}/META-INF/hibernate-orm.xml"
+									tofile="${project.build.outputDirectory}/META-INF/orm.xml" />
+							</target>
+						</configuration>
+						<goals>
+							<goal>run</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>${slf4j.api.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>jakarta.persistence</groupId>
+			<artifactId>jakarta.persistence-api</artifactId>
+			<version>${jakarta.persistence.api.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>ch.elexis.core</groupId>
+			<artifactId>ch.rgw.utility</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>ch.elexis.core</groupId>
+			<artifactId>ch.elexis.core</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+	</dependencies>
+
+	<distributionManagement>
+		<repository>
+			<id>github</id>
+			<name>GitHub Elexis Apache Maven Packages</name>
+			<url>https://maven.pkg.github.com/elexis/packages</url>
+		</repository>
+	</distributionManagement>
+</project>

@@ -19,9 +19,9 @@ import jakarta.persistence.Table;
 @Entity
 @Table(name = "ch_medelexis_pea")
 @EntityListeners(EntityWithIdListener.class)
-@NamedQuery(name = "Pea.openRegistrations", query = "SELECT pea FROM PeaElement pea WHERE pea.deleted = false AND pea.type = '1' AND pea.localState = '0'")
-@NamedQuery(name = "Pea.publishedPublicQuestionnaire", query = "SELECT pea FROM PeaElement pea WHERE pea.deleted = false AND pea.type = '2' AND pea.localState = '5' AND pea.handler = :handlerName")
-@NamedQuery(name = "Pea.publishedTargetedQuestionnaire", query = "SELECT pea FROM PeaElement pea WHERE pea.deleted = false AND pea.type = '2' AND pea.localState = '5' AND pea.handler = :handlerName AND pea.subjectId = :subjectId")
+@NamedQuery(name = "Pea.openRegistrations", query = "SELECT pea FROM PeaElement pea WHERE pea.deleted = false AND pea.type = 1 AND pea.localState = 0")
+@NamedQuery(name = "Pea.publishedPublicQuestionnaire", query = "SELECT pea FROM PeaElement pea WHERE pea.deleted = false AND pea.type = 2 AND pea.localState = 5 AND pea.handler = :handlerName")
+@NamedQuery(name = "Pea.publishedTargetedQuestionnaire", query = "SELECT pea FROM PeaElement pea WHERE pea.deleted = false AND pea.type = 2 AND pea.localState = 5 AND pea.handler = :handlerName AND pea.subjectId = :subjectId")
 public class PeaElement extends AbstractEntityWithId implements EntityWithDeleted {
 
 	@Id

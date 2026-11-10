@@ -41,7 +41,7 @@ public class ICPCEpisode extends AbstractEntityWithId implements EntityWithId, E
 	@JoinColumn(name = "PatientID")
 	private Kontakt patientKontakt;
 
-	@OneToMany(mappedBy = "Episode")
+	@OneToMany(mappedBy = "episode")
 	private List<ICPCEpisodeDiagnosisLink> diagnosisLinks = new ArrayList<>();
 
 	@Column(length = 256, name = "Title")

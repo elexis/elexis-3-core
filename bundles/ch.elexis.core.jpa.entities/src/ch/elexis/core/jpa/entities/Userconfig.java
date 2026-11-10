@@ -33,6 +33,7 @@ public class Userconfig extends AbstractEntityWithId implements EntityWithId {
 	private String param;
 
 	@Lob
+	@Column(name = "Value")
 	private String value;
 
 	public String getOwnerId() {

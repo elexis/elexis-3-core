@@ -73,11 +73,11 @@ public class Behandlung extends AbstractEntityWithId implements EntityWithId, En
 	@Column(length = 6, name = "Zeit")
 	private String time;
 
-	@OneToMany(fetch = FetchType.LAZY)
+	@OneToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "behdl_dg_joint", joinColumns = @JoinColumn(name = "BehandlungsID", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "DiagnoseID", referencedColumnName = "id"))
 	private List<Diagnosis> diagnoses;
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "behandlung", cascade = CascadeType.REFRESH)
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "behandlung", cascade = CascadeType.REFRESH)
 	@OrderBy("klasse ASC, leistungenCode ASC")
 	private List<Verrechnet> billed;
 

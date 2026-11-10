@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2026 MEDEVIT <office@medevit.at>.
+ * Copyright (c) 2016 MEDEVIT <office@medevit.at>.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,6 +10,8 @@
  ******************************************************************************/
 package ch.elexis.core.jpa.entities;
 
+import java.beans.Transient;
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +24,7 @@ import ch.elexis.core.jpa.entities.listener.EntityWithIdListener;
 import ch.elexis.core.model.util.ElexisIdGenerator;
 import ch.elexis.core.types.Country;
 import ch.elexis.core.types.Gender;
+import jakarta.persistence.Cacheable;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
@@ -43,13 +46,14 @@ import jakarta.persistence.Table;
  */
 @Entity
 @Table(name = "KONTAKT")
+@Cacheable
 @EntityListeners({ EntityWithIdListener.class })
 @NamedQuery(name = "Kontakt.code", query = "SELECT k FROM Kontakt k WHERE k.deleted = false AND k.code = :code")
 @NamedQuery(name = "Kontakt.patient", query = "SELECT k FROM Kontakt k WHERE k.deleted = false AND k.patient = :patient")
 @NamedQuery(name = "Kontakt.person", query = "SELECT k FROM Kontakt k WHERE k.deleted = false AND k.person = :person")
 @NamedQuery(name = "Kontakt.organization", query = "SELECT k FROM Kontakt k WHERE k.deleted = false AND k.organisation = :organization")
 @NamedQuery(name = "Kontakt.mandator", query = "SELECT k FROM Kontakt k WHERE k.deleted = false AND k.mandator = :mandator")
-public class Kontakt extends AbstractEntityWithId implements EntityWithId, EntityWithDeleted, EntityWithExtInfo {
+public class Kontakt extends AbstractEntityWithId implements EntityWithDeleted, EntityWithExtInfo, Serializable {
 
 	// Transparently updated by the EntityListener
 	protected Long lastupdate;
@@ -91,7 +95,6 @@ public class Kontakt extends AbstractEntityWithId implements EntityWithId, Entit
 	@Column(length = 255, name = "bezeichnung3")
 	protected String description3;
 
-	// @Basic(fetch = FetchType.LAZY)
 	@Convert(converter = ElexisDBCompressedStringConverter.class)
 	@Column(columnDefinition = "BLOB")
 	protected String diagnosen;
@@ -102,12 +105,10 @@ public class Kontakt extends AbstractEntityWithId implements EntityWithId, Entit
 	@Column(length = 255)
 	protected String email2;
 
-	// @Basic(fetch = FetchType.LAZY)
 	@Convert(converter = ElexisDBCompressedStringConverter.class)
 	@Column(name = "famAnamnese", columnDefinition = "BLOB")
 	protected String familyAnamnese;
 
-	// @Basic(fetch = FetchType.LAZY)
 	@Convert(converter = ElexisDBCompressedStringConverter.class)
 	@Column(name = "persAnamnese", columnDefinition = "BLOB")
 	protected String personalAnamnese;
@@ -579,5 +580,29 @@ public class Kontakt extends AbstractEntityWithId implements EntityWithId, Entit
 	@Override
 	public void setLastupdate(Long lastupdate) {
 		this.lastupdate = lastupdate;
+	}
+
+	// if of type Person, eases mapping
+	@Transient
+	public String getFirstName() {
+		return getDescription2();
+	}
+
+	// if of type Person, eases mapping
+	@Transient
+	public void setFirstName(String firstName) {
+		setDescription2(firstName);
+	}
+
+	// if of type Person, eases mapping
+	@Transient
+	public String getLastName() {
+		return getDescription1();
+	}
+
+	// if of type Person, eases mapping
+	@Transient
+	public void setLastName(String lastName) {
+		setDescription1(lastName);
 	}
 }

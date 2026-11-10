@@ -15,8 +15,8 @@ import jakarta.persistence.Table;
 @Entity
 @Table(name = "ICD10")
 @EntityListeners(EntityWithIdListener.class)
-@NamedQuery(name = "ICD10.code", query = "SELECT ic FROM ICD10 ic WHERE ic.id <> 1 AND ic.deleted = false AND ic.code = :code")
-@NamedQuery(name = "ICD10.parent", query = "SELECT ic FROM ICD10 ic WHERE ic.id <> 1 AND ic.deleted = false AND ic.parent = :parent ORDER BY ic.code ASC")
+@NamedQuery(name = "ICD10.code", query = "SELECT ic FROM ICD10 ic WHERE ic.id <> '1' AND ic.deleted = false AND ic.code = :code")
+@NamedQuery(name = "ICD10.parent", query = "SELECT ic FROM ICD10 ic WHERE ic.id <> '1' AND ic.deleted = false AND ic.parent = :parent ORDER BY ic.code ASC")
 public class ICD10 extends AbstractEntityWithId implements EntityWithId, EntityWithDeleted, EntityWithExtInfo {
 
 	// Transparently updated by the EntityListener

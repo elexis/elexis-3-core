@@ -26,7 +26,7 @@ public class PrescriptionEntryTypeConverter implements AttributeConverter<EntryT
 		int typeNum = -1;
 		if (prescTypeString != null && !prescTypeString.isEmpty()) {
 			try {
-				typeNum = Integer.parseInt(prescTypeString);
+				typeNum = Integer.parseInt(prescTypeString.strip());
 			} catch (NumberFormatException e) {
 				// ignore and return -1
 			}

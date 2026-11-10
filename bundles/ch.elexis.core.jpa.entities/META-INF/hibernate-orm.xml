@@ -1,0 +1,20 @@
+<entity-mappings
+	xmlns="https://jakarta.ee/xml/ns/persistence/orm"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:orm="http://www.hibernate.org/xsd/orm/mapping"
+	xsi:schemaLocation="
+        https://jakarta.ee/xml/ns/persistence/orm
+        https://www.hibernate.org/xsd/orm/mapping/mapping-3.1.0.xsd"
+	version="3.1">
+
+	<entity class="ch.elexis.core.jpa.entities.AllergyIntolerance"
+		access="FIELD">
+		<attributes>
+			<basic name="content">
+				<!-- org.hibernate.type.SqlTypes -->
+				<orm:jdbc-type-code>4001</orm:jdbc-type-code>
+			</basic>
+		</attributes>
+	</entity>
+
+</entity-mappings>
