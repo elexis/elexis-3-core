@@ -39,6 +39,14 @@ import ch.elexis.core.services.holder.StockServiceHolder;
 
 public class MediorderPartUtil {
 
+	/**
+	 * Resolve the {@link IPatient} owning the stock of the provided
+	 * {@link IStockEntry}.
+	 *
+	 * @param entry
+	 * @return the patient, or {@link Optional#empty()} if the entry has no stock or
+	 *         the stock is not owned by a patient
+	 */
 	public static Optional<IPatient> getPatient(IStockEntry entry) {
 		return entry != null ? getPatient(entry.getStock()) : Optional.empty();
 	}
@@ -206,9 +214,11 @@ public class MediorderPartUtil {
 	}
 
 	/**
-	 * Taking only a part of the missing amount is not supported. An active
-	 * mandator is required, as the taken amount is billed. Entries with an open
-	 * order are excluded, as the article is already ordered from the supplier.
+	 * Checks if the missing amount of all entries can be taken from an existing
+	 * stock (minimum = requested, maximum = approved). Not possible without active
+	 * mandator (billing), for partially approved entries, entries with an open
+	 * order or if the stock does not contain the missing amount, summed up per
+	 * article.
 	 */
 	public static boolean canTakeFromStock(List<IStockEntry> entries, IStockService stockService,
 			IContextService contextService, IOrderService orderService) {
@@ -217,27 +227,47 @@ public class MediorderPartUtil {
 		}
 		Map<IArticle, Integer> missingByArticle = new HashMap<>();
 		for (IStockEntry entry : entries) {
-			int missing = getMissingAmount(entry);
-			if (entry.getArticle() == null || missing == 0 || entry.getMinimumStock() > entry.getMaximumStock()
-					|| orderService.findOpenOrderEntryForStockEntry(entry) != null) {
+			if (!isTakeableFromStock(entry, orderService)) {
 				return false;
 			}
-			missingByArticle.merge(entry.getArticle(), missing, Integer::sum);
+			missingByArticle.merge(entry.getArticle(), getMissingAmount(entry), Integer::sum);
 		}
-		return missingByArticle.entrySet().stream().allMatch(e -> {
-			IStockEntry sourceStockEntry = findSourceStockEntry(e.getKey(), e.getValue(), stockService,
-					contextService);
-			return sourceStockEntry != null && sourceStockEntry.getCurrentStock() >= e.getValue();
-		});
+		return missingByArticle.entrySet().stream()
+				.allMatch(e -> isInSourceStock(e.getKey(), e.getValue(), stockService, contextService));
 	}
 
+	private static boolean isTakeableFromStock(IStockEntry entry, IOrderService orderService) {
+		return entry.getArticle() != null && getMissingAmount(entry) > 0 && isFullyApproved(entry)
+				&& orderService.findOpenOrderEntryForStockEntry(entry) == null;
+	}
+
+	private static boolean isFullyApproved(IStockEntry entry) {
+		return entry.getMaximumStock() >= entry.getMinimumStock();
+	}
+
+	private static boolean isInSourceStock(IArticle article, int amount, IStockService stockService,
+			IContextService contextService) {
+		IStockEntry sourceStockEntry = findSourceStockEntry(article, amount, stockService, contextService);
+		return sourceStockEntry != null && sourceStockEntry.getCurrentStock() >= amount;
+	}
+
+	/**
+	 * Takes the missing amount (requested minus current) of a patient stock entry
+	 * from a source stock instead of ordering it. The source stock entry is locked
+	 * and reloaded before the amounts are moved, so concurrent changes by other
+	 * users are respected.
+	 *
+	 * @param entry the patient stock entry to fill up
+	 * @return the amount taken from stock, which is always the full missing amount
+	 *         or 0 if nothing was taken
+	 */
 	public static int takeFromStock(IStockEntry entry, IStockService stockService, IModelService coreModelService,
 			IContextService contextService, IOrderService orderService) {
 		if (!canTakeFromStock(List.of(entry), stockService, contextService, orderService)) {
 			return 0;
 		}
-		IStockEntry sourceStockEntry = findSourceStockEntry(entry.getArticle(), getMissingAmount(entry),
-				stockService, contextService);
+		IStockEntry sourceStockEntry = findSourceStockEntry(entry.getArticle(), getMissingAmount(entry), stockService,
+				contextService);
 		LockResponse lockResponse = LocalLockServiceHolder.get().acquireLockBlocking(sourceStockEntry, 1,
 				new NullProgressMonitor());
 		if (!lockResponse.isOk()) {
@@ -245,21 +275,21 @@ public class MediorderPartUtil {
 					sourceStockEntry.getId());
 			return 0;
 		}
-		int missing = getMissingAmount(entry);
+		int amount = getMissingAmount(entry);
 		try {
 			// another user could have changed the source stock in the meantime
 			coreModelService.refresh(sourceStockEntry, true);
-			if (sourceStockEntry.getCurrentStock() < missing) {
+			if (sourceStockEntry.getCurrentStock() < amount) {
 				return 0;
 			}
-			sourceStockEntry.setCurrentStock(sourceStockEntry.getCurrentStock() - missing);
-			entry.setCurrentStock(entry.getCurrentStock() + missing);
+			sourceStockEntry.setCurrentStock(sourceStockEntry.getCurrentStock() - amount);
+			entry.setCurrentStock(entry.getCurrentStock() + amount);
 			coreModelService.save(List.of(sourceStockEntry, entry));
 		} finally {
 			LocalLockServiceHolder.get().releaseLock(lockResponse.getLockInfo());
 		}
 		contextService.postEvent(ElexisEventTopics.EVENT_UPDATE, sourceStockEntry);
-		return missing;
+		return amount;
 	}
 
 	/**
