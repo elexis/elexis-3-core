@@ -11,4 +11,8 @@ public interface IServiceLoader {
 
 	public <T extends Object> Optional<T> getService(Class<T> clazz, String filter);
 
+	public <T extends Object> Optional<T> getServiceWait(Class<T> clazz, long timeout);
+
+	public void ungetService(Object object);
+
 }

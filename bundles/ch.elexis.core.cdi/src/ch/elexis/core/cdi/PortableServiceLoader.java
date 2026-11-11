@@ -36,6 +36,10 @@ public class PortableServiceLoader {
 		return PortableServiceLoader.serviceLoader.getService(clazz);
 	}
 
+	public synchronized static <T extends Object> Optional<T> getOptionalWait(Class<T> clazz, long timeout) {
+		return PortableServiceLoader.serviceLoader.getServiceWait(clazz, timeout);
+	}
+
 	public synchronized static <T extends Object> T get(Class<T> clazz) {
 		return PortableServiceLoader.serviceLoader.getService(clazz).get();
 	}
@@ -47,6 +51,15 @@ public class PortableServiceLoader {
 	public synchronized static IModelService getCoreModelService() {
 		return PortableServiceLoader.serviceLoader
 				.getService(IModelService.class, "(" + IModelService.SERVICEMODELNAME + "=ch.elexis.core.model)").get();
+	}
+
+	public synchronized static IModelService getArzttarifeModelService() {
+		return PortableServiceLoader.serviceLoader.getService(IModelService.class,
+				"(" + IModelService.SERVICEMODELNAME + "=ch.elexis.base.ch.arzttarife.model)").get();
+	}
+
+	public static void ungetService(Object object) {
+		PortableServiceLoader.serviceLoader.ungetService(object);
 	}
 
 }
