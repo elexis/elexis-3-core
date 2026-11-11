@@ -201,7 +201,7 @@ public class MediorderPartUtil {
 
 	public static int getAvailableStockAmount(IStockEntry entry, IStockService stockService,
 			IContextService contextService) {
-		IStockEntry sourceStockEntry = findSourceStockEntry(entry.getArticle(), getMissingAmount(entry), stockService,
+		IStockEntry sourceStockEntry = findSourceStockEntry(entry.getArticle(), getOrderedAmount(entry), stockService,
 				contextService);
 		return sourceStockEntry != null ? sourceStockEntry.getCurrentStock() : 0;
 	}
@@ -209,15 +209,15 @@ public class MediorderPartUtil {
 	/**
 	 * In a patient stock the minimum stock is the requested amount.
 	 */
-	public static int getMissingAmount(IStockEntry entry) {
+	public static int getOrderedAmount(IStockEntry entry) {
 		return Math.max(0, entry.getMinimumStock() - entry.getCurrentStock());
 	}
 
 	/**
-	 * Checks if the missing amount of all entries can be taken from an existing
+	 * Checks if the ordered amount of all entries can be taken from an existing
 	 * stock (minimum = requested, maximum = approved). Not possible without active
 	 * mandator (billing), for partially approved entries, entries with an open
-	 * order or if the stock does not contain the missing amount, summed up per
+	 * order or if the stock does not contain the ordered amount, summed up per
 	 * article.
 	 */
 	public static boolean canTakeFromStock(List<IStockEntry> entries, IStockService stockService,
@@ -225,19 +225,19 @@ public class MediorderPartUtil {
 		if (entries == null || entries.isEmpty() || contextService.getActiveMandator().isEmpty()) {
 			return false;
 		}
-		Map<IArticle, Integer> missingByArticle = new HashMap<>();
+		Map<IArticle, Integer> orderedByArticle = new HashMap<>();
 		for (IStockEntry entry : entries) {
 			if (!isTakeableFromStock(entry, orderService)) {
 				return false;
 			}
-			missingByArticle.merge(entry.getArticle(), getMissingAmount(entry), Integer::sum);
+			orderedByArticle.merge(entry.getArticle(), getOrderedAmount(entry), Integer::sum);
 		}
-		return missingByArticle.entrySet().stream()
+		return orderedByArticle.entrySet().stream()
 				.allMatch(e -> isInSourceStock(e.getKey(), e.getValue(), stockService, contextService));
 	}
 
 	private static boolean isTakeableFromStock(IStockEntry entry, IOrderService orderService) {
-		return entry.getArticle() != null && getMissingAmount(entry) > 0 && isFullyApproved(entry)
+		return entry.getArticle() != null && getOrderedAmount(entry) > 0 && isFullyApproved(entry)
 				&& orderService.findOpenOrderEntryForStockEntry(entry) == null;
 	}
 
@@ -252,13 +252,13 @@ public class MediorderPartUtil {
 	}
 
 	/**
-	 * Takes the missing amount (requested minus current) of a patient stock entry
+	 * Takes the ordered amount (requested minus current) of a patient stock entry
 	 * from a source stock instead of ordering it. The source stock entry is locked
 	 * and reloaded before the amounts are moved, so concurrent changes by other
 	 * users are respected.
 	 *
 	 * @param entry the patient stock entry to fill up
-	 * @return the amount taken from stock, which is always the full missing amount
+	 * @return the amount taken from stock, which is always the full ordered amount
 	 *         or 0 if nothing was taken
 	 */
 	public static int takeFromStock(IStockEntry entry, IStockService stockService, IModelService coreModelService,
@@ -266,7 +266,7 @@ public class MediorderPartUtil {
 		if (!canTakeFromStock(List.of(entry), stockService, contextService, orderService)) {
 			return 0;
 		}
-		IStockEntry sourceStockEntry = findSourceStockEntry(entry.getArticle(), getMissingAmount(entry), stockService,
+		IStockEntry sourceStockEntry = findSourceStockEntry(entry.getArticle(), getOrderedAmount(entry), stockService,
 				contextService);
 		LockResponse lockResponse = LocalLockServiceHolder.get().acquireLockBlocking(sourceStockEntry, 1,
 				new NullProgressMonitor());
@@ -275,7 +275,7 @@ public class MediorderPartUtil {
 					sourceStockEntry.getId());
 			return 0;
 		}
-		int amount = getMissingAmount(entry);
+		int amount = getorderedAmount(entry);
 		try {
 			// another user could have changed the source stock in the meantime
 			coreModelService.refresh(sourceStockEntry, true);
