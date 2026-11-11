@@ -275,7 +275,7 @@ public class MediorderPartUtil {
 					sourceStockEntry.getId());
 			return 0;
 		}
-		int amount = getorderedAmount(entry);
+		int amount = getOrderedAmount(entry);
 		try {
 			// another user could have changed the source stock in the meantime
 			coreModelService.refresh(sourceStockEntry, true);
