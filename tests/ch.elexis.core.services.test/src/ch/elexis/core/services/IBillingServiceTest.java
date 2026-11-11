@@ -166,6 +166,17 @@ public class IBillingServiceTest extends AbstractServiceTest {
 	}
 
 	@Test
+	public void billArticleWithoutStockDisposal() {
+		Result<IBilled> billed = billingService.bill(customArticle, encounter, 1.0, false);
+		assertTrue(billed.getMessages().get(0).getText(), billed.isOK());
+		CoreModelServiceHolder.get().remove(billed.get());
+
+		IStockEntry stockEntry = StockServiceHolder.get()
+				.findStockEntryForArticleInStock(StockServiceHolder.get().getDefaultStock(), customArticle);
+		assertEquals(1, stockEntry.getCurrentStock());
+	}
+
+	@Test
 	public void changeAmountCorrectlyModifiesStock() {
 		customArticleStockEntry.setCurrentStock(8);
 		coreModelService.save(customArticleStockEntry);

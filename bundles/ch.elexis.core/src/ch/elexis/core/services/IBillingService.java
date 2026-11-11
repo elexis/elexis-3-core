@@ -55,6 +55,22 @@ public interface IBillingService {
 	public Result<IBilled> bill(IBillable billable, IEncounter encounter, double amount);
 
 	/**
+	 * Try to bill the amount of {@link IBillable} using the {@link IEncounter},
+	 * see {@link #bill(IBillable, IEncounter, double)}. If the billable is an
+	 * article, it is only disposed from stock if stockDisposal is
+	 * <code>true</code>. Use <code>false</code> if the stock is managed by the
+	 * caller, e.g. for patient medication orders.
+	 *
+	 * @param billable
+	 * @param encounter
+	 * @param amount
+	 * @param stockDisposal
+	 * @return a {@link Result} that returns a {@link SEVERITY#WARNING} if only a
+	 *         partial amount could be billed
+	 */
+	public Result<IBilled> bill(IBillable billable, IEncounter encounter, double amount, boolean stockDisposal);
+
+	/**
 	 * Remove a billed service from the encounter. This will only work if the
 	 * encounter is editable. This method additionally takes care of side-effects
 	 * like e.g. returning an article to stock if removed
