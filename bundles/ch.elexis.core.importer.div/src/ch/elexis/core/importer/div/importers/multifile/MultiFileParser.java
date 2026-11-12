@@ -87,7 +87,8 @@ public class MultiFileParser implements IMultiFileParser {
 			try {
 				IVirtualFilesystemHandle[] listHandles = sortListHandles(fileHandle.listHandles());
 				for (IVirtualFilesystemHandle childHandle : listHandles) {
-					if ("hl7".equalsIgnoreCase(childHandle.getExtension())) {
+					if ("hl7".equalsIgnoreCase(childHandle.getExtension())
+							|| "hl7v2".equalsIgnoreCase(childHandle.getExtension())) {
 						Result<Object> importFromHandle = importFromHandle(childHandle, importStrategyFactory,
 								hl7parser, persistenceHandler);
 						results.add(importFromHandle);
