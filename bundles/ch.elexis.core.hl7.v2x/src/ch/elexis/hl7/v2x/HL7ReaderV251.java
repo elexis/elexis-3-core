@@ -26,9 +26,11 @@ import ca.uhn.hl7v2.model.v251.datatype.XAD;
 import ca.uhn.hl7v2.model.v251.datatype.XCN;
 import ca.uhn.hl7v2.model.v251.group.ORU_R01_ORDER_OBSERVATION;
 import ca.uhn.hl7v2.model.v251.group.ORU_R01_PATIENT_RESULT;
+import ca.uhn.hl7v2.model.v251.group.ORU_R30_OBSERVATION;
 import ca.uhn.hl7v2.model.v251.group.OUL_R22_ORDER;
 import ca.uhn.hl7v2.model.v251.group.OUL_R22_SPECIMEN;
 import ca.uhn.hl7v2.model.v251.message.ORU_R01;
+import ca.uhn.hl7v2.model.v251.message.ORU_R30;
 import ca.uhn.hl7v2.model.v251.message.OUL_R22;
 import ca.uhn.hl7v2.model.v251.segment.MSH;
 import ca.uhn.hl7v2.model.v251.segment.NTE;
@@ -95,6 +97,8 @@ public class HL7ReaderV251 extends HL7Reader {
 			this.patientResolver = patientResolver;
 			if (message.getName().contains("OUL_R22")) {
 				readObservationOulR22(createIfNotFound);
+			} else if (message.getName().contains("ORU_R30")) {
+				readObservationOruR30(createIfNotFound);
 			} else {
 				readObservationOruR01(createIfNotFound);
 			}
@@ -103,6 +107,50 @@ public class HL7ReaderV251 extends HL7Reader {
 		}
 
 		return observation;
+	}
+
+	private void readObservationOruR30(boolean createIfNotFound) throws ParseException, HL7Exception {
+		ORU_R30 oru = (ORU_R30) message;
+		msh = oru.getMSH();
+
+		PID pid = oru.getPID();
+		// place order number
+		String orderNumber = oru.getORC().getOrc2_PlacerOrderNumber()
+				.getEi1_EntityIdentifier().getValue();
+		setPatient(pid, orderNumber, createIfNotFound);
+
+		int obsCount = oru.getOBSERVATIONReps();
+		for (int idx = 0; idx < obsCount; idx++) {
+			OBR obr = oru.getOBR();
+			String obrObservationDateTime = obr.getObr7_ObservationDateTime().getTs1_Time().getValue();
+
+			setOrderComment(oru, idx, obrObservationDateTime);
+
+			for (int i = 0; i < oru.getOBSERVATIONReps(); i++) {
+				ORU_R30_OBSERVATION obs = oru.getOBSERVATION(idx);
+				// get notes and comments
+				String commentNTE = getComments(obs, i);
+
+				// groupe and sequence
+				String group = StringUtils.EMPTY;
+				String sequence = StringUtils.EMPTY;
+				for (int k = 0; k < 2; k++) {
+					CE ce = obr.getObr47_FillerSupplementalServiceInformation(k);
+					if (ce != null) {
+						String code = StringUtils.EMPTY;
+						if (ce.getCe3_NameOfCodingSystem() != null)
+							code = ce.getCe3_NameOfCodingSystem().getValue();
+
+						group = getGroup(code, ce);
+						sequence = getSequence(code, ce);
+
+					}
+				}
+
+				// result
+				readOBXResults(obs.getOBX(), commentNTE, group, sequence, obrObservationDateTime);
+			}
+		}
 	}
 
 	private void readObservationOruR01(boolean createIfNotFound) throws ParseException, HL7Exception {
@@ -291,11 +339,14 @@ public class HL7ReaderV251 extends HL7Reader {
 				if (StringTool.isNothing(patid)) {
 					patid = pid.getPid2_PatientID().getIDNumber().getValue();
 					if (StringTool.isNothing(patid)) {
-						patid = pid.getAlternatePatientIDPID(0).getCx1_IDNumber().getValue();
+						patid = pid.getPatientIdentifierList(0).getIDNumber().getValue();
 						if (StringTool.isNothing(patid)) {
-							patid = patid_alternative;
-							if (patid == null) {
-								patid = StringUtils.EMPTY;
+							patid = pid.getAlternatePatientIDPID(0).getCx1_IDNumber().getValue();
+							if (StringTool.isNothing(patid)) {
+								patid = patid_alternative;
+								if (patid == null) {
+									patid = StringUtils.EMPTY;
+								}
 							}
 						}
 					}
@@ -378,6 +429,40 @@ public class HL7ReaderV251 extends HL7Reader {
 				}
 			}
 		}
+	}
+
+	private void setOrderComment(ORU_R30 oru, int idx, String obsDate) throws ParseException {
+		String orderCommentNTE = getComments(oru.getOBSERVATION(idx), -1);
+		if (orderCommentNTE != null) {
+			observation.add(new TextData(HL7Constants.COMMENT_NAME, orderCommentNTE, obsDate,
+					HL7Constants.COMMENT_GROUP, null));
+		}
+
+	}
+
+	private String getComments(ORU_R30_OBSERVATION oobs, int i) {
+		String commentNTE = null;
+		int size = oobs.getNTEReps();
+		if (i > -1) {
+			size = oobs.getNTEReps();
+		}
+
+		for (int n = 0; n < size; n++) {
+			NTE nte = oobs.getNTE(n);
+			if (i > -1) {
+				nte = oobs.getNTE(n);
+			}
+			AbstractPrimitive comment = nte.getNte3_Comment(0);
+			if (comment != null) {
+				if (commentNTE != null) {
+					commentNTE += StringUtils.LF;
+				} else {
+					commentNTE = StringUtils.EMPTY;
+				}
+				commentNTE += comment.getValue();
+			}
+		}
+		return commentNTE;
 	}
 
 	private void setOrderComment(ORU_R01 oru, int idx, String obsDate) throws ParseException {
