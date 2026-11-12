@@ -475,7 +475,7 @@ public class HL7Parser {
 					return true;
 				}
 			} else {
-				if ("hl7".equalsIgnoreCase(handle.getExtension())) { //$NON-NLS-1$
+				if (isHl7FileExtension(handle.getExtension())) {
 					return true;
 				}
 			}
@@ -537,5 +537,18 @@ public class HL7Parser {
 
 	public void setDate(TimeTool date) {
 		this.date = date;
+	}
+
+	/**
+	 * Test if the provided file extension is a known hl7 file extension.
+	 * 
+	 * @param extension
+	 * @return
+	 */
+	public static boolean isHl7FileExtension(String extension) {
+		if (extension != null) {
+			return "hl7".equalsIgnoreCase(extension) || "hl7v2".equalsIgnoreCase(extension); // $NON-NLS-1$ //$NON-NLS-2$
+		}
+		return false;
 	}
 }
