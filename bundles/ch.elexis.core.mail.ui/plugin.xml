@@ -4,9 +4,10 @@
    <extension
          point="org.eclipse.ui.preferencePages">
       <page
-            class="ch.elexis.core.mail.ui.preference.Preference"
+            class="ch.elexis.core.mail.ui.preference.MailAccountsPreferencePage"
             id="ch.elexis.core.mail.ui.preference"
-            name="E-Mail">
+            name="%MailAccountsPage">
+         <keywordReference id="ch.elexis.core.mail.ui.preference.keyword"/>
       </page>
       <page
             category="ch.elexis.core.mail.ui.preference"
@@ -17,6 +18,9 @@
                id="aclallow:all">
          </keywordReference>
       </page>
+   </extension>
+   <extension point="org.eclipse.ui.keywords">
+      <keyword id="ch.elexis.core.mail.ui.preference.keyword" label="%MailAccountsKeywords"/>
    </extension>
    <extension
          point="org.eclipse.ui.commands">

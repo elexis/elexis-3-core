@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.3.0" deactivate="deactivate" name="ch.elexis.core.mail.internal.send.MailSendService">
+   <service>
+      <provide interface="ch.elexis.core.mail.service.IMailSendService"/>
+   </service>
+   <reference cardinality="1..1" field="accessControlService" interface="ch.elexis.core.services.IAccessControlService" name="accessControlService"/>
+   <reference cardinality="1..1" field="accountService" interface="ch.elexis.core.mail.service.IMailboxAccountService" name="accountService"/>
+   <reference cardinality="0..1" field="archiveService" interface="ch.elexis.core.mail.service.IMailSentFiling" name="archiveService" policy="dynamic"/>
+   <reference cardinality="1..1" field="configService" interface="ch.elexis.core.services.IConfigService" name="configService"/>
+   <reference cardinality="1..1" field="connections" interface="ch.elexis.core.mail.internal.connection.MailboxConnectionManager" name="connections"/>
+   <reference cardinality="1..1" field="contextService" interface="ch.elexis.core.services.IContextService" name="contextService"/>
+   <reference cardinality="0..1" field="documentStore" interface="ch.elexis.core.services.IDocumentStore" name="documentStore" policy="dynamic" target="(storeid=ch.elexis.data.store.omnivore)"/>
+   <reference cardinality="1..1" field="mailboxService" interface="ch.elexis.core.mail.service.IMailboxService" name="mailboxService"/>
+   <reference cardinality="1..1" field="modelService" interface="ch.elexis.core.services.IModelService" name="modelService" target="(service.model.name=ch.elexis.core.model)"/>
+   <reference cardinality="1..1" field="tokens" interface="ch.elexis.core.mail.internal.oauth.OAuth2TokenCache" name="tokens"/>
+   <implementation class="ch.elexis.core.mail.internal.send.MailSendService"/>
+</scr:component>

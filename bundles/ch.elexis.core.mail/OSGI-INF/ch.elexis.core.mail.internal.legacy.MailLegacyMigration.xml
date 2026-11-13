@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.3.0" immediate="true" name="ch.elexis.core.mail.internal.legacy.MailLegacyMigration">
+   <service>
+      <provide interface="ch.elexis.core.mail.internal.legacy.MailLegacyMigration"/>
+   </service>
+   <reference cardinality="1..1" field="accounts" interface="ch.elexis.core.mail.internal.legacy.MailLegacyAccountStore" name="accounts"/>
+   <reference cardinality="1..1" field="configService" interface="ch.elexis.core.services.IConfigService" name="configService"/>
+   <reference cardinality="1..1" field="modelService" interface="ch.elexis.core.services.IModelService" name="modelService" target="(service.model.name=ch.elexis.core.model)"/>
+   <implementation class="ch.elexis.core.mail.internal.legacy.MailLegacyMigration"/>
+</scr:component>

@@ -58,6 +58,7 @@ import ch.elexis.core.mail.MailMessage;
 import ch.elexis.core.mail.MailTextTemplate;
 import ch.elexis.core.mail.PreferenceConstants;
 import ch.elexis.core.mail.TaskUtil;
+import ch.elexis.core.mail.service.IMailboxAccountService;
 import ch.elexis.core.mail.ui.client.MailClientComponent;
 import ch.elexis.core.mail.ui.handlers.OutboxUtil;
 import ch.elexis.core.mail.ui.preference.SerializableFile;
@@ -85,6 +86,9 @@ public class SendMailDialog extends TitleAreaDialog {
 
 	@Inject
 	private ITextReplacementService textReplacement;
+
+	@Inject
+	private IMailboxAccountService mailboxAccounts;
 
 	private ComboViewer accountsViewer;
 	private MailAccount account;
@@ -401,20 +405,10 @@ public class SendMailDialog extends TitleAreaDialog {
 				// set selected account for mandant
 				IMandator selectedMandant = ContextServiceHolder.get().getActiveMandator().orElse(null);
 				if (selectedMandant != null) {
-					List<String> accounts = MailClientComponent.getMailClient().getAccountsLocal();
-					Optional<String> mandantAccount = accounts.stream()
-							.filter(aid -> MailClientComponent.getMailClient().getAccount(aid).isPresent())
+					Optional<String> mandantAccount = getSendMailAccounts().stream()
 							.filter(aid -> MailClientComponent.getMailClient().getAccount(aid).get()
 									.isForMandant(selectedMandant.getId()))
-							.findFirst();
-					if (!mandantAccount.isPresent()) {
-						accounts = MailClientComponent.getMailClient().getAccounts();
-						mandantAccount = accounts.stream()
-								.filter(aid -> MailClientComponent.getMailClient().getAccount(aid).isPresent())
-								.filter(aid -> MailClientComponent.getMailClient().getAccount(aid).get()
-										.isForMandant(selectedMandant.getId()))
 								.findFirst();
-					}
 					if (mandantAccount.isPresent()) {
 						accountsViewer.setSelection(new StructuredSelection(mandantAccount.get()));
 					}
@@ -490,7 +484,9 @@ public class SendMailDialog extends TitleAreaDialog {
 				.filter(aid -> MailClientComponent.getMailClient().getAccount(aid).get().getType() == TYPE.SMTP)
 				.collect(Collectors.toList()));
 		accounts = MailClientComponent.getMailClient().getAccounts();
-		ret.addAll(accounts.stream().filter(aid -> MailClientComponent.getMailClient().getAccount(aid).isPresent())
+		List<String> visible = mailboxAccounts.getVisibleAccounts(
+				ContextServiceHolder.get().getActiveUser().orElse(null)).stream().map(value -> value.id()).toList();
+		ret.addAll(accounts.stream().filter(visible::contains).filter(aid -> MailClientComponent.getMailClient().getAccount(aid).isPresent())
 				.filter(aid -> MailClientComponent.getMailClient().getAccount(aid).get().getType() == TYPE.SMTP)
 				.collect(Collectors.toList()));
 		return ret;

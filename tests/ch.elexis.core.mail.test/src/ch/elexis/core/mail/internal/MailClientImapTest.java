@@ -52,6 +52,7 @@ public class MailClientImapTest {
 
 	@BeforeClass
 	public static void beforeClass() {
+		Thread.currentThread().setContextClassLoader(MailClientImapTest.class.getClassLoader());
 		client = PortableServiceLoader.get(IMailClient.class);
 	}
 

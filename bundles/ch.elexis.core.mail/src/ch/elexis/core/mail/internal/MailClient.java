@@ -1,14 +1,16 @@
 package ch.elexis.core.mail.internal;
 
-import java.io.File;
-import java.net.ConnectException;
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadFactory;
 
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.angus.mail.imap.IMAPFolder;
@@ -16,6 +18,7 @@ import org.eclipse.angus.mail.imap.IMAPMessage;
 import org.eclipse.angus.mail.imap.IMAPStore;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Reference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,13 +29,27 @@ import ch.elexis.core.mail.IMailClient;
 import ch.elexis.core.mail.MailAccount;
 import ch.elexis.core.mail.MailAccount.TYPE;
 import ch.elexis.core.mail.MailMessage;
+import ch.elexis.core.mail.MailClientConfig;
+import ch.elexis.core.mail.internal.account.CredentialCipher;
+import ch.elexis.core.mail.internal.account.MailCredentialProvider;
+import ch.elexis.core.mail.internal.account.PasswordCredentialProvider;
+import ch.elexis.core.mail.internal.connection.MailSessionFactory;
+import ch.elexis.core.mail.internal.connection.MailcapRegistration;
+import ch.elexis.core.mail.internal.legacy.MailLegacyAccountConverter;
+import ch.elexis.core.mail.internal.legacy.MailLegacyAccountStore;
+import ch.elexis.core.mail.internal.oauth.OAuth2TokenCache;
+import ch.elexis.core.mail.internal.send.MailSystemSender;
+import ch.elexis.core.mail.internal.send.SendSmtpTransport;
+import ch.elexis.core.mail.model.MailSecurity;
+import ch.elexis.core.mail.model.MailboxAccount;
+import ch.elexis.core.mail.model.MailboxScope;
+import ch.elexis.core.mail.service.IMailboxAccountService;
+import ch.elexis.core.model.IContact;
+import ch.elexis.core.model.IUser;
 import ch.elexis.core.services.IConfigService;
-import jakarta.activation.CommandMap;
-import jakarta.activation.DataHandler;
-import jakarta.activation.DataSource;
-import jakarta.activation.FileDataSource;
-import jakarta.activation.MailcapCommandMap;
+import ch.elexis.core.services.IModelService;
 import jakarta.annotation.PostConstruct;
+import jakarta.annotation.PreDestroy;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.mail.AuthenticationFailedException;
@@ -40,18 +57,11 @@ import jakarta.mail.Flags;
 import jakarta.mail.Flags.Flag;
 import jakarta.mail.Folder;
 import jakarta.mail.Message;
-import jakarta.mail.Message.RecipientType;
 import jakarta.mail.MessagingException;
-import jakarta.mail.Multipart;
-import jakarta.mail.PasswordAuthentication;
-import jakarta.mail.Session;
-import jakarta.mail.Store;
-import jakarta.mail.Transport;
+import jakarta.mail.Service;
+import jakarta.mail.URLName;
 import jakarta.mail.internet.AddressException;
-import jakarta.mail.internet.InternetAddress;
-import jakarta.mail.internet.MimeBodyPart;
 import jakarta.mail.internet.MimeMessage;
-import jakarta.mail.internet.MimeMultipart;
 import jakarta.mail.search.SearchTerm;
 
 @ApplicationScoped
@@ -69,20 +79,38 @@ public class MailClient implements IMailClient {
 	@Reference
 	IConfigService configService;
 
-	private ErrorTyp lastError;
+	@Inject
+	@Reference
+	private IMailboxAccountService accountService;
+	@Inject
+	@Reference
+	private MailLegacyAccountStore legacyAccounts;
+	@Inject
+	@Reference
+	private OAuth2TokenCache tokens;
+	@Inject
+	@Reference(target = "(service.model.name=ch.elexis.core.model)")
+	private IModelService modelService;
+	private MailCredentialProvider credentials;
+	private MailSystemSender sender;
+	private final ThreadFactory threads = Thread.ofPlatform().daemon(true).name("mail-legacy-", 0).factory();
+	private final ExecutorService executor = Executors.newCachedThreadPool(runnable -> {
+		Thread thread = threads.newThread(runnable);
+		thread.setContextClassLoader(IMAPStore.class.getClassLoader());
+		return thread;
+	});
+
+	private volatile ErrorTyp lastError;
 
 	@Activate
 	@PostConstruct
 	void activate() {
-		MailcapCommandMap mc = (MailcapCommandMap) CommandMap.getDefaultCommandMap();
-		mc.addMailcap("text/html;; x-java-content-handler=org.eclipse.angus.mail.handlers.text_html");
-		mc.addMailcap("text/xml;; x-java-content-handler=org.eclipse.angus.mail.handlers.text_xml");
-		mc.addMailcap("text/plain;; x-java-content-handler=org.eclipse.angus.mail.handlers.text_plain");
-		mc.addMailcap("multipart/*;; x-java-content-handler=org.eclipse.angus.mail.handlers.multipart_mixed");
-		mc.addMailcap("message/rfc822;; x-java-content- handler=org.eclipse.angus.mail.handlers.message_rfc822");
-		mc.addMailcap(
-				"message/disposition-notification;;x-java-content-handler=org.eclipse.angus.mail.handlers.text_plain");
-		CommandMap.setDefaultCommandMap(mc);
+		MailcapRegistration.register();
+		CredentialCipher cipher = new CredentialCipher(() -> configService.get(MailClientConfig.SECRET_SALT, null),
+				salt -> configService.set(MailClientConfig.SECRET_SALT, salt, false));
+		credentials = new MailCredentialProvider(new PasswordCredentialProvider(configService, cipher,
+				id -> modelService.load(id, IUser.class), id -> modelService.load(id, IContact.class)), tokens);
+		sender = new MailSystemSender(configService, credentials);
 	}
 
 	@Override
@@ -94,26 +122,20 @@ public class MailClient implements IMailClient {
 
 	@Override
 	public Optional<MailAccount> getAccount(String id) {
-		MailAccount ret = null;
-		String accountString = configService.getLocal(CONFIG_ACCOUNT + "/" + id, null);
-		if (accountString == null) {
-			accountString = configService.get(CONFIG_ACCOUNT + "/" + id, null);
+		String local = configService.getLocal(CONFIG_ACCOUNT + "/" + id, null);
+		if (local != null) {
+			logger.warn("Using local legacy mail account {}", id);
+			return Optional.ofNullable(MailAccount.from(local));
 		}
-		if (accountString != null) {
-			ret = MailAccount.from(accountString);
-		}
-		return Optional.ofNullable(ret);
+		return accountService.getAccount(id)
+				.map(account -> MailLegacyAccountConverter.toLegacy(account, accountService.getMandatorIds(id)));
 	}
 
 	@Override
 	public List<String> getAccounts() {
-		List<String> ret = new ArrayList<>();
-		String accountIds = configService.get(CONFIG_ACCOUNTS, null);
-		if (accountIds != null) {
-			String[] currentIds = accountIds.split(ACCOUNTS_SEPARATOR);
-			ret.addAll(Arrays.asList(currentIds));
-		}
-		return ret;
+		return Arrays.stream(configService.get(MailClientConfig.ACCOUNTS, "").split(ACCOUNTS_SEPARATOR))
+				.filter(id -> !id.isBlank()).filter(id -> accountService.getAccount(id)
+						.map(account -> account.scope() == MailboxScope.SHARED).orElse(false)).toList();
 	}
 
 	@Override
@@ -130,8 +152,7 @@ public class MailClient implements IMailClient {
 	@Override
 	public void saveAccount(MailAccount account) {
 		if (account != null && account.getId() != null) {
-			addAccountId(account.getId());
-			configService.set(CONFIG_ACCOUNT + "/" + account.getId(), account.toString());
+			legacyAccounts.save(account);
 		}
 	}
 
@@ -162,30 +183,10 @@ public class MailClient implements IMailClient {
 		}
 	}
 
-	private void addAccountId(String id) {
-		if (id.contains(ACCOUNTS_SEPARATOR)) {
-			throw new IllegalStateException("Id can not contain separator [" + ACCOUNTS_SEPARATOR + "]");
-		}
-		String accountIds = configService.get(CONFIG_ACCOUNTS, null);
-		if (accountIds == null) {
-			configService.set(CONFIG_ACCOUNTS, id);
-		} else {
-			String[] currentIds = accountIds.split(ACCOUNTS_SEPARATOR);
-			for (String string : currentIds) {
-				if (string.equals(id)) {
-					return;
-				}
-			}
-			// not already in list
-			configService.set(CONFIG_ACCOUNTS, accountIds + ACCOUNTS_SEPARATOR + id);
-		}
-	}
-
 	@Override
 	public void removeAccount(MailAccount account) {
 		if (account != null && account.getId() != null) {
-			removeAccountId(account.getId());
-			configService.set(CONFIG_ACCOUNT + "/" + account.getId(), null);
+			legacyAccounts.remove(account.getId());
 		}
 	}
 
@@ -219,169 +220,86 @@ public class MailClient implements IMailClient {
 		}
 	}
 
-	private void removeAccountId(String id) {
-		String accountIds = configService.get(CONFIG_ACCOUNTS, null);
-		if (accountIds != null) {
-			StringBuilder sb = new StringBuilder();
-			String[] currentIds = accountIds.split(ACCOUNTS_SEPARATOR);
-			for (String string : currentIds) {
-				if (!string.equals(id)) {
-					if (sb.length() > 0) {
-						sb.append(ACCOUNTS_SEPARATOR);
-					}
-					sb.append(string);
-				}
-			}
-			// write new list
-			if (StringUtils.isNotBlank(sb.toString())) {
-				configService.set(CONFIG_ACCOUNTS, sb.toString());
-			} else {
-				configService.set(CONFIG_ACCOUNTS, null);
-			}
-		}
-	}
-
 	@Override
 	public boolean testAccount(MailAccount account) {
-		MailClientProperties properties = new MailClientProperties(account);
-
-		try {
-			if (account.getType() == TYPE.SMTP) {
-				Session session = Session.getInstance(properties.getProperties(), new jakarta.mail.Authenticator() {
-					@Override
-					protected PasswordAuthentication getPasswordAuthentication() {
-						return new PasswordAuthentication(account.getUsername(), account.getPassword());
-					}
-				});
-				Transport transport = session.getTransport();
-				transport.connect();
-				transport.close();
-			} else if (account.getType() == TYPE.IMAP) {
-				Session session = Session.getInstance(properties.getProperties(), new jakarta.mail.Authenticator() {
-					@Override
-					protected PasswordAuthentication getPasswordAuthentication() {
-						return new PasswordAuthentication(account.getUsername(), account.getPassword());
-					}
-				});
-				Store store = session.getStore("imap");
-
-				store.connect();
-				store.close();
-			} else if (account.getType() == TYPE.IMAPS) {
-				Session session = Session.getInstance(properties.getProperties(), new jakarta.mail.Authenticator() {
-					@Override
-					protected PasswordAuthentication getPasswordAuthentication() {
-						return new PasswordAuthentication(account.getUsername(), account.getPassword());
-					}
-				});
-				Store store = session.getStore("imaps");
-
-				store.connect();
-				store.close();
-			} else {
-				logger.warn("Unknown account type [" + account.getType() + "].");
-				lastError = ErrorTyp.CONFIGTYP;
-				return false;
-			}
-		} catch (MessagingException e) {
-			logger.warn("Error testing account [" + account.getId() + "]", e);
-			lastError = ErrorTyp.CONNECTION;
-			handleException(e);
+		if (account == null || account.getType() == null) {
+			lastError = ErrorTyp.CONFIGTYP;
 			return false;
 		}
-		return true;
+		try {
+			mailWork(() -> {
+				Resolved resolved = resolve(account);
+				MailboxAccount settings = resolved.account();
+				MailSessionFactory sessions = sessions(resolved);
+				boolean smtp = settings.smtp() != null;
+				try (Service connection = smtp
+						? new SendSmtpTransport(sessions.createSmtpSession(settings), new URLName("smtp",
+								settings.smtp().host(), settings.smtp().port(), null, null, null),
+								settings.smtp().security() == MailSecurity.SSL)
+						: sessions.createStore(settings)) {
+					credentials.connect(settings, smtp, resolved.password(), (username, password) -> connection.connect(
+							smtp ? settings.smtp().host() : settings.imap().host(),
+							smtp ? settings.smtp().port() : settings.imap().port(), username, new String(password)));
+				} finally {
+					resolved.clear();
+				}
+				return null;
+			});
+			return true;
+		} catch (MessagingException e) {
+			handleException(e);
+			return false;
+		} catch (IllegalArgumentException e) {
+			lastError = ErrorTyp.CONFIGTYP;
+			return false;
+		}
 	}
 
 	@Override
 	public boolean sendMail(MailAccount account, MailMessage message) {
-		System.setProperty("mail.mime.encodeparameters", "false");
-		MailClientProperties properties = new MailClientProperties(account);
-
-		try {
-			if (account.getType() == TYPE.SMTP) {
-				Session session = Session.getInstance(properties.getProperties(), new jakarta.mail.Authenticator() {
-					@Override
-					protected PasswordAuthentication getPasswordAuthentication() {
-						return new PasswordAuthentication(account.getUsername(), account.getPassword());
-					}
-				});
-
-				MimeMessage mimeMessage = new MimeMessage(session);
-				mimeMessage.addHeader("X-ElexisMail", "ch.elexis.core.mail");
-				// mail.user attribute of the properties
-				mimeMessage.setFrom(account.getFromAddress());
-				mimeMessage.setSubject(message.getSubject());
-
-				Multipart multipart = new MimeMultipart("related");
-				// create the message part
-				MimeBodyPart messageBodyPart = new MimeBodyPart();
-				messageBodyPart.setContent(message.getHtmlText(), "text/html;charset=UTF-8");
-				multipart.addBodyPart(messageBodyPart);
-
-				if (message.hasImage()) {
-					for (String imageString : message.getImageStrings()) {
-						File image = message.getImage(imageString);
-						if (image != null) {
-							messageBodyPart = new MimeBodyPart();
-							DataSource source = new FileDataSource(image);
-							messageBodyPart.setDataHandler(new DataHandler(source));
-							messageBodyPart.setHeader("Content-ID", "<" + message.getImageMimeContentId(imageString) + ">");
-							messageBodyPart.setHeader("Content-Location", image.getName());
-							messageBodyPart.setDisposition(MimeBodyPart.INLINE);
-							messageBodyPart.setFileName(image.getName());
-							multipart.addBodyPart(messageBodyPart);
-						}
-					}
-				}
-
-				if (message.hasAttachments()) {
-					List<File> attachments = message.getAttachments();
-					for (File file : attachments) {
-						messageBodyPart = new MimeBodyPart();
-						DataSource source = new FileDataSource(file);
-						messageBodyPart.setDataHandler(new DataHandler(source));
-						messageBodyPart.setFileName(file.getName());
-						multipart.addBodyPart(messageBodyPart);
-					}
-				}
-				// Put parts in message
-				mimeMessage.setContent(multipart);
-
-				Transport transport = session.getTransport();
-				transport.connect();
-				// add recipients
-				List<InternetAddress> addressesList = new ArrayList<>();
-				mimeMessage.setRecipients(RecipientType.TO, message.getToAddress());
-				addressesList.addAll(Arrays.asList(message.getToAddress()));
-				mimeMessage.setRecipients(RecipientType.CC, message.getCcAddress());
-				addressesList.addAll(Arrays.asList(message.getCcAddress()));
-
-				// use ClassLoader of transport impl. as mailcap is defined there
-				ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-				Thread.currentThread().setContextClassLoader(transport.getClass().getClassLoader());
-				transport.sendMessage(mimeMessage, addressesList.toArray(new InternetAddress[addressesList.size()]));
-				transport.close();
-				Thread.currentThread().setContextClassLoader(classLoader);
-			} else {
-				logger.warn("Invalid account type for sending [" + account.getType() + "].");
-				lastError = ErrorTyp.CONFIGTYP;
-				return false;
-			}
-		} catch (MessagingException e) {
-			logger.warn("Error sending using account [" + account.getId() + "]", e);
-			handleException(e);
+		if (account == null || account.getType() != TYPE.SMTP) {
+			lastError = ErrorTyp.CONFIGTYP;
 			return false;
 		}
-		return true;
+		try {
+			mailWork(() -> {
+				Resolved resolved = resolve(account);
+				try {
+					if (resolved.account().smtp() == null) {
+						throw new IllegalArgumentException("SMTP account required");
+					}
+					sender.send(resolved.account(), message, resolved.password(), sessions(resolved));
+				} finally {
+					resolved.clear();
+				}
+				return null;
+			});
+			return true;
+		} catch (MessagingException e) {
+			handleException(e);
+			return false;
+		} catch (IllegalArgumentException e) {
+			lastError = ErrorTyp.CONFIGTYP;
+			return false;
+		}
 	}
 
 	@Override
 	public List<IMAPMailMessage> getMessages(MailAccount account, String sourceFolder, boolean flag,
 			boolean onlyFetchUnflagged) throws MessagingException {
-		if (account.getType() == TYPE.SMTP) {
-			logger.warn("Invalid account type for receiving [" + account.getType() + "].");
-			lastError = ErrorTyp.CONFIGTYP;
-			return Collections.emptyList();
+		return mailWork(() -> readMessages(account, sourceFolder, flag, onlyFetchUnflagged));
+	}
+
+	private List<IMAPMailMessage> readMessages(MailAccount account, String sourceFolder, boolean flag,
+			boolean onlyFetchUnflagged) throws MessagingException {
+		Resolved resolved = resolve(account);
+		try {
+			if (resolved.account().imap() == null) {
+				lastError = ErrorTyp.CONFIGTYP;
+				return Collections.emptyList();
+			}
+		} finally {
+			resolved.clear();
 		}
 
 		if (sourceFolder == null) {
@@ -390,8 +308,7 @@ public class MailClient implements IMailClient {
 
 		IMAPStore imapStore = null;
 		try {
-			imapStore = (IMAPStore) getSession(account).getStore();
-			imapStore.connect();
+			imapStore = connectedStore(account);
 			List<IMAPMailMessage> listMessages = new ArrayList<>();
 			Folder folder = imapStore.getFolder(sourceFolder);
 
@@ -418,18 +335,17 @@ public class MailClient implements IMailClient {
 		}
 	}
 
-	private Session getSession(MailAccount account) {
-		MailClientProperties properties = new MailClientProperties(account);
-		return Session.getInstance(properties.getProperties(), new jakarta.mail.Authenticator() {
-			@Override
-			protected PasswordAuthentication getPasswordAuthentication() {
-				return new PasswordAuthentication(account.getUsername(), account.getPassword());
-			}
+	@Override
+	public void moveMessage(MailAccount account, IMAPMailMessage message, @Nullable String sourceFolder,
+			String targetFolder, boolean removeFlag) throws MessagingException {
+
+		mailWork(() -> {
+			move(account, message, sourceFolder, targetFolder, removeFlag);
+			return null;
 		});
 	}
 
-	@Override
-	public void moveMessage(MailAccount account, IMAPMailMessage message, @Nullable String sourceFolder,
+	private void move(MailAccount account, IMAPMailMessage message, String sourceFolder,
 			String targetFolder, boolean removeFlag) throws MessagingException {
 
 		if (sourceFolder == null) {
@@ -442,8 +358,7 @@ public class MailClient implements IMailClient {
 
 		IMAPStore imapStore = null;
 		try {
-			imapStore = (IMAPStore) getSession(account).getStore();
-			imapStore.connect();
+			imapStore = connectedStore(account);
 
 			IMAPFolder _sourceFolder = (IMAPFolder) imapStore.getFolder(sourceFolder);
 			IMAPFolder _targetFolder = (IMAPFolder) imapStore.getFolder(targetFolder);
@@ -453,7 +368,7 @@ public class MailClient implements IMailClient {
 			SearchTerm searchTerm = new MySearchTerm(referrer.getSubject(), referrer.getSize());
 
 			_sourceFolder.open(Folder.READ_WRITE);
-			Message[] matches = _sourceFolder.search(searchTerm);
+			Message[] matches = Arrays.stream(_sourceFolder.getMessages()).filter(searchTerm::match).toArray(Message[]::new);
 
 			if (matches != null && matches.length == 1) {
 				// found the message, lets move it
@@ -487,14 +402,86 @@ public class MailClient implements IMailClient {
 		}
 	}
 
+	private Resolved resolve(MailAccount account) {
+		String local = configService.getLocal(CONFIG_ACCOUNT + "/" + account.getId(), null);
+		if (local != null) {
+			MailAccount legacy = MailAccount.from(local);
+			return new Resolved(MailLegacyAccountConverter.toMailbox(legacy),
+					legacy.getPassword() == null ? new char[0] : legacy.getPassword().toCharArray(), true);
+		}
+		Optional<MailboxAccount> saved = accountService.getAccount(account.getId());
+		if (saved.isPresent()) {
+			if (saved.get().scope() != MailboxScope.SHARED) {
+				throw new IllegalArgumentException("Shared mail account required");
+			}
+			return new Resolved(saved.get(), null, accountService.isLegacy(account.getId()));
+		}
+		return new Resolved(MailLegacyAccountConverter.toMailbox(account),
+				account.getPassword() == null ? new char[0] : account.getPassword().toCharArray(), true);
+	}
+
+	private MailSessionFactory sessions(Resolved account) {
+		return new MailSessionFactory(id -> account.legacy());
+	}
+
+	private IMAPStore connectedStore(MailAccount account) throws MessagingException {
+		Resolved resolved = resolve(account);
+		IMAPStore store = null;
+		try {
+			MailboxAccount settings = resolved.account();
+			if (settings.imap() == null) {
+				throw new MessagingException("IMAP account required");
+			}
+			store = sessions(resolved).createStore(settings);
+			IMAPStore opened = store;
+			credentials.connect(settings, false, resolved.password(), (username, password) -> opened.connect(
+					settings.imap().host(), settings.imap().port(), username, new String(password)));
+			return store;
+		} catch (MessagingException | RuntimeException e) {
+			if (store != null) {
+				store.close();
+			}
+			throw e;
+		} finally {
+			resolved.clear();
+		}
+	}
+
+	private <T> T mailWork(Callable<T> work) throws MessagingException {
+		try {
+			return executor.submit(work).get();
+		} catch (InterruptedException e) {
+			Thread.currentThread().interrupt();
+			throw new MessagingException("Legacy mail operation interrupted", e);
+		} catch (ExecutionException e) {
+			if (e.getCause() instanceof MessagingException mail) {
+				handleException(mail);
+				throw mail;
+			}
+			if (e.getCause() instanceof RuntimeException runtime) {
+				throw runtime;
+			}
+			throw new MessagingException("Legacy mail operation failed", e);
+		}
+	}
+
 	private void handleException(MessagingException e) {
-		if (e instanceof AuthenticationFailedException) {
-			lastError = ErrorTyp.AUTHENTICATION;
-		} else if (e.getNextException() instanceof UnknownHostException
-				|| e.getNextException() instanceof ConnectException) {
-			lastError = ErrorTyp.CONNECTION;
-		} else if (e instanceof AddressException) {
-			lastError = ErrorTyp.ADDRESS;
+		lastError = e instanceof AuthenticationFailedException ? ErrorTyp.AUTHENTICATION
+				: e instanceof AddressException ? ErrorTyp.ADDRESS : ErrorTyp.CONNECTION;
+		logger.warn("Legacy mail operation failed: {}", e.getClass().getSimpleName());
+	}
+
+	@Deactivate
+	@PreDestroy
+	void deactivate() {
+		executor.shutdown();
+	}
+
+	private record Resolved(MailboxAccount account, char[] password, boolean legacy) {
+		void clear() {
+			if (password != null) {
+				Arrays.fill(password, '\0');
+			}
 		}
 	}
 
