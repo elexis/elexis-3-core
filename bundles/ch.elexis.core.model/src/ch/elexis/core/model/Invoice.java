@@ -52,7 +52,9 @@ public class Invoice extends AbstractIdDeleteModelAdapter<ch.elexis.core.jpa.ent
 
 	@Override
 	public void setState(InvoiceState value) {
-		setStateDate(LocalDate.now());
+		if (getState() != value) {
+			setStateDate(LocalDate.now());
+		}
 		getEntityMarkDirty().setState(value);
 		addTrace(InvoiceConstants.STATUS_CHANGED, Integer.toString(value.numericValue()));
 		ContextServiceHolder.get().getActiveUserContact().ifPresent(activeUserContact -> {
