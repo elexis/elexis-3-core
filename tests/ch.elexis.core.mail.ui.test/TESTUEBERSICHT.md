@@ -4,7 +4,7 @@ Stand: 13.11.2026, Ticket 28645, Auftrag B.
 
 Das Fragment `ch.elexis.core.mail.ui.test` enthält 46 mit `@Test` annotierte Methoden in 2 Testklassen. `AllMailTests` umfasst `SendMailDialogTest` (1 SWT-Test) und den aus Medelexis verschobenen `MailAccountFormTest` (45 Tests). Der bisherige Importtest entfällt zusammen mit dem manuellen Import.
 
-Die eingecheckte `MailUiAllTests.launch` ist veraltet (fehlende Target-Bundles wie `org.eclipse.orbit.xml-apis-ext` und `org.jfree.chart`, ElexisApp startet ohne Kontextdienst) und startet nicht. Am 13.11.2026 lief die Suite als JUnit Plug-in Test mit Workbench und den Persistenz-Bundles aus `MailAllTests.launch`: 45 von 46 grün. `SendMailDialogTest.testConfidentialSend` scheitert unabhängig von 28645: Er erwartet `Testbetreff (Vertraulich)`, `MailConstants.CONFIDENTIAL_STRING` ist aber seit Ticket 27226 `(Vertraulich)` ohne Leerzeichen. Die Suite läuft nicht im CI. Dynamische OSGi-Beiträge, Mandantenauswahl, Standardkonto, Warnhinweise und Anbieterwahl mit und ohne Secrets müssen im Produkt geprüft werden.
+Die eingecheckte `MailUiAllTests.launch` ist veraltet (fehlende Target-Bundles wie `org.eclipse.orbit.xml-apis-ext` und `org.jfree.chart`, ElexisApp startet ohne Kontextdienst) und startet nicht. Am 13.11.2026 lief die Suite als JUnit Plug-in Test mit Workbench und den Persistenz-Bundles aus `MailAllTests.launch`: 46 von 46 grün. `SendMailDialogTest.testConfidentialSend` deckte auf, dass seit Ticket 27226 das Leerzeichen vor `(Vertraulich)` im Betreff fehlte; `SendMailDialog` setzt es wieder. Die Suite läuft nicht im CI. Dynamische OSGi-Beiträge, Mandantenauswahl, Standardkonto, Warnhinweise und Anbieterwahl mit und ohne Secrets müssen im Produkt geprüft werden.
 
 ## MailAccountFormTest
 

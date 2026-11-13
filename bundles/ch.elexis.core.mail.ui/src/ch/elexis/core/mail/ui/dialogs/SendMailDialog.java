@@ -590,7 +590,7 @@ public class SendMailDialog extends TitleAreaDialog {
 		String replacedSubject = textReplacement.performReplacement(ContextServiceHolder.get().getRootContext(),
 				rawSubject);
 		boolean finalConfidential = templateConfidential || checkboxConfidential;
-		subjectString = finalConfidential ? replacedSubject + MailConstants.CONFIDENTIAL_STRING : replacedSubject;
+		subjectString = finalConfidential ? replacedSubject + " " + MailConstants.CONFIDENTIAL_STRING : replacedSubject;
 
 		StructuredSelection accountSelection = (StructuredSelection) accountsViewer.getSelection();
 		if (accountSelection == null || accountSelection.isEmpty()) {
