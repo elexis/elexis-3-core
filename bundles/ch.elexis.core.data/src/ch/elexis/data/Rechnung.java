@@ -560,13 +560,15 @@ public class Rechnung extends PersistentObject {
 
 			@SuppressWarnings("unchecked")
 			List<String> stateChanges = (List<String>) getExtInfoStoredObjectByKey(STATUS_CHANGED);
-			String lastElement = stateChanges.get(stateChanges.size() - 1);
-			String[] split = lastElement.split(": ");
-			try {
-				stateNumeric = Integer.parseInt(split[1]);
-			} catch (NumberFormatException nfe) {
-				log.error("Error resolving invoice state [{}] in element [{}], returning UNKNOWN.", split[1],
-						lastElement);
+			if (stateChanges != null) {
+				String lastElement = stateChanges.get(stateChanges.size() - 1);
+				String[] split = lastElement.split(": ");
+				try {
+					stateNumeric = Integer.parseInt(split[1]);
+				} catch (NumberFormatException nfe) {
+					log.error("Error resolving invoice state [{}] in element [{}], returning UNKNOWN.", split[1],
+							lastElement);
+				}
 			}
 		} else {
 			try {
@@ -599,8 +601,10 @@ public class Rechnung extends PersistentObject {
 	 * @param state as defined by {@link InvoiceState#numericValue()}
 	 */
 	public void setStatus(final InvoiceState state) {
+		if (getInvoiceState() != state) {
+			set(BILL_STATE_DATE, new TimeTool().toString(TimeTool.DATE_GER));
+		}
 		set(BILL_STATE, String.valueOf(state.getState()));
-		set(BILL_STATE_DATE, new TimeTool().toString(TimeTool.DATE_GER));
 		addTrace(STATUS_CHANGED, String.valueOf(state.getState()));
 		ContextServiceHolder.get().getActiveUserContact().ifPresent(activeUserContact -> {
 			String userDescription = String.format("%s %s", activeUserContact.getDescription1(), //$NON-NLS-1$

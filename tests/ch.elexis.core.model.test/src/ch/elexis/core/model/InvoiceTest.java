@@ -172,4 +172,36 @@ public class InvoiceTest extends AbstractTest {
 
 		created.forEach(i -> coreModelService.remove(i));
 	}
+
+	@Test
+	public void setStateUpdatesStateDateOnlyOnChange() {
+		IInvoice invoice = coreModelService.create(IInvoice.class);
+		invoice.setCoverage(coverage);
+		invoice.setDate(LocalDate.now());
+		invoice.setDateFrom(LocalDate.now());
+		// initial state is null, so setting a state updates the state date
+		invoice.setState(InvoiceState.OPEN);
+		coreModelService.save(invoice);
+		assertEquals(LocalDate.now(), invoice.getStateDate());
+		assertEquals(1, invoice.getTrace(InvoiceConstants.STATUS_CHANGED).size());
+
+		// pin the state date to a known past date
+		invoice.setStateDate(LocalDate.of(2020, 1, 1));
+		coreModelService.save(invoice);
+
+		// setting the same state again must not touch the state date
+		invoice.setState(InvoiceState.OPEN);
+		coreModelService.save(invoice);
+		assertEquals(LocalDate.of(2020, 1, 1), invoice.getStateDate());
+		// but the trace entry is still recorded
+		assertEquals(2, invoice.getTrace(InvoiceConstants.STATUS_CHANGED).size());
+
+		// changing the state updates the state date
+		invoice.setState(InvoiceState.PAID);
+		coreModelService.save(invoice);
+		assertEquals(LocalDate.now(), invoice.getStateDate());
+		assertEquals(3, invoice.getTrace(InvoiceConstants.STATUS_CHANGED).size());
+
+		coreModelService.remove(invoice);
+	}
 }
