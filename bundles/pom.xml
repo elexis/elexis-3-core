@@ -36,6 +36,7 @@
 		<module>ch.elexis.core.services.rcp</module>
 		<module>ch.elexis.core.model</module>
 		<module>ch.elexis.core.jpa</module>
+		<module>ch.elexis.core.jpa.model</module>
 		<module>ch.elexis.core.jpa.ui</module>
 		<module>ch.elexis.core.jpa.datasource</module>
 		<module>ch.elexis.core.jpa.entities</module>
