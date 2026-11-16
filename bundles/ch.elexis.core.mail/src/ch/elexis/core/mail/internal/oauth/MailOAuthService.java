@@ -9,6 +9,7 @@ import java.security.GeneralSecurityException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
+import java.text.ParseException;
 import java.time.Duration;
 import java.util.Base64;
 import java.util.HashMap;
@@ -36,9 +37,8 @@ import org.osgi.service.event.EventAdmin;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParseException;
-import com.google.gson.JsonParser;
+import com.nimbusds.jwt.JWTClaimsSet;
+import com.nimbusds.jwt.JWTParser;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpServer;
 
@@ -189,21 +189,16 @@ public class MailOAuthService implements IMailOAuthService {
 
 	private String identity(String jwt) throws MailOAuthException {
 		try {
-			String[] parts = jwt.split("\\.");
-			if (parts.length < 2) {
-				throw new MailOAuthException(MailOAuthError.TOKEN_FAILED);
+			JWTClaimsSet claims = JWTParser.parse(jwt).getJWTClaimsSet();
+			String address = claims.getStringClaim("email");
+			if (address == null || address.isBlank()) {
+				address = claims.getStringClaim("preferred_username");
 			}
-			JsonObject payload = JsonParser.parseString(new String(Base64.getUrlDecoder().decode(parts[1]),
-					StandardCharsets.UTF_8)).getAsJsonObject();
-			String address = OAuth2Client.string(payload, "email");
-			if (address.isBlank()) {
-				address = OAuth2Client.string(payload, "preferred_username");
-			}
-			if (address.isBlank()) {
+			if (address == null || address.isBlank()) {
 				throw new MailOAuthException(MailOAuthError.TOKEN_FAILED);
 			}
 			return address;
-		} catch (IllegalArgumentException | IllegalStateException | JsonParseException e) {
+		} catch (ParseException e) {
 			throw new MailOAuthException(MailOAuthError.TOKEN_FAILED);
 		}
 	}
