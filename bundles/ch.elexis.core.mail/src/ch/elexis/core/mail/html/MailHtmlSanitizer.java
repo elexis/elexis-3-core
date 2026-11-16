@@ -39,7 +39,8 @@ public final class MailHtmlSanitizer {
 		Safelist safelist = Safelist.relaxed().addAttributes(":all", "style")
 				.removeAttributes("blockquote", "cite").removeAttributes("q", "cite")
 				.removeProtocols("a", "href", "ftp", "http", "https", "mailto")
-				.removeProtocols("img", "src", "http", "https");
+				.removeProtocols("img", "src", "http", "https").addAttributes("table", "background")
+				.addAttributes("td", "background").addAttributes("th", "background");
 		Document clean = new Cleaner(safelist).clean(source);
 		clean.outputSettings().prettyPrint(false);
 		for (Element element : clean.body().getAllElements()) {
@@ -61,6 +62,8 @@ public final class MailHtmlSanitizer {
 				}
 			} else if (element.normalName().equals("img")) {
 				filterImage(element, cidUrlResolver);
+			} else if (element.hasAttr("background")) {
+				filterBackground(element);
 			}
 		}
 		return Optional.of(clean.body().html());
@@ -92,6 +95,15 @@ public final class MailHtmlSanitizer {
 			image.attr("src", src);
 		} else {
 			image.remove();
+		}
+	}
+
+	private void filterBackground(Element element) {
+		String src = element.attr("background").trim();
+		element.removeAttr("background");
+		String scheme = scheme(src);
+		if (scheme.equals("http") || scheme.equals("https")) {
+			element.attr("data-mail-remote-background", src).addClass("mail-remote-background");
 		}
 	}
 

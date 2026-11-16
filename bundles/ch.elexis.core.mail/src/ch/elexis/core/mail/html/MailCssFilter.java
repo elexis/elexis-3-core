@@ -13,7 +13,7 @@ public final class MailCssFilter {
 	private static final Set<String> PROPERTIES = Set.of("color", "background-color", "font", "font-family",
 			"font-size", "font-weight", "font-style", "text-align", "text-decoration", "text-indent", "line-height",
 			"letter-spacing", "vertical-align", "white-space", "width", "height", "max-width", "min-width",
-			"display", "list-style-type");
+			"display", "list-style-type", "background-size", "background-position", "background-repeat");
 
 	private static final Set<String> DISPLAY_VALUES = Set.of("block", "inline", "inline-block", "table",
 			"table-row", "table-cell", "table-caption", "table-row-group", "table-header-group", "table-footer-group",
