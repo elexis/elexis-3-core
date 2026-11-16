@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <launchConfiguration type="org.eclipse.pde.ui.JunitLaunchConfig">
+    <booleanAttribute key="add_console" value="false"/>
     <booleanAttribute key="append.args" value="true"/>
     <booleanAttribute key="askclear" value="false"/>
     <booleanAttribute key="automaticAdd" value="false"/>
@@ -12,8 +13,10 @@
     <booleanAttribute key="clearwslog" value="false"/>
     <stringAttribute key="configLocation" value="${workspace_loc}/.metadata/.plugins/org.eclipse.pde.core/pde-junit"/>
     <booleanAttribute key="default" value="false"/>
+    <setAttribute key="deselected_workspace_bundles"/>
     <booleanAttribute key="includeOptional" value="true"/>
     <stringAttribute key="location" value="${workspace_loc}/../junit-workspace"/>
+    <booleanAttribute key="org.eclipse.debug.core.ATTR_FORCE_SYSTEM_CONSOLE_ENCODING" value="false"/>
     <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
         <listEntry value="/ch.elexis.core.mail.ui.test/src/ch/elexis/core/mail/ui/test/AllMailTests.java"/>
     </listAttribute>
@@ -22,7 +25,11 @@
     </listAttribute>
     <stringAttribute key="org.eclipse.jdt.junit.CONTAINER" value=""/>
     <booleanAttribute key="org.eclipse.jdt.junit.KEEPRUNNING_ATTR" value="false"/>
+    <stringAttribute key="org.eclipse.jdt.junit.TESTNAME" value=""/>
     <stringAttribute key="org.eclipse.jdt.junit.TEST_KIND" value="org.eclipse.jdt.junit.loader.junit4"/>
+    <booleanAttribute key="org.eclipse.jdt.launching.ATTR_ATTR_USE_ARGFILE" value="false"/>
+    <booleanAttribute key="org.eclipse.jdt.launching.ATTR_SHOW_CODEDETAILS_IN_EXCEPTION_MESSAGES" value="true"/>
+    <stringAttribute key="org.eclipse.jdt.launching.JRE_CONTAINER" value="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-21"/>
     <stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="ch.elexis.core.mail.ui.test.AllMailTests"/>
     <stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-os ${target.os} -ws ${target.ws} -arch ${target.arch} -nl ${target.nl} -consoleLog"/>
     <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="ch.elexis.core.mail.ui.test"/>
@@ -31,36 +38,38 @@
     <stringAttribute key="pde.version" value="3.3"/>
     <stringAttribute key="product" value="org.eclipse.platform.ide"/>
     <booleanAttribute key="run_in_ui_thread" value="true"/>
+    <setAttribute key="selected_target_bundles"/>
     <setAttribute key="selected_workspace_bundles">
-        <setEntry value="ch.elexis.core.mail.ui.test*1.0.0.qualifier"/>
-        <setEntry value="ch.elexis.core"/>
-        <setEntry value="ch.elexis.core.cdi"/>
-        <setEntry value="ch.elexis.core.documents"/>
-        <setEntry value="ch.elexis.core.ee.openapi"/>
-        <setEntry value="ch.elexis.core.hl7.v2x"/>
-        <setEntry value="ch.elexis.core.httpclient"/>
-        <setEntry value="ch.elexis.core.importer.div"/>
-        <setEntry value="ch.elexis.core.jcifs"/>
-        <setEntry value="ch.elexis.core.jpa"/>
-        <setEntry value="ch.elexis.core.jpa.datasource"/>
-        <setEntry value="ch.elexis.core.jpa.entities"/>
-        <setEntry value="ch.elexis.core.jpa.logging.slf4j"/>
-        <setEntry value="ch.elexis.core.l10n"/>
-        <setEntry value="ch.elexis.core.logging.default_configuration"/>
-        <setEntry value="ch.elexis.core.mail"/>
-        <setEntry value="ch.elexis.core.model"/>
-        <setEntry value="ch.elexis.core.rcp"/>
-        <setEntry value="ch.elexis.core.services"/>
-        <setEntry value="ch.elexis.core.services.rcp"/>
-        <setEntry value="ch.elexis.core.tasks"/>
-        <setEntry value="ch.elexis.core.tasks.model"/>
-        <setEntry value="ch.elexis.core.test.logging"/>
-        <setEntry value="ch.elexis.core.webdav"/>
-        <setEntry value="ch.rgw.utility"/>
-        <setEntry value="ch.rgw.utility.legacy"/>
-        <setEntry value="es.gogo.shell"/>
-        <setEntry value="info.elexis.server.core.logging"/>
+        <setEntry value="ch.elexis.core.cdi@default:default"/>
+        <setEntry value="ch.elexis.core.documents@default:default"/>
+        <setEntry value="ch.elexis.core.ee.openapi@default:default"/>
+        <setEntry value="ch.elexis.core.hl7.v2x@default:default"/>
+        <setEntry value="ch.elexis.core.httpclient@default:default"/>
+        <setEntry value="ch.elexis.core.importer.div@default:default"/>
+        <setEntry value="ch.elexis.core.jcifs@default:default"/>
+        <setEntry value="ch.elexis.core.jpa.datasource@default:default"/>
+        <setEntry value="ch.elexis.core.jpa.entities@default:default"/>
+        <setEntry value="ch.elexis.core.jpa.logging.slf4j@default:false"/>
+        <setEntry value="ch.elexis.core.jpa@default:default"/>
+        <setEntry value="ch.elexis.core.l10n@default:default"/>
+        <setEntry value="ch.elexis.core.logging.default_configuration@default:false"/>
+        <setEntry value="ch.elexis.core.mail.ui.test@default:false"/>
+        <setEntry value="ch.elexis.core.mail@default:default"/>
+        <setEntry value="ch.elexis.core.model@default:default"/>
+        <setEntry value="ch.elexis.core.rcp@default:default"/>
+        <setEntry value="ch.elexis.core.services.rcp@default:default"/>
+        <setEntry value="ch.elexis.core.services@default:default"/>
+        <setEntry value="ch.elexis.core.tasks.model@default:default"/>
+        <setEntry value="ch.elexis.core.tasks@default:default"/>
+        <setEntry value="ch.elexis.core.test.logging@default:false"/>
+        <setEntry value="ch.elexis.core.webdav@default:default"/>
+        <setEntry value="ch.elexis.core@default:default"/>
+        <setEntry value="ch.rgw.utility.legacy@default:default"/>
+        <setEntry value="ch.rgw.utility@default:default"/>
+        <setEntry value="es.gogo.shell@default:false"/>
+        <setEntry value="info.elexis.server.core.logging@default:false"/>
     </setAttribute>
+    <booleanAttribute key="show_selected_only" value="false"/>
     <booleanAttribute key="tracing" value="false"/>
     <booleanAttribute key="useCustomFeatures" value="false"/>
     <booleanAttribute key="useDefaultConfig" value="true"/>

@@ -99,6 +99,7 @@ public class SendMailDialog extends TitleAreaDialog {
 	private Text subjectText;
 	private String subjectString = StringUtils.EMPTY;
 	private String defaultSubject = StringUtils.EMPTY;
+	private String automaticSubject = StringUtils.EMPTY;
 	private Text textText;
 	private String textString = StringUtils.EMPTY;
 	private AttachmentsComposite attachments;
@@ -139,7 +140,14 @@ public class SendMailDialog extends TitleAreaDialog {
 			lbl.setText("Von");
 			accountsViewer = new ComboViewer(container);
 			accountsViewer.setContentProvider(ArrayContentProvider.getInstance());
-			accountsViewer.setLabelProvider(new LabelProvider());
+			accountsViewer.setLabelProvider(new LabelProvider() {
+				@Override
+				public String getText(Object element) {
+					return mailboxAccounts.getAccount((String) element)
+							.map(account -> account.displayName() + " <" + account.emailAddress() + ">") //$NON-NLS-1$ //$NON-NLS-2$
+							.orElse(super.getText(element));
+				}
+			});
 			accountsViewer.setInput(getSendMailAccounts());
 			accountsViewer.getControl().setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 			if (accountId != null) {
@@ -286,6 +294,7 @@ public class SendMailDialog extends TitleAreaDialog {
 			lbl.setText("Betreff");
 			subjectText = new Text(container, SWT.BORDER);
 			subjectText.setText(subjectString);
+			automaticSubject = subjectString;
 			subjectText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 
 			lbl = new Label(container, SWT.NONE);
@@ -328,13 +337,16 @@ public class SendMailDialog extends TitleAreaDialog {
 
 						textText.setText(textReplacement.performReplacement(ContextServiceHolder.get().getRootContext(),
 								selectedTemplate.getTemplate()));
-						if (selectedTemplate.getExtInfo(MailConstants.TEXTTEMPLATE_SUBJECT) instanceof String subjTpl
-								&& StringUtils.isNotBlank(subjTpl)) {
-							String ctx = textReplacement.performReplacement(ContextServiceHolder.get().getRootContext(),
-									subjTpl);
-							subjectText.setText(ctx);
-						} else {
-							subjectText.setText(defaultSubject);
+						if (subjectText.getText().equals(automaticSubject)) {
+							if (selectedTemplate.getExtInfo(MailConstants.TEXTTEMPLATE_SUBJECT) instanceof String subjTpl
+									&& StringUtils.isNotBlank(subjTpl)) {
+								String ctx = textReplacement.performReplacement(ContextServiceHolder.get().getRootContext(),
+										subjTpl);
+								subjectText.setText(ctx);
+							} else {
+								subjectText.setText(defaultSubject);
+							}
+							automaticSubject = subjectText.getText();
 						}
 					} else {
 						textText.setText(StringUtils.EMPTY);
