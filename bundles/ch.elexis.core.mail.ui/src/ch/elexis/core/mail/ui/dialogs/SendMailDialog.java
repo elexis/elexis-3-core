@@ -59,6 +59,7 @@ import ch.elexis.core.mail.MailTextTemplate;
 import ch.elexis.core.mail.PreferenceConstants;
 import ch.elexis.core.mail.TaskUtil;
 import ch.elexis.core.mail.service.IMailboxAccountService;
+import ch.elexis.core.mail.ui.client.MailAccountLabelProvider;
 import ch.elexis.core.mail.ui.client.MailClientComponent;
 import ch.elexis.core.mail.ui.handlers.OutboxUtil;
 import ch.elexis.core.mail.ui.preference.SerializableFile;
@@ -140,14 +141,7 @@ public class SendMailDialog extends TitleAreaDialog {
 			lbl.setText("Von");
 			accountsViewer = new ComboViewer(container);
 			accountsViewer.setContentProvider(ArrayContentProvider.getInstance());
-			accountsViewer.setLabelProvider(new LabelProvider() {
-				@Override
-				public String getText(Object element) {
-					return mailboxAccounts.getAccount((String) element)
-							.map(account -> account.displayName() + " <" + account.emailAddress() + ">") //$NON-NLS-1$ //$NON-NLS-2$
-							.orElse(super.getText(element));
-				}
-			});
+			accountsViewer.setLabelProvider(new MailAccountLabelProvider());
 			accountsViewer.setInput(getSendMailAccounts());
 			accountsViewer.getControl().setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 			if (accountId != null) {
