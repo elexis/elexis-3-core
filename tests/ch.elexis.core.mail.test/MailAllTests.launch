@@ -64,6 +64,7 @@
         <setEntry value="com.icegreen.greenmail-junit4@default:default"/>
         <setEntry value="com.icegreen.greenmail@default:default"/>
         <setEntry value="com.mysql.cj@default:default"/>
+        <setEntry value="com.nimbusds.nimbus-jose-jwt@default:default"/>
         <setEntry value="com.opencsv@default:default"/>
         <setEntry value="com.sun.xml.bind.jaxb-osgi@default:default"/>
         <setEntry value="io.curity.oauth-filter@default:default"/>
