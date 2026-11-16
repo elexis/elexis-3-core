@@ -11,8 +11,7 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.FileDialog;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.handlers.HandlerUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,8 +40,9 @@ public class ImportTemplatesCommand extends AbstractHandler {
 			return null;
 		}
 		mandantId = mandant.getId();
-		IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-		TextTemplateView ttView = (TextTemplateView) activePage.findView(TextTemplateView.ID);
+		if (!(HandlerUtil.getActivePart(event) instanceof TextTemplateView ttView)) {
+			return null;
+		}
 
 		ITextPlugin plugin = ttView.getActiveTextPlugin();
 		if (plugin == null) {

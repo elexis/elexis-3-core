@@ -12,8 +12,6 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.widgets.FileDialog;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,8 +33,9 @@ public class ImportSelectedTemplateCommand extends AbstractHandler {
 
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
-		IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-		TextTemplateView textTemplateView = (TextTemplateView) activePage.findView(TextTemplateView.ID);
+		if (!(HandlerUtil.getActivePart(event) instanceof TextTemplateView textTemplateView)) {
+			return null;
+		}
 
 		TextTemplate textTemplate = getSelectedTextTemplate(event);
 		if (textTemplate == null) {
