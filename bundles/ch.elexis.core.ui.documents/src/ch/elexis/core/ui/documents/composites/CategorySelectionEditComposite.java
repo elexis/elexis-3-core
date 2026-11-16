@@ -22,6 +22,7 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.exceptions.ElexisException;
@@ -230,6 +231,14 @@ public class CategorySelectionEditComposite extends Composite {
 	@Override
 	protected void checkSubclass() {
 		// Disable the check that prevents subclassing of SWT components
+	}
+
+	@Override
+	public void setEnabled(boolean enabled) {
+		super.setEnabled(enabled);
+		for (Control child : getChildren()) {
+			child.setEnabled(enabled && (storeAvailable || child != cbCategories.getControl()));
+		}
 	}
 
 	public void addSelectionChangeListener(ISelectionChangedListener listener) {

@@ -99,6 +99,8 @@ public final class Messages extends NLS {
 	public static String MailSettings_DefaultAccount;
 	public static String MailSettings_LegacyWarning;
 	public static String MailSettings_LocalAccounts;
+	public static String MailSettings_ArchiveAttachments;
+	public static String MailSettings_ArchiveCategory;
 
 	static {
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

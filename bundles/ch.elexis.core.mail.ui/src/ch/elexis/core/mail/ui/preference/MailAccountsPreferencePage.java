@@ -28,6 +28,7 @@ import ch.elexis.core.mail.IMailClient;
 import ch.elexis.core.mail.PreferenceConstants;
 import ch.elexis.core.mail.model.MailSecurity;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
+import ch.elexis.core.model.ICategory;
 import ch.elexis.core.model.IUser;
 import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
@@ -38,7 +39,9 @@ import ch.elexis.core.mail.service.IMailAccountTester;
 import ch.elexis.core.mail.service.IMailOAuthService;
 import ch.elexis.core.mail.service.IMailboxAccountService;
 import ch.elexis.core.mail.service.MailAccessException;
+import ch.elexis.core.mail.ui.archive.ArchiveUtil;
 import ch.elexis.core.mail.ui.messages.Messages;
+import ch.elexis.core.ui.documents.composites.CategorySelectionEditComposite;
 
 /**
  * Lists manageable accounts without connecting and hosts optional account contributions.
@@ -144,6 +147,7 @@ public final class MailAccountsPreferencePage extends PreferencePage implements 
 		contributionSettings = new Composite(body, SWT.NONE);
 		contributionSettings.setLayout(new GridLayout(2, false));
 		contributionSettings.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 2, 1));
+		createArchiveSettings();
 		BundleContext context = FrameworkUtil.getBundle(getClass()).getBundleContext();
 		contributions = new ServiceTracker<>(context, IMailAccountPageContribution.class, null) {
 			@Override
@@ -163,6 +167,37 @@ public final class MailAccountsPreferencePage extends PreferencePage implements 
 		contributions.open();
 		rebuildContributions();
 		return body;
+	}
+
+	private void createArchiveSettings() {
+		Composite archive = new Composite(body, SWT.NONE);
+		archive.setLayout(new GridLayout(2, false));
+		archive.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 2, 1));
+		new Label(archive, SWT.SEPARATOR | SWT.HORIZONTAL)
+				.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
+		Button archiveAttachments = new Button(archive, SWT.CHECK);
+		archiveAttachments.setText(Messages.MailSettings_ArchiveAttachments);
+		archiveAttachments.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
+		archiveAttachments.setSelection(ConfigServiceHolder.get().get(ArchiveUtil.PREF_MAIL_ARCHIVE_ENABLED, false));
+		Label archiveCategoryLabel = new Label(archive, SWT.NONE);
+		archiveCategoryLabel.setText(Messages.MailSettings_ArchiveCategory);
+		archiveCategoryLabel.setEnabled(archiveAttachments.getSelection());
+		CategorySelectionEditComposite archiveCategory = new CategorySelectionEditComposite(archive, SWT.NONE,
+				"ch.elexis.data.store.omnivore", true); //$NON-NLS-1$
+		archiveCategory.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, false));
+		archiveCategory.setEnabled(archiveAttachments.getSelection());
+		archiveCategory.setCategoryByName(ConfigServiceHolder.get().get(ArchiveUtil.PREF_MAIL_ARCHIVE_DOCUMENT_CATEGORY,
+				ArchiveUtil.DEFAULT_CATEGORY));
+		archiveAttachments.addListener(SWT.Selection, event -> {
+			ConfigServiceHolder.get().set(ArchiveUtil.PREF_MAIL_ARCHIVE_ENABLED, archiveAttachments.getSelection());
+			archiveCategoryLabel.setEnabled(archiveAttachments.getSelection());
+			archiveCategory.setEnabled(archiveAttachments.getSelection());
+		});
+		archiveCategory.addSelectionChangeListener(event -> {
+			ICategory category = archiveCategory.getSelection();
+			ConfigServiceHolder.get().set(ArchiveUtil.PREF_MAIL_ARCHIVE_DOCUMENT_CATEGORY,
+					category != null ? category.getName() : null);
+		});
 	}
 
 	private void rebuildLater() {
