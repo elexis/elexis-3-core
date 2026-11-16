@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import ch.elexis.core.mail.MailAccount;
 import ch.elexis.core.mail.MailClientConfig;
 import ch.elexis.core.model.IConfig;
+import ch.elexis.core.services.IAccessControlService;
 import ch.elexis.core.services.IConfigService;
 import ch.elexis.core.services.IModelService;
 
@@ -26,9 +27,15 @@ public class MailLegacyMigration {
 	private IModelService modelService;
 	@Reference
 	private MailLegacyAccountStore accounts;
+	@Reference
+	private IAccessControlService accessControlService;
 
 	@Activate
 	void activate() {
+		accessControlService.doPrivileged(this::migrate);
+	}
+
+	private void migrate() {
 		if (modelService.load(MARKER, IConfig.class).isPresent()) {
 			return;
 		}
@@ -44,6 +51,7 @@ public class MailLegacyMigration {
 		}
 		try {
 			ensureSalt();
+			boolean complete = true;
 			for (String id : configService.get("ch.elexis.core.mail/accounts", "").split(",")) {
 				if (id.isBlank()) {
 					continue;
@@ -64,14 +72,20 @@ public class MailLegacyMigration {
 					accounts.save(account);
 					log.info("Migrated legacy mail account {}", id);
 				} catch (RuntimeException e) {
-					log.warn("Legacy mail migration failed for account {}: {}", id, e.getClass().getSimpleName());
+					complete = false;
+					log.warn("Legacy mail migration failed for account {}", id, e);
 				}
+			}
+			if (!complete) {
+				modelService.executeNativeUpdate("DELETE FROM config WHERE param = '" + MARKER + "'");
+				return;
 			}
 			IConfig marker = modelService.load(MARKER, IConfig.class, false, true).orElseThrow();
 			marker.setValue("done");
 			modelService.save(marker);
 		} catch (RuntimeException e) {
-			log.warn("Legacy mail migration failed: {}", e.getClass().getSimpleName());
+			log.warn("Legacy mail migration failed", e);
+			modelService.executeNativeUpdate("DELETE FROM config WHERE param = '" + MARKER + "'");
 		}
 	}
 

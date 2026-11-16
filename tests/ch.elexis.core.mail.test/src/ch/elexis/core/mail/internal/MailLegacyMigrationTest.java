@@ -104,7 +104,7 @@ public class MailLegacyMigrationTest extends MailLegacyTestSupport {
 		assertTrue(client.getAccount("local").isPresent());
 	}
 
-	/** A malformed legacy account does not prevent later accounts from being migrated. */
+	/** A malformed legacy account does not prevent later accounts from being migrated and keeps the migration open. */
 	@Test
 	public void continuesAfterMalformedAccount() throws Exception {
 		global.put("ch.elexis.core.mail/accounts", "broken,valid");
@@ -113,6 +113,12 @@ public class MailLegacyMigrationTest extends MailLegacyTestSupport {
 		migrate(migration());
 		assertFalse(accounts.getAccount("broken").isPresent());
 		assertTrue(accounts.getAccount("valid").isPresent());
+		assertNull(global.get("mail/client/legacy/migration"));
+		String valid = global.get(MailClientConfig.account("valid"));
+		global.put("ch.elexis.core.mail/account/broken", legacy("broken", MailAccount.TYPE.SMTP).toString());
+		migrate(migration());
+		assertTrue(accounts.getAccount("broken").isPresent());
+		assertEquals(valid, global.get(MailClientConfig.account("valid")));
 		assertEquals("done", global.get("mail/client/legacy/migration"));
 	}
 

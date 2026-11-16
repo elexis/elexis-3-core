@@ -66,15 +66,15 @@ public class MailLegacyAccountStore {
 				Arrays.fill(password, '\0');
 			}
 		}
-		configService.set(MailClientConfig.legacy(id), "true");
-		configService.set(MailClientConfig.mandators(id), String.join(",", MailLegacyAccountConverter.mandatorIds(legacy)));
-		configService.set(MailClientConfig.sentCopyDetected(id), SentCopyDetected.UNKNOWN.name());
-		configService.set(MailClientConfig.account(id), gson.toJson(account));
+		configService.set(MailClientConfig.legacy(id), "true", false);
+		configService.set(MailClientConfig.mandators(id), String.join(",", MailLegacyAccountConverter.mandatorIds(legacy)), false);
+		configService.set(MailClientConfig.sentCopyDetected(id), SentCopyDetected.UNKNOWN.name(), false);
+		configService.set(MailClientConfig.account(id), gson.toJson(account), false);
 		List<String> ids = ids();
 		if (!ids.contains(id)) {
 			ids.add(id);
 		}
-		configService.set(MailClientConfig.ACCOUNTS, String.join(",", ids));
+		configService.set(MailClientConfig.ACCOUNTS, String.join(",", ids), false);
 		changed(id);
 	}
 

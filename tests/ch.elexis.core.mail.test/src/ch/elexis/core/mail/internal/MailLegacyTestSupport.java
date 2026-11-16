@@ -21,6 +21,7 @@ import ch.elexis.core.mail.internal.account.MailboxAccountService;
 import ch.elexis.core.mail.internal.legacy.MailLegacyAccountStore;
 import ch.elexis.core.mail.internal.legacy.MailLegacyMigration;
 import ch.elexis.core.model.IConfig;
+import ch.elexis.core.services.IAccessControlService;
 import ch.elexis.core.services.IConfigService;
 import ch.elexis.core.services.IModelService;
 
@@ -71,6 +72,10 @@ public abstract class MailLegacyTestSupport {
 						return global.containsKey(key) ? Optional.of(entry(key)) : Optional.empty();
 					}
 					if (method.getName().equals("executeNativeUpdate")) {
+						Matcher delete = Pattern.compile("^DELETE FROM config WHERE param = '([^']*)'$").matcher((String) args[0]);
+						if (delete.find()) {
+							return global.remove(delete.group(1)) == null ? 0 : 1;
+						}
 						Matcher insert = Pattern.compile("VALUES \\('([^']*)', '([^']*)'\\)").matcher((String) args[0]);
 						if (!insert.find()) {
 							throw new AssertionError("Expected a literal config insert");
@@ -115,6 +120,14 @@ public abstract class MailLegacyTestSupport {
 		inject(migration, "configService", config);
 		inject(migration, "modelService", model);
 		inject(migration, "accounts", store);
+		inject(migration, "accessControlService", Proxy.newProxyInstance(getClass().getClassLoader(),
+				new Class<?>[] { IAccessControlService.class }, (proxy, method, args) -> {
+					if (method.getName().equals("doPrivileged")) {
+						((Runnable) args[0]).run();
+						return null;
+					}
+					throw new UnsupportedOperationException(method.getName());
+				}));
 		return migration;
 	}
 
