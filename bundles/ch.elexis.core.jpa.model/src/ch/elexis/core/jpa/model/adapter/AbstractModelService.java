@@ -19,8 +19,6 @@ import java.util.stream.Stream;
 
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.eclipse.persistence.config.HintValues;
-import org.eclipse.persistence.config.QueryHints;
 import org.osgi.service.event.Event;
 import org.osgi.service.event.EventAdmin;
 import org.slf4j.LoggerFactory;
@@ -28,6 +26,7 @@ import org.slf4j.LoggerFactory;
 import ch.elexis.core.ac.EvACE;
 import ch.elexis.core.ac.ObjectEvaluatableACE;
 import ch.elexis.core.ac.Right;
+import ch.elexis.core.cdi.PortableServiceLoader;
 import ch.elexis.core.common.ElexisEvent;
 import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.constants.ElexisSystemPropertyConstants;
@@ -39,8 +38,7 @@ import ch.elexis.core.jpa.entities.EntityWithId;
 import ch.elexis.core.jpa.entities.Invoice;
 import ch.elexis.core.jpa.entities.Kontakt;
 import ch.elexis.core.jpa.entities.LabOrder;
-import ch.elexis.core.jpa.model.service.holder.ContextServiceHolder;
-import ch.elexis.core.jpa.model.service.holder.StoreToStringServiceHolder;
+import ch.elexis.core.jpa.model.provider.JpaProviderAdapter;
 import ch.elexis.core.jpa.model.util.OtherModelUtil;
 import ch.elexis.core.model.Deleteable;
 import ch.elexis.core.model.IContact;
@@ -50,13 +48,14 @@ import ch.elexis.core.model.IPerson;
 import ch.elexis.core.model.IUser;
 import ch.elexis.core.model.IXid;
 import ch.elexis.core.model.Identifiable;
-import ch.elexis.core.rcp.utils.OsgiServiceUtil;
 import ch.elexis.core.services.IAccessControlService;
+import ch.elexis.core.services.IContextService;
 import ch.elexis.core.services.IModelService;
 import ch.elexis.core.services.INamedQuery;
 import ch.elexis.core.services.INativeQuery;
 import ch.elexis.core.services.IQuery;
 import ch.elexis.core.services.IQuery.COMPARATOR;
+import ch.elexis.core.services.IStoreToStringService;
 import ch.elexis.core.utils.CoreUtil;
 import ch.rgw.tools.net.NetTool;
 import jakarta.persistence.EntityManager;
@@ -82,8 +81,6 @@ public abstract class AbstractModelService implements IModelService {
 
 	private List<String> blockEventTopics;
 
-	private EntityWithId entity;
-
 	public <T> Optional<T> load(String id, Class<T> clazz, boolean includeDeleted, boolean refreshCache,
 			Set<String> eagerFetchAttributes) {
 		// Only implemented in Quarkus Hibernation
@@ -108,7 +105,9 @@ public abstract class AbstractModelService implements IModelService {
 
 				HashMap<String, Object> queryHints = new HashMap<>();
 				if (refreshCache) {
-					queryHints.put(QueryHints.REFRESH, HintValues.TRUE);
+					// eclipselink
+					// queryHints.put(QueryHints.REFRESH, HintValues.TRUE);
+					queryHints.put("eclipselink.refresh", "True");
 				}
 				EntityWithId dbObject = em.find(dbObjectClass, id, queryHints);
 				if (dbObject != null) {
@@ -176,7 +175,9 @@ public abstract class AbstractModelService implements IModelService {
 		if (dbObject != null) {
 			HashMap<String, Object> queryHints = new HashMap<>();
 			if (refreshCache) {
-				queryHints.put(QueryHints.REFRESH, HintValues.TRUE);
+				// eclipselink
+				// queryHints.put(QueryHints.REFRESH, HintValues.TRUE);
+				queryHints.put("eclipselink.refresh", "True");
 			}
 			EntityWithId reloadedDbObject = em.find(dbObject.getClass(), dbObject.getId(), queryHints);
 			if (reloadedDbObject != null) {
@@ -267,16 +268,17 @@ public abstract class AbstractModelService implements IModelService {
 						identifiable.clearRefresh();
 					}
 					if (identifiable.getUpdated() != null) {
-						ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_UPDATE, identifiable,
+						PortableServiceLoader.get(IContextService.class).postEvent(ElexisEventTopics.EVENT_UPDATE,
+								identifiable,
 								Collections.singletonMap(ElexisEventTopics.PROPKEY_UPDATED, identifiable.getUpdated()));
 						identifiable.clearUpdated();
 					}
 					if (newlyCreatedObject) {
 						ElexisEvent createEvent = getCreateEvent(identifiable);
 						if (createEvent != null) {
-							if (ContextServiceHolder.isPresent()) {
-								String userId = ContextServiceHolder.get().getActiveUser().map(Identifiable::getId)
-										.orElse(null);
+							if (PortableServiceLoader.getOptional(IContextService.class).isPresent()) {
+								String userId = PortableServiceLoader.get(IContextService.class).getActiveUser()
+										.map(Identifiable::getId).orElse(null);
 								if (userId != null) {
 									createEvent.getProperties().put(ElexisEventTopics.PROPKEY_USER, userId);
 								}
@@ -325,8 +327,8 @@ public abstract class AbstractModelService implements IModelService {
 							if (newlyCreatedObject) {
 								ElexisEvent createEvent = getCreateEvent(identifiable);
 								if (createEvent != null) {
-									if (ContextServiceHolder.isPresent()) {
-										String userId = ContextServiceHolder.get().getActiveUser()
+									if (PortableServiceLoader.getOptional(IContextService.class).isPresent()) {
+										String userId = PortableServiceLoader.get(IContextService.class).getActiveUser()
 												.map(Identifiable::getId).orElse(null);
 										if (userId != null) {
 											createEvent.getProperties().put(ElexisEventTopics.PROPKEY_USER, userId);
@@ -350,7 +352,8 @@ public abstract class AbstractModelService implements IModelService {
 								i.clearRefresh();
 							}
 							if (i.getUpdated() != null) {
-								ContextServiceHolder.get().postEvent(ElexisEventTopics.EVENT_UPDATE, i,
+								PortableServiceLoader.get(IContextService.class).postEvent(
+										ElexisEventTopics.EVENT_UPDATE, i,
 										Collections.singletonMap(ElexisEventTopics.PROPKEY_UPDATED, i.getUpdated()));
 								i.clearUpdated();
 							}
@@ -552,8 +555,10 @@ public abstract class AbstractModelService implements IModelService {
 	 */
 	private void createDBLog(Identifiable identifiable) {
 		DBLog dbLog = new DBLog();
-		dbLog.setUserId(ContextServiceHolder.getActiveUserContact().map(IContact::getId).orElse("?")); //$NON-NLS-1$
-		dbLog.setOid(StoreToStringServiceHolder.getStoreToString(identifiable).orElse(identifiable.getId()));
+		dbLog.setUserId(PortableServiceLoader.get(IContextService.class).getActiveUserContact().map(IContact::getId)
+				.orElse("?")); //$NON-NLS-1$
+		dbLog.setOid(PortableServiceLoader.get(IStoreToStringService.class).storeToString(identifiable)
+				.orElse(identifiable.getId()));
 		dbLog.setTyp(DBLog.Type.DELETE);
 		dbLog.setDatum(LocalDate.now());
 		dbLog.setStation(Optional.ofNullable(NetTool.hostname).orElse("?")); //$NON-NLS-1$
@@ -611,7 +616,7 @@ public abstract class AbstractModelService implements IModelService {
 
 	private IAccessControlService getAccessControlService() {
 		if (accessControlService == null) {
-			accessControlService = OsgiServiceUtil.getService(IAccessControlService.class).orElse(null);
+			accessControlService = PortableServiceLoader.getOptional(IAccessControlService.class).orElse(null);
 		}
 		return accessControlService;
 	}
@@ -680,7 +685,8 @@ public abstract class AbstractModelService implements IModelService {
 		if (getAccessControlService() != null) {
 			ret = getAccessControlService().evaluate(EvACE.of(clazz, right));
 			if (!ret) {
-				String userId = ContextServiceHolder.get().getActiveUser().map(IUser::getId).orElse("?");
+				String userId = PortableServiceLoader.get(IContextService.class).getActiveUser().map(IUser::getId)
+						.orElse("?");
 				String privileged = getAccessControlService().isPrivileged() ? "P" : "";
 				String message = "(ACL " + System.currentTimeMillis() + ") +" + privileged + "  User " + userId
 						+ " has no right [" + right + "] for class [" + clazz.getName() + "]";
@@ -727,7 +733,8 @@ public abstract class AbstractModelService implements IModelService {
 			// test all objects if aobo
 			if (getAccessControlService() != null) {
 				for (Identifiable identifiable : identifiables) {
-					String storeToString = StoreToStringServiceHolder.getStoreToString(identifiable).orElse(null);
+					String storeToString = PortableServiceLoader.get(IStoreToStringService.class)
+							.storeToString(identifiable).orElse(null);
 					if (storeToString != null) {
 						ObjectEvaluatableACE objAce = (ObjectEvaluatableACE) EvACE.of(identifiable.getClass(), right,
 								storeToString);

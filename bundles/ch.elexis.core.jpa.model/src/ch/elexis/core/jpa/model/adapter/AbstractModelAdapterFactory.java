@@ -11,8 +11,9 @@ import java.util.function.Predicate;
 
 import org.slf4j.LoggerFactory;
 
+import ch.elexis.core.cdi.PortableServiceLoader;
 import ch.elexis.core.jpa.entities.EntityWithId;
-import ch.elexis.core.jpa.model.adapter.event.EntityChangeEventListenerHolder;
+import ch.elexis.core.jpa.model.adapter.event.EntityChangeEventListener;
 import ch.elexis.core.model.Identifiable;
 
 public abstract class AbstractModelAdapterFactory {
@@ -149,8 +150,8 @@ public abstract class AbstractModelAdapterFactory {
 						return Optional.empty();
 					}
 				}
-				if (registerEntityChangeEvent && EntityChangeEventListenerHolder.isAvailable()) {
-					EntityChangeEventListenerHolder.get().add((AbstractIdModelAdapter<?>) adapter);
+				if (registerEntityChangeEvent) {
+					PortableServiceLoader.get(EntityChangeEventListener.class).add((AbstractIdModelAdapter<?>) adapter);
 				}
 				return Optional.of(adapter);
 			}

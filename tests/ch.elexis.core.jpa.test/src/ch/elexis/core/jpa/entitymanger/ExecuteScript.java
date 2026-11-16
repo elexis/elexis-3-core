@@ -7,8 +7,8 @@ import java.util.Optional;
 
 import org.junit.Test;
 
+import ch.elexis.core.cdi.PortableServiceLoader;
 import ch.elexis.core.jpa.test.AllPluginTests;
-import ch.elexis.core.rcp.utils.OsgiServiceUtil;
 import ch.elexis.core.services.IElexisEntityManager;
 
 public class ExecuteScript {
@@ -16,12 +16,12 @@ public class ExecuteScript {
 	@Test
 	public void execute() throws IOException{
 		Optional<IElexisEntityManager> elexisEntityManager =
-			OsgiServiceUtil.getService(IElexisEntityManager.class);
+				PortableServiceLoader.getOptional(IElexisEntityManager.class);
 		assertTrue(elexisEntityManager.isPresent());
 		
 		assertTrue(elexisEntityManager.get().executeSQLScript("testScriptId",
 			AllPluginTests.loadFile("/rsc/testContacts.sql")));
-		OsgiServiceUtil.ungetService(elexisEntityManager.get());
+		PortableServiceLoader.ungetService(elexisEntityManager.get());
 	}
 	
 }

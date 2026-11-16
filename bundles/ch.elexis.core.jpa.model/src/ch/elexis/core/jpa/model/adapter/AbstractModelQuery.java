@@ -11,14 +11,6 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.emf.ecore.EStructuralFeature;
-import org.eclipse.persistence.config.HintValues;
-import org.eclipse.persistence.config.QueryHints;
-import org.eclipse.persistence.jpa.JpaEntityManager;
-import org.eclipse.persistence.jpa.JpaQuery;
-import org.eclipse.persistence.queries.DatabaseQuery;
-import org.eclipse.persistence.queries.ScrollableCursor;
-import org.eclipse.persistence.sessions.DatabaseRecord;
-import org.eclipse.persistence.sessions.Session;
 import org.slf4j.LoggerFactory;
 
 import ch.elexis.core.ac.ACEAccessBitMapConstraint;
@@ -26,14 +18,14 @@ import ch.elexis.core.ac.AoboEntity;
 import ch.elexis.core.ac.AoboEntityColumn;
 import ch.elexis.core.ac.ObjectEvaluatableACE;
 import ch.elexis.core.ac.Right;
+import ch.elexis.core.cdi.PortableServiceLoader;
 import ch.elexis.core.jpa.entities.EntityWithDeleted;
 import ch.elexis.core.jpa.entities.EntityWithId;
 import ch.elexis.core.jpa.model.adapter.internal.PredicateGroupStack;
 import ch.elexis.core.jpa.model.adapter.internal.PredicateHandler;
-import ch.elexis.core.jpa.model.adapter.internal.QueryCursor;
+import ch.elexis.core.jpa.model.provider.JpaProviderAdapter;
 import ch.elexis.core.model.Identifiable;
 import ch.elexis.core.model.ModelPackage;
-import ch.elexis.core.rcp.utils.OsgiServiceUtil;
 import ch.elexis.core.services.IAccessControlService;
 import ch.elexis.core.services.IModelService;
 import ch.elexis.core.services.IQuery;
@@ -138,14 +130,14 @@ public abstract class AbstractModelQuery<T> implements IQuery<T> {
 
 	private String getSelfMandatorId() {
 		if (accessControlService == null) {
-			accessControlService = OsgiServiceUtil.getService(IAccessControlService.class).orElse(null);
+			accessControlService = PortableServiceLoader.getOptional(IAccessControlService.class).orElse(null);
 		}
 		return accessControlService != null ? accessControlService.getSelfMandatorId() : "-1";
 	}
 
 	private List<String> getAoboMandatorIds() {
 		if (accessControlService == null) {
-			accessControlService = OsgiServiceUtil.getService(IAccessControlService.class).orElse(null);
+			accessControlService = PortableServiceLoader.getOptional(IAccessControlService.class).orElse(null);
 		}
 		return accessControlService != null ? accessControlService.getAoboMandatorIds()
 				: Collections.singletonList("-1");
@@ -157,7 +149,7 @@ public abstract class AbstractModelQuery<T> implements IQuery<T> {
 
 	private Optional<ACEAccessBitMapConstraint> isAoboOrSelf(Class<? extends EntityWithId> entityClazz) {
 		if (accessControlService == null) {
-			accessControlService = OsgiServiceUtil.getService(IAccessControlService.class).orElse(null);
+			accessControlService = PortableServiceLoader.getOptional(IAccessControlService.class).orElse(null);
 		}
 		return accessControlService.isAoboOrSelf(new ObjectEvaluatableACE(entityClazz, Right.READ));
 	}
@@ -359,7 +351,7 @@ public abstract class AbstractModelQuery<T> implements IQuery<T> {
 		return this;
 	}
 
-	private TypedQuery<?> getTypedQuery() {
+	protected TypedQuery<?> getTypedQuery() {
 		// apply the predicate groups to the criteriaQuery
 		int groups = predicateGroups.getPredicateGroupsSize();
 		if (groups > 0) {
@@ -380,7 +372,8 @@ public abstract class AbstractModelQuery<T> implements IQuery<T> {
 		// update cache with results
 		// (https://wiki.eclipse.org/EclipseLink/UserGuide/JPA/Basic_JPA_Development/Querying/Query_Hints)
 		if (refreshCache) {
-			query.setHint(QueryHints.REFRESH, HintValues.TRUE);
+			query.setHint("eclipselink.refresh", "True");
+			// FIXME hibernate
 		}
 		if (limit > 0) {
 			query.setMaxResults(limit);
@@ -396,17 +389,11 @@ public abstract class AbstractModelQuery<T> implements IQuery<T> {
 		return executeAsCursor(null);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public IQueryCursor<T> executeAsCursor(Map<String, Object> queryHints) {
-		TypedQuery<?> query = getTypedQuery();
-		if (queryHints == null) {
-			query.setHint(QueryHints.MAINTAIN_CACHE, HintValues.FALSE);
-		} else {
-			queryHints.forEach(query::setHint);
-		}
-		query.setHint(QueryHints.SCROLLABLE_CURSOR, HintValues.TRUE);
-		ScrollableCursor cursor = (ScrollableCursor) query.getSingleResult();
-		return new QueryCursor<>(cursor, adapterFactory, clazz);
+		return (IQueryCursor<T>) PortableServiceLoader.getOptional(JpaProviderAdapter.class).orElseThrow()
+				.executeAsCursor(adapterFactory, clazz, getTypedQuery(), queryHints);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -439,15 +426,6 @@ public abstract class AbstractModelQuery<T> implements IQuery<T> {
 			return Optional.of(result.get(0));
 		}
 		return Optional.empty();
-	}
-
-	@Override
-	public String toString() {
-		Session session = entityManager.unwrap(JpaEntityManager.class).getActiveSession();
-		DatabaseQuery databaseQuery = ((JpaQuery<?>) getTypedQuery()).getDatabaseQuery();
-		databaseQuery.prepareCall(session, new DatabaseRecord());
-		String sqlString = databaseQuery.getSQLString();
-		return sqlString;
 	}
 
 	private class SubQuery<S> implements ISubQuery<S> {

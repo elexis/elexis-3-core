@@ -6,8 +6,9 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
-import ch.elexis.core.jpa.model.service.holder.StoreToStringServiceHolder;
+import ch.elexis.core.cdi.PortableServiceLoader;
 import ch.elexis.core.model.Identifiable;
+import ch.elexis.core.services.IStoreToStringService;
 
 /**
  * {@link InvocationHandler} can be used to make a loaded {@link Identifiable}
@@ -26,14 +27,14 @@ public class ModelAdapterProxyHandler implements InvocationHandler {
 	private static Map<Class<?>, Map<String, Method>> classMethodMap;
 
 	public ModelAdapterProxyHandler(Identifiable target) {
-		this.storeToString = StoreToStringServiceHolder.get().storeToString(target).get();
+		this.storeToString = PortableServiceLoader.get(IStoreToStringService.class).storeToString(target).get();
 	}
 
 	@Override
 	public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
 		Object target = targetReference != null ? targetReference.get() : null;
 		if (target == null) {
-			target = StoreToStringServiceHolder.get().loadFromString(storeToString).orElse(null);
+			target = PortableServiceLoader.get(IStoreToStringService.class).loadFromString(storeToString).orElse(null);
 			targetReference = new WeakReference<>(target);
 		}
 		if (target != null) {

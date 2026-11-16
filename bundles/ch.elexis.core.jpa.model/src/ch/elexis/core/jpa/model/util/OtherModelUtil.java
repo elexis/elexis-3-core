@@ -8,9 +8,9 @@ import java.util.Optional;
 
 import org.slf4j.LoggerFactory;
 
+import ch.elexis.core.cdi.PortableServiceLoader;
 import ch.elexis.core.jpa.model.adapter.AbstractIdModelAdapter;
 import ch.elexis.core.model.Identifiable;
-import ch.elexis.core.rcp.utils.OsgiServiceUtil;
 
 public class OtherModelUtil {
 
@@ -51,7 +51,7 @@ public class OtherModelUtil {
 									&& Arrays.asList(m.getParameterTypes()).contains(Identifiable.class))
 							.findFirst().orElse(null);
 					if (modelSerivceClass != null && saveMethod != null) {
-						Optional<?> modelService = OsgiServiceUtil.getService(modelSerivceClass);
+						Optional<?> modelService = PortableServiceLoader.getOptional(modelSerivceClass);
 						if (modelService.isPresent()) {
 							saveMethod.invoke(modelService.get(), identifiable);
 						}
@@ -75,7 +75,7 @@ public class OtherModelUtil {
 									&& Arrays.asList(m.getParameterTypes()).contains(Identifiable.class))
 							.findFirst().orElse(null);
 					if (modelSerivceClass != null && saveMethod != null) {
-						Optional<?> modelService = OsgiServiceUtil.getService(modelSerivceClass);
+						Optional<?> modelService = PortableServiceLoader.getOptional(modelSerivceClass);
 						if (modelService.isPresent()) {
 							saveMethod.invoke(modelService.get(), identifiable);
 						}

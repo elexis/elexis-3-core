@@ -7,17 +7,14 @@ import java.util.List;
 import java.util.WeakHashMap;
 
 import org.osgi.service.component.annotations.Component;
-import org.osgi.service.event.Event;
-import org.osgi.service.event.EventConstants;
-import org.osgi.service.event.EventHandler;
 
-import ch.elexis.core.common.ElexisEventTopics;
 import ch.elexis.core.jpa.entities.EntityWithId;
 import ch.elexis.core.jpa.model.adapter.AbstractIdModelAdapter;
+import jakarta.inject.Singleton;
 
-@Component(service = { EventHandler.class, EntityChangeEventListener.class }, property = EventConstants.EVENT_TOPIC
-		+ "=" + ElexisEventTopics.PERSISTENCE_EVENT_ENTITYCHANGED)
-public class EntityChangeEventListener implements EventHandler {
+@Singleton
+@Component(immediate = true, service = EntityChangeEventListener.class)
+public class EntityChangeEventListener {
 
 	private WeakHashMap<EntityWithId, List<WeakReference<AbstractIdModelAdapter<?>>>> listenerMap;
 
@@ -26,6 +23,10 @@ public class EntityChangeEventListener implements EventHandler {
 	}
 
 	private int addCount;
+
+	WeakHashMap<EntityWithId, List<WeakReference<AbstractIdModelAdapter<?>>>> getListenerMap() {
+		return listenerMap;
+	}
 
 	public void add(AbstractIdModelAdapter<?> adapter) {
 		synchronized (listenerMap) {
@@ -67,7 +68,7 @@ public class EntityChangeEventListener implements EventHandler {
 		}
 	}
 
-	private List<WeakReference<AbstractIdModelAdapter<?>>> getListenersFor(EntityWithId entity) {
+	List<WeakReference<AbstractIdModelAdapter<?>>> getListenersFor(EntityWithId entity) {
 		List<WeakReference<AbstractIdModelAdapter<?>>> listeners = listenerMap.get(entity);
 		if (listeners == null) {
 			listeners = new ArrayList<>();
@@ -75,9 +76,7 @@ public class EntityChangeEventListener implements EventHandler {
 		return listeners;
 	}
 
-	@Override
-	public void handleEvent(Event event) {
-		EntityWithId entity = (EntityWithId) event.getProperty(EntityWithId.class.getName());
+	public void handleEvent(EntityWithId entity) {
 		synchronized (listenerMap) {
 			List<WeakReference<AbstractIdModelAdapter<?>>> listeners = getListenersFor(entity);
 			// reset map with new entity object, old object could be no longer referenced

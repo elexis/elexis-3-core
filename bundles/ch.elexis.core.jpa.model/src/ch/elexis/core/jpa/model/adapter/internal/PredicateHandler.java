@@ -174,6 +174,11 @@ public class PredicateHandler {
 						valueRoot != null ? valueRoot.get((SingularAttribute) value)
 								: rootQuery.get((SingularAttribute) value)));
 			} else {
+				if (value == null) {
+					// HACK Hibernate handles null differently
+					// https://stackoverflow.com/questions/2123438/hibernate-how-to-set-null-query-parameter-value-with-hql
+					return Optional.of(criteriaBuilder.isNull(rootQuery.get(attribute)));
+				}
 				return Optional.of(criteriaBuilder.equal(rootQuery.get(attribute), value));
 			}
 		case NOT_EQUALS:
@@ -182,6 +187,10 @@ public class PredicateHandler {
 						valueRoot != null ? valueRoot.get((SingularAttribute) value)
 								: rootQuery.get((SingularAttribute) value)));
 			} else {
+				if (value == null) {
+					// HACK Hibernate handles null differently
+					return Optional.of(criteriaBuilder.isNotNull(rootQuery.get(attribute)));
+				}
 				return Optional.of(criteriaBuilder.notEqual(rootQuery.get(attribute), value));
 			}
 		case LIKE:
@@ -276,9 +285,9 @@ public class PredicateHandler {
 				return Optional.of(criteriaBuilder.lessThanOrEqualTo(rootQuery.get(attribute),
 						valueRoot != null ? valueRoot.get((SingularAttribute) value)
 								: rootQuery.get((SingularAttribute) value)));
-			} else {
+				} else {
 				throw new IllegalStateException("[" + value + "] is not a known type"); //$NON-NLS-1$ //$NON-NLS-2$
-			}
+				}
 		case IN:
 			if (value instanceof Iterable<?>) {
 				Path expr = rootQuery.get(attribute);
@@ -286,9 +295,9 @@ public class PredicateHandler {
 				In<Object> in = criteriaBuilder.in(expr);
 				values.forEach(p -> in.value(p));
 				return Optional.of(in);
-			} else {
+				} else {
 				throw new IllegalStateException("[" + value + "] is not a known type"); //$NON-NLS-1$ //$NON-NLS-2$
-			}
+				}
 		default:
 			break;
 		}

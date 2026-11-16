@@ -1,0 +1,27 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Elexis Core JPA Provider Independent Model
+Bundle-SymbolicName: ch.elexis.core.jpa.model
+Bundle-Version: 3.14.0.qualifier
+Export-Package: ch.elexis.core.jpa.model.adapter,
+ ch.elexis.core.jpa.model.adapter.mixin,
+ ch.elexis.core.jpa.model.adapter.proxy,
+ ch.elexis.core.jpa.model.provider,
+ ch.elexis.core.jpa.model.util,
+ ch.elexis.core.jpa.model.util.compatibility
+Import-Package: io.quarkus.vertx;version="[3.40.0,4.0.0)";resolution:=optional,
+ jakarta.enterprise.context;version="[4.0.0,5.0.0)",
+ jakarta.persistence;version="3.2.0",
+ jakarta.persistence.criteria;version="3.2.0",
+ jakarta.persistence.metamodel;version="3.2.0",
+ org.apache.commons.beanutils;version="[1.9.0,2.0.0)",
+ org.osgi.service.event;version="[1.4.0,2.0.0)"
+Require-Bundle: ch.rgw.utility;bundle-version="3.14.0",
+ ch.elexis.core.jpa.entities;bundle-version="3.14.0",
+ ch.elexis.core;bundle-version="3.14.0",
+ ch.elexis.core.cdi;bundle-version="3.14.0"
+Service-Component: OSGI-INF/ch.elexis.core.jpa.model.adapter.event.EntityChangeEventListener.xml,
+ OSGI-INF/ch.elexis.core.jpa.model.adapter.event.EntityChangeEventListenerEventHandler.xml
+Automatic-Module-Name: ch.elexis.core.jpa.model
+Bundle-RequiredExecutionEnvironment: JavaSE-21
+Bundle-ActivationPolicy: lazy

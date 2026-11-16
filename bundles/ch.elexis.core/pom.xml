@@ -16,6 +16,10 @@
 	<organization>
 		<name>elexis.info</name>
 	</organization>
+	<properties>
+		<slf4j.api.version>2.0.20</slf4j.api.version>
+	</properties>
+
 	<build>
 		<sourceDirectory>src</sourceDirectory>
 		<resources>
@@ -57,7 +61,11 @@
 	</build>
 
 	<dependencies>
-
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>${slf4j.api.version}</version>
+		</dependency>
 		<dependency>
 			<groupId>ch.elexis.core</groupId>
 			<artifactId>ch.elexis.core.l10n</artifactId>
@@ -67,6 +75,11 @@
 			<groupId>ch.elexis.core</groupId>
 			<artifactId>ch.rgw.utility</artifactId>
 			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.osgi</groupId>
+			<artifactId>org.osgi.service.event</artifactId>
+			<version>1.4.1</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.platform</groupId>

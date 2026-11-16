@@ -61,4 +61,8 @@
          id="jakarta.persistence-api"
          version="0.0.0"/>
 
+   <plugin
+         id="ch.elexis.core.jpa.model"
+         version="0.0.0"/>
+
 </feature>

@@ -5,14 +5,9 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import org.eclipse.persistence.config.CacheUsage;
-import org.eclipse.persistence.config.HintValues;
-import org.eclipse.persistence.config.QueryHints;
-import org.eclipse.persistence.queries.ScrollableCursor;
-
+import ch.elexis.core.cdi.PortableServiceLoader;
 import ch.elexis.core.jpa.entities.EntityWithId;
-import ch.elexis.core.jpa.model.adapter.internal.QueryCursor;
-import ch.elexis.core.rcp.utils.OsgiServiceUtil;
+import ch.elexis.core.jpa.model.provider.JpaProviderAdapter;
 import ch.elexis.core.services.IAccessControlService;
 import ch.elexis.core.services.INamedQuery;
 import ch.elexis.core.services.IQueryCursor;
@@ -28,7 +23,6 @@ public class NamedQuery<R, T> implements INamedQuery<R> {
 
 	private Class<? extends EntityWithId> entityClazz;
 	private TypedQuery<?> query;
-	private EntityManager entityManager;
 
 	private IAccessControlService accessControlService;
 
@@ -38,7 +32,6 @@ public class NamedQuery<R, T> implements INamedQuery<R> {
 		this.interfaceClazz = interfaceClazz;
 		this.returnValueClazz = returnValueClazz;
 		this.entityClazz = adapterFactory.getEntityClass(interfaceClazz);
-		this.entityManager = entityManager;
 
 		if (returnValueClazz.equals(interfaceClazz)) {
 			this.query = entityManager.createNamedQuery(queryName, entityClazz);
@@ -48,10 +41,14 @@ public class NamedQuery<R, T> implements INamedQuery<R> {
 		// update cache with results
 		// (https://wiki.eclipse.org/EclipseLink/UserGuide/JPA/Basic_JPA_Development/Querying/Query_Hints)
 		if (refreshCache) {
-			this.query.setHint(QueryHints.REFRESH, HintValues.TRUE);
-			Map<String, Object> hints = query.getHints();
-			if (hints != null && hints.containsKey(QueryHints.QUERY_RESULTS_CACHE)) {
-				this.query.setHint(QueryHints.CACHE_USAGE, CacheUsage.Invalidate);
+			if (refreshCache) {
+				// eclipselink
+				// queryHints.put(QueryHints.REFRESH, HintValues.TRUE);
+				this.query.setHint("eclipselink.refresh", "True");
+				Map<String, Object> hints = query.getHints();
+				if (hints != null && hints.containsKey("eclipselink.query-results-cache")) {
+					this.query.setHint("eclipselink.cache-usage", "Invalidate");
+				}
 			}
 		}
 	}
@@ -87,7 +84,7 @@ public class NamedQuery<R, T> implements INamedQuery<R> {
 
 	private void addAoboParameter(Map<String, Object> parameters) {
 		if (accessControlService == null) {
-			accessControlService = OsgiServiceUtil.getService(IAccessControlService.class).orElse(null);
+			accessControlService = PortableServiceLoader.getOptional(IAccessControlService.class).orElse(null);
 		}
 		parameters.put("aoboids", accessControlService.getAoboMandatorIdsForSqlIn());
 	}
@@ -96,6 +93,7 @@ public class NamedQuery<R, T> implements INamedQuery<R> {
 		return query.getParameters().stream().filter(p -> p.getName().equals("aoboids")).findFirst().isPresent();
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public IQueryCursor<R> executeAsCursorWithParameters(Map<String, Object> parameters) {
 		if (isAoboQuery()) {
@@ -105,17 +103,18 @@ public class NamedQuery<R, T> implements INamedQuery<R> {
 			v = resolveValue(v);
 			query.setParameter(k, v);
 		});
-		query.setHint(QueryHints.MAINTAIN_CACHE, HintValues.FALSE);
-		query.setHint(QueryHints.SCROLLABLE_CURSOR, HintValues.TRUE);
+
+		JpaProviderAdapter jpaProviderAdapter = PortableServiceLoader.getOptional(JpaProviderAdapter.class)
+				.orElseThrow();
+
 		if (returnValueClazz.equals(interfaceClazz)) {
-			ScrollableCursor cursor = (ScrollableCursor) query.getSingleResult();
-			return new QueryCursor<>(cursor, adapterFactory, interfaceClazz);
+			return (IQueryCursor<R>) jpaProviderAdapter.executeAsCursor(adapterFactory, interfaceClazz, query, null);
 		} else {
-			ScrollableCursor cursor = (ScrollableCursor) query.getSingleResult();
-			return new QueryCursor<>(cursor, null, null);
+			return (IQueryCursor<R>) jpaProviderAdapter.executeAsCursor(null, null, query, null);
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public Optional<R> executeWithParametersSingleResult(Map<String, Object> parameters) {
 		if (isAoboQuery()) {

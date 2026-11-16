@@ -19,6 +19,7 @@ import org.osgi.service.component.annotations.Reference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ch.elexis.core.cdi.PortableServiceLoader;
 import ch.elexis.core.constants.ElexisSystemPropertyConstants;
 import ch.elexis.core.jpa.entities.Kontakt;
 import ch.elexis.core.jpa.entitymanager.ui.IDatabaseUpdateUi;
@@ -26,7 +27,6 @@ import ch.elexis.core.jpa.liquibase.LiquibaseDBInitializer;
 import ch.elexis.core.jpa.liquibase.LiquibaseDBScriptExecutor;
 import ch.elexis.core.jpa.liquibase.LiquibaseDBUpdater;
 import ch.elexis.core.l10n.Messages;
-import ch.elexis.core.rcp.utils.OsgiServiceUtil;
 import ch.elexis.core.services.IElexisEntityManager;
 import ch.elexis.core.utils.CoreUtil;
 import jakarta.persistence.EntityManager;
@@ -94,7 +94,7 @@ public class ElexisEntityManger implements IElexisEntityManager {
 			// try to initialize
 
 			if (!SKIP_LIQUIBASE) {
-				updateProgress = OsgiServiceUtil.getServiceWait(IDatabaseUpdateUi.class, 100).orElse(null);
+				updateProgress = PortableServiceLoader.getOptionalWait(IDatabaseUpdateUi.class, 100).orElse(null);
 				if (updateProgress != null) {
 					try {
 						updateProgress.executeWithProgress(Messages.ElexisEntityManger_Database_Init, () -> {
@@ -106,7 +106,7 @@ public class ElexisEntityManger implements IElexisEntityManager {
 					} catch (Exception e) {
 						logger.warn("Exeption executing database update with ui", e); //$NON-NLS-1$
 					}
-					OsgiServiceUtil.ungetService(updateProgress);
+					PortableServiceLoader.ungetService(updateProgress);
 				} else {
 					dbInit(null);
 					dbUpdate(null);
