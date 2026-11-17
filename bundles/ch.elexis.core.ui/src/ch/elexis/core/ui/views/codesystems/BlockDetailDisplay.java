@@ -28,6 +28,7 @@ import org.eclipse.jface.databinding.swt.typed.WidgetProperties;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IInputValidator;
 import org.eclipse.jface.dialogs.InputDialog;
+import org.eclipse.jface.util.LocalSelectionTransfer;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.DoubleClickEvent;
@@ -42,6 +43,8 @@ import org.eclipse.jface.viewers.ViewerCell;
 import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.DND;
+import org.eclipse.swt.dnd.DragSourceAdapter;
+import org.eclipse.swt.dnd.DragSourceEvent;
 import org.eclipse.swt.dnd.DropTargetEvent;
 import org.eclipse.swt.dnd.DropTargetListener;
 import org.eclipse.swt.dnd.TextTransfer;
@@ -113,6 +116,7 @@ public class BlockDetailDisplay implements IDetailDisplay {
 
 	private Action removeLeistung, moveUpAction, moveDownAction, editAction, countAction;
 	private TableViewerFocusCellManager focusCellManager;
+	private BlockElementViewerItem draggedItem;
 
 	private final IChangeListener changeListener = (event) -> {
 		if (master.getValue() instanceof ICodeElementBlock) {
@@ -212,10 +216,41 @@ public class BlockDetailDisplay implements IDetailDisplay {
 		updateViewerInput(ContextServiceHolder.get().getTyped(ICodeElementBlock.class).orElse(null));
 
 		final TextTransfer textTransfer = TextTransfer.getInstance();
-		Transfer[] types = new Transfer[] { textTransfer };
-		viewer.addDropSupport(DND.DROP_COPY, types, new DropTargetListener() {
+		final LocalSelectionTransfer selectionTransfer = LocalSelectionTransfer.getTransfer();
+		viewer.addDragSupport(DND.DROP_MOVE, new Transfer[] { selectionTransfer }, new DragSourceAdapter() {
+			@Override
+			public void dragStart(DragSourceEvent event) {
+				IStructuredSelection selection = viewer.getStructuredSelection();
+				event.doit = viewer.getComparator() == null && !selection.isEmpty();
+				if (event.doit) {
+					draggedItem = (BlockElementViewerItem) selection.getFirstElement();
+					selectionTransfer.setSelection(selection);
+				}
+			}
+
+			@Override
+			public void dragSetData(DragSourceEvent event) {
+				event.data = selectionTransfer.getSelection();
+			}
+
+			@Override
+			public void dragFinished(DragSourceEvent event) {
+				draggedItem = null;
+				selectionTransfer.setSelection(null);
+			}
+		});
+		Transfer[] types = new Transfer[] { textTransfer, selectionTransfer };
+		viewer.addDropSupport(DND.DROP_COPY | DND.DROP_MOVE, types, new DropTargetListener() {
 			@Override
 			public void dragEnter(final DropTargetEvent event) {
+				if (draggedItem != null) {
+					event.detail = DND.DROP_MOVE;
+					return;
+				}
+				if (!textTransfer.isSupportedType(event.currentDataType)) {
+					event.detail = DND.DROP_NONE;
+					return;
+				}
 				if (event.data instanceof IArticle) {
 					if (((IArticle) event.data).isProduct()) {
 						event.detail = event.detail = DND.DROP_NONE;
@@ -240,6 +275,12 @@ public class BlockDetailDisplay implements IDetailDisplay {
 			@Override
 			public void drop(final DropTargetEvent event) {
 				Optional<ICodeElementBlock> block = ContextServiceHolder.get().getTyped(ICodeElementBlock.class);
+				if (draggedItem != null) {
+					BlockElementViewerItem target = event.item != null ? (BlockElementViewerItem) event.item.getData()
+							: null;
+					block.ifPresent(b -> moveElementTo(b, draggedItem, target));
+					return;
+				}
 				String drp = (String) event.data;
 				String[] dl = drp.split(","); //$NON-NLS-1$
 				for (String obj : dl) {
@@ -621,6 +662,17 @@ public class BlockDetailDisplay implements IDetailDisplay {
 				updateViewerInput(b);
 			}
 		});
+	}
+
+	private void moveElementTo(ICodeElementBlock block, BlockElementViewerItem source, BlockElementViewerItem target) {
+		List<?> items = (List<?>) viewer.getInput();
+		int from = items.indexOf(source);
+		int to = target != null ? items.indexOf(target) : items.size() - 1;
+		for (int i = 0; i < Math.abs(to - from); i++) {
+			block.moveElement(source.getFirstElement(), to < from);
+		}
+		CoreModelServiceHolder.get().save(block);
+		updateViewerInput(block);
 	}
 
 	private class BlockComparator extends ViewerComparator {
