@@ -24,8 +24,7 @@ public final class OAuth2AccountStore {
 		this.config = config;
 		this.owners = owners;
 		this.contacts = contacts;
-		cipher = new CredentialCipher(() -> config.get(MailClientConfig.SECRET_SALT, null),
-				salt -> config.set(MailClientConfig.SECRET_SALT, salt, false));
+		cipher = new CredentialCipher();
 	}
 
 	/**

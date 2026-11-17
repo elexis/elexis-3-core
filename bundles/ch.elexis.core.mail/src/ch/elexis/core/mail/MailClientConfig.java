@@ -4,8 +4,6 @@ package ch.elexis.core.mail;
 public final class MailClientConfig {
 	/** Ordered, comma-separated account ids. */
 	public static final String ACCOUNTS = "mail/client/accounts";
-	/** Installation salt, encoded as Base64. */
-	public static final String SECRET_SALT = "mail/client/secret/salt";
 
 	/** Per-user ordered sender addresses whose remote images may be displayed. */
 	public static final String REMOTE_IMAGE_SENDERS = "mail/client/user/remoteImages/allowedSenders";

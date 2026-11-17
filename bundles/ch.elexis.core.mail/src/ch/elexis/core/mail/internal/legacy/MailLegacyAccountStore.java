@@ -1,6 +1,5 @@
 package ch.elexis.core.mail.internal.legacy;
 
-import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -38,10 +37,9 @@ public class MailLegacyAccountStore {
 	private final Gson gson = new Gson();
 
 	/**
-	 * Saves a shared legacy account and encrypts an explicitly supplied password.
+	 * Saves a shared legacy account and encodes an explicitly supplied password.
 	 * @param legacy the account to convert
 	 * @throws IllegalArgumentException for invalid ids or a personal target account
-	 * @throws IllegalStateException if encryption fails
 	 */
 	public synchronized void save(MailAccount legacy) {
 		String id = legacy.getId();
@@ -55,16 +53,8 @@ public class MailLegacyAccountStore {
 		checkShared(id);
 		MailboxAccount account = MailLegacyAccountConverter.toMailbox(legacy);
 		if (legacy.getPassword() != null) {
-			char[] password = legacy.getPassword().toCharArray();
-			try {
-				CredentialCipher cipher = new CredentialCipher(() -> configService.get(MailClientConfig.SECRET_SALT, null),
-						salt -> configService.set(MailClientConfig.SECRET_SALT, salt, false));
-				configService.set(MailClientConfig.password(id), cipher.encrypt(password), false);
-			} catch (GeneralSecurityException e) {
-				throw new IllegalStateException("Legacy mail credential encryption failed", e);
-			} finally {
-				Arrays.fill(password, '\0');
-			}
+			configService.set(MailClientConfig.password(id),
+					new CredentialCipher().encrypt(legacy.getPassword().toCharArray()), false);
 		}
 		configService.set(MailClientConfig.legacy(id), "true", false);
 		configService.set(MailClientConfig.mandators(id), String.join(",", MailLegacyAccountConverter.mandatorIds(legacy)), false);

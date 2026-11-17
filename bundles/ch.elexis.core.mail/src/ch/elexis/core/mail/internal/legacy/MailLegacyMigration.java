@@ -1,8 +1,5 @@
 package ch.elexis.core.mail.internal.legacy;
 
-import java.security.SecureRandom;
-import java.util.Base64;
-
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -50,7 +47,6 @@ public class MailLegacyMigration {
 			return;
 		}
 		try {
-			ensureSalt();
 			boolean complete = true;
 			for (String id : configService.get("ch.elexis.core.mail/accounts", "").split(",")) {
 				if (id.isBlank()) {
@@ -86,21 +82,6 @@ public class MailLegacyMigration {
 		} catch (RuntimeException e) {
 			log.warn("Legacy mail migration failed", e);
 			modelService.executeNativeUpdate("DELETE FROM config WHERE param = '" + MARKER + "'");
-		}
-	}
-
-	private void ensureSalt() {
-		if (configService.get(MailClientConfig.SECRET_SALT, null) == null) {
-			byte[] salt = new byte[32];
-			new SecureRandom().nextBytes(salt);
-			String value = Base64.getEncoder().encodeToString(salt);
-			try {
-				modelService.executeNativeUpdate("INSERT INTO config (param, wert) VALUES ('mail/client/secret/salt', '" + value + "')");
-			} catch (RuntimeException e) {
-				if (modelService.load(MailClientConfig.SECRET_SALT, IConfig.class, false, true).isEmpty()) {
-					throw e;
-				}
-			}
 		}
 	}
 }

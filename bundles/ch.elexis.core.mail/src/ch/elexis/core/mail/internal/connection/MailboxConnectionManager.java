@@ -100,8 +100,7 @@ public class MailboxConnectionManager implements EventHandler {
 	@Activate
 	void activate() {
 		MailcapRegistration.register();
-		CredentialCipher cipher = new CredentialCipher(() -> configService.get(MailClientConfig.SECRET_SALT, null),
-				salt -> configService.set(MailClientConfig.SECRET_SALT, salt, false));
+		CredentialCipher cipher = new CredentialCipher();
 		credentials = new MailCredentialProvider(new PasswordCredentialProvider(configService, cipher,
 				id -> modelService.load(id, IUser.class), id -> modelService.load(id, IContact.class)), tokens);
 	}

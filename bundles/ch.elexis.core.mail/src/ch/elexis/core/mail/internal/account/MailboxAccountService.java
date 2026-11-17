@@ -1,6 +1,5 @@
 package ch.elexis.core.mail.internal.account;
 
-import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashSet;
@@ -79,8 +78,7 @@ public class MailboxAccountService implements IMailboxAccountService {
 		policy = new MailAccessPolicy(userService::getUserGroups,
 				user -> user.getId().equals(contextService.getActiveUserId())
 						&& accessControlService.evaluate(EvACE.of(MailClientRights.MAIL_CLIENT_MANAGE_ACCOUNTS)));
-		cipher = new CredentialCipher(() -> configService.get(MailClientConfig.SECRET_SALT, null),
-				salt -> configService.set(MailClientConfig.SECRET_SALT, salt, false));
+		cipher = new CredentialCipher();
 	}
 
 	/** {@inheritDoc} */
@@ -212,7 +210,7 @@ public class MailboxAccountService implements IMailboxAccountService {
 
 	/**
 	 * {@inheritDoc}
-	 * @throws IllegalStateException if encryption fails or the owner has no assigned contact
+	 * @throws IllegalStateException if the owner has no assigned contact
 	 * @throws IllegalArgumentException if the account does not exist
 	 */
 	@Override
@@ -222,17 +220,13 @@ public class MailboxAccountService implements IMailboxAccountService {
 				.orElseThrow(() -> new IllegalArgumentException("Unknown mail account"));
 		policy.checkManage(user, account);
 		IContact owner = account.scope() == MailboxScope.PERSONAL ? accountOwnerContact(account) : null;
-		try {
-			String encrypted = cipher.encrypt(password);
-			if (account.scope() == MailboxScope.PERSONAL) {
-				configService.set(owner, MailClientConfig.password(accountId), encrypted);
-			} else {
-				configService.set(MailClientConfig.password(accountId), encrypted, false);
-			}
-			accountsChanged(accountId);
-		} catch (GeneralSecurityException e) {
-			throw new IllegalStateException("Credential encryption failed", e);
+		String encrypted = cipher.encrypt(password);
+		if (account.scope() == MailboxScope.PERSONAL) {
+			configService.set(owner, MailClientConfig.password(accountId), encrypted);
+		} else {
+			configService.set(MailClientConfig.password(accountId), encrypted, false);
 		}
+		accountsChanged(accountId);
 	}
 
 	/** {@inheritDoc} */

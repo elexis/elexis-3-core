@@ -7,7 +7,6 @@ import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
-import java.util.Base64;
 import java.util.List;
 import java.util.concurrent.CyclicBarrier;
 import java.util.concurrent.ExecutorService;
@@ -52,9 +51,8 @@ public class MailLegacyMigrationTest extends MailLegacyTestSupport {
 		assertTrue(accounts.isLegacy("relay"));
 		assertEquals(List.of("m1", "m2"), accounts.getMandatorIds("relay"));
 		String secret = global.get(MailClientConfig.password("relay"));
-		assertTrue(secret.startsWith("v1:"));
 		assertNotEquals(old.getPassword(), secret);
-		CredentialCipher cipher = new CredentialCipher(Base64.getDecoder().decode(global.get(MailClientConfig.SECRET_SALT)));
+		CredentialCipher cipher = new CredentialCipher();
 		assertArrayEquals(old.getPassword().toCharArray(), cipher.decrypt(secret));
 		assertEquals(encoded, global.get("ch.elexis.core.mail/account/relay"));
 		assertEquals("relay", global.get("ch.elexis.core.mail/accounts"));
