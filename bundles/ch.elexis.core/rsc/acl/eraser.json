@@ -5,8 +5,11 @@
     "object": {
 		"ch.elexis.core.model.IArticle": "z",
 		"ch.elexis.core.model.IBilled": "z",
+		"ch.elexis.core.model.IBillingSystemFactor": "z",
 		"ch.elexis.core.model.ICoverage": "z",
+		"ch.elexis.core.model.IDiagnosisReference": "z",
 		"ch.elexis.core.model.IEncounter": "z",
+		"ch.elexis.core.model.IMandator": "z",
         "ch.elexis.core.model.IPatient": "z",
         "ch.elexis.core.model.IPerson": "z",
         "ch.elexis.core.model.IReminder": "z",
