@@ -26,7 +26,6 @@ public class OpenIdUser implements IUser {
 	/**
 	 * This users data is populated via incoming Json Web Token.
 	 *
-	 * @param coreModelService
 	 * @param preferredUsername   jwt preferred_username
 	 * @param name                jwt name
 	 * @param familyName          jwt family_name

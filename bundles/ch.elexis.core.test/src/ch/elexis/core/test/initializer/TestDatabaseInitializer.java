@@ -13,6 +13,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ch.elexis.core.cdi.PortableServiceLoader;
 import ch.elexis.core.constants.XidConstants;
 import ch.elexis.core.model.IArticle;
 import ch.elexis.core.model.ICoverage;
@@ -109,9 +110,20 @@ public class TestDatabaseInitializer {
 
 	private static IXidService xidService;
 
+	private static TestDatabaseInitializer instance;
+
 	public TestDatabaseInitializer(IModelService modelService, IElexisEntityManager entityManager) {
 		this.modelService = modelService;
 		this.entityManager = entityManager;
+	}
+
+	public static TestDatabaseInitializer getInstance() {
+		if (instance == null) {
+			instance = new TestDatabaseInitializer(PortableServiceLoader.getCoreModelService(),
+					PortableServiceLoader.get(IElexisEntityManager.class));
+		}
+
+		return instance;
 	}
 
 	public TestDatabaseInitializer() {
