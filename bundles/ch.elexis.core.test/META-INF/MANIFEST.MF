@@ -8,7 +8,8 @@ Automatic-Module-Name: ch.elexis.core.test
 Bundle-RequiredExecutionEnvironment: JavaSE-21
 Require-Bundle: ch.elexis.core;bundle-version="3.7.0",
  ch.elexis.core.rcp;bundle-version="3.13.0",
- ch.elexis.core.l10n;bundle-version="3.8.0"
+ ch.elexis.core.l10n;bundle-version="3.8.0",
+ ch.elexis.core.cdi;bundle-version="[3.14.0,4.0.0)"
 Import-Package: ch.elexis.core.jpa.entities,
  ch.elexis.core.jpa.model.adapter,
  ch.rgw.tools,
