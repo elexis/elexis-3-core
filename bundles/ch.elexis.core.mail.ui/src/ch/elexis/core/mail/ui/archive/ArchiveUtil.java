@@ -19,6 +19,7 @@ import ch.elexis.core.model.IPatient;
 import ch.elexis.core.services.IDocumentStore;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.services.holder.ContextServiceHolder;
+import ch.elexis.core.types.DocumentStatus;
 
 public class ArchiveUtil {
 
@@ -63,6 +64,7 @@ public class ArchiveUtil {
 				category.getName());
 		archiveDocument.setCreated(new Date());
 		archiveDocument.setMimeType(FilenameUtils.getExtension(file.getName()));
+		archiveDocument.setStatus(DocumentStatus.SENT, true);
 		try (FileInputStream inStream = new FileInputStream(file)) {
 			omnivoreStore.saveDocument(archiveDocument, inStream);
 		} catch (IOException | ElexisException e) {
