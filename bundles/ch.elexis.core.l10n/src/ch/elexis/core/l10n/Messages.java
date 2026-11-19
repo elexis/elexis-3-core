@@ -3845,6 +3845,13 @@ public class Messages extends NLS {
 	public static String PriceHistory_LastUpdated;
 	public static String PriceHistory_UnknownArticle;
 	public static String PriceHistory_Error_LoadingTitle;
+	public static String PriceHistory_Search_Placeholder;
+	public static String PriceHistory_Search_Result;
+	public static String PriceHistory_Sort_Label;
+	public static String PriceHistory_Sort_Name;
+	public static String PriceHistory_Sort_Increase;
+	public static String PriceHistory_Sort_Decrease;
+	public static String PriceHistory_Sort_Encounters;
 	public static String PriceHistoryTemplate_24;
 	public static String PrintChartAction_Alterskorrektur;
 	public static String PrintChartAction_author;
