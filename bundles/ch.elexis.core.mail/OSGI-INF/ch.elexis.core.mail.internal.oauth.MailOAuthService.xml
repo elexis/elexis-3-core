@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.3.0" deactivate="deactivate" name="ch.elexis.core.mail.internal.oauth.MailOAuthService">
+   <service>
+      <provide interface="ch.elexis.core.mail.service.IMailOAuthService"/>
+   </service>
+   <reference cardinality="1..1" field="accountService" interface="ch.elexis.core.mail.service.IMailboxAccountService" name="accountService"/>
+   <reference cardinality="0..1" field="eventAdmin" interface="org.osgi.service.event.EventAdmin" name="eventAdmin" policy="dynamic"/>
+   <reference cardinality="1..1" field="tokens" interface="ch.elexis.core.mail.internal.oauth.OAuth2TokenCache" name="tokens"/>
+   <implementation class="ch.elexis.core.mail.internal.oauth.MailOAuthService"/>
+</scr:component>

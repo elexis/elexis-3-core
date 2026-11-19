@@ -9,6 +9,7 @@ import org.osgi.service.component.annotations.Reference;
 import ch.elexis.core.mail.IMailClient;
 import ch.elexis.core.mail.IMailClient.ErrorTyp;
 import ch.elexis.core.mail.MailAccount;
+import ch.elexis.core.mail.service.IMailboxAccountService;
 
 @Component
 public class MailClientComponent {
@@ -16,6 +17,8 @@ public class MailClientComponent {
 	private static String virtLocalId = " [virt_local]";
 
 	private static IMailClient mailClient;
+
+	private static IMailboxAccountService mailboxAccountService;
 
 	@Reference
 	public void setMailClient(IMailClient mailClient) {
@@ -28,6 +31,19 @@ public class MailClientComponent {
 
 	public static IMailClient getMailClient() {
 		return mailClient;
+	}
+
+	@Reference
+	public void setMailboxAccountService(IMailboxAccountService mailboxAccountService) {
+		MailClientComponent.mailboxAccountService = mailboxAccountService;
+	}
+
+	public void unsetMailboxAccountService(IMailboxAccountService mailboxAccountService) {
+		MailClientComponent.mailboxAccountService = null;
+	}
+
+	public static IMailboxAccountService getMailboxAccountService() {
+		return mailboxAccountService;
 	}
 
 	public static String getLastErrorMessage() {

@@ -128,7 +128,7 @@ public class MailAccount {
 		if (parts != null && parts.length > 2) {
 			ret = new MailAccount();
 			for (String string : parts) {
-				String[] subParts = string.split("=");
+				String[] subParts = string.split("=", 2);
 				if (subParts != null && subParts.length == 2) {
 					setField(subParts[0], subParts[1], ret);
 				}

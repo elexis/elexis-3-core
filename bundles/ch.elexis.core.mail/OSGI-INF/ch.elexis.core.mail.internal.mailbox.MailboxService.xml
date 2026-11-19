@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.3.0" name="ch.elexis.core.mail.internal.mailbox.MailboxService">
+   <service>
+      <provide interface="ch.elexis.core.mail.service.IMailboxService"/>
+   </service>
+   <reference cardinality="1..1" field="accountService" interface="ch.elexis.core.mail.service.IMailboxAccountService" name="accountService"/>
+   <reference cardinality="1..1" field="connections" interface="ch.elexis.core.mail.internal.connection.MailboxConnectionManager" name="connections"/>
+   <implementation class="ch.elexis.core.mail.internal.mailbox.MailboxService"/>
+</scr:component>

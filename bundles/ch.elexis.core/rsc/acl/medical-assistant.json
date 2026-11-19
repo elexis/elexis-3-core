@@ -2,6 +2,9 @@
 	"roles-represented": [
 		"medical-assistant"
 	],
+	"system-command": {
+		"MAIL_CLIENT_FILE": "x"
+	},
 	"object": {
 		"ch.elexis.base.ch.arzttarife.tarmed.ITarmedExtension": "rv",
 		"ch.elexis.base.ch.arzttarife.tarmed.ITarmedGroup": "rv",

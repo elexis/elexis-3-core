@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" name="ch.elexis.core.mail.ui.client.MailClientComponent">
    <reference bind="setMailClient" interface="ch.elexis.core.mail.IMailClient" name="MailClient" unbind="unsetMailClient"/>
+   <reference bind="setMailboxAccountService" interface="ch.elexis.core.mail.service.IMailboxAccountService" name="MailboxAccountService" unbind="unsetMailboxAccountService"/>
    <implementation class="ch.elexis.core.mail.ui.client.MailClientComponent"/>
 </scr:component>

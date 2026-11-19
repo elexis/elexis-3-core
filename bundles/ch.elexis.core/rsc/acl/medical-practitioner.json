@@ -3,6 +3,7 @@
 		"medical-practitioner"
 	],
 	"system-command": {
+		"MAIL_CLIENT_FILE": "x",
 		"USE_ARCHIE": "x"
 	},	
 	"object": {

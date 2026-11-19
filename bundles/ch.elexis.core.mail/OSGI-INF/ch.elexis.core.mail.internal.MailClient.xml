@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.3.0" name="ch.elexis.core.mail.internal.MailClient">
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.3.0" deactivate="deactivate" name="ch.elexis.core.mail.internal.MailClient">
    <service>
       <provide interface="ch.elexis.core.mail.IMailClient"/>
    </service>
+   <reference cardinality="1..1" field="accountService" interface="ch.elexis.core.mail.service.IMailboxAccountService" name="accountService"/>
    <reference cardinality="1..1" field="configService" interface="ch.elexis.core.services.IConfigService" name="configService"/>
+   <reference cardinality="1..1" field="legacyAccounts" interface="ch.elexis.core.mail.internal.legacy.MailLegacyAccountStore" name="legacyAccounts"/>
+   <reference cardinality="1..1" field="modelService" interface="ch.elexis.core.services.IModelService" name="modelService" target="(service.model.name=ch.elexis.core.model)"/>
+   <reference cardinality="1..1" field="tokens" interface="ch.elexis.core.mail.internal.oauth.OAuth2TokenCache" name="tokens"/>
    <implementation class="ch.elexis.core.mail.internal.MailClient"/>
 </scr:component>

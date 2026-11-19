@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.3.0" deactivate="deactivate" name="ch.elexis.core.mail.internal.connection.MailboxConnectionManager">
+   <property name="event.topics" value="ch/medelexis/mail/ACCOUNTS"/>
+   <service>
+      <provide interface="ch.elexis.core.mail.internal.connection.MailboxConnectionManager"/>
+      <provide interface="org.osgi.service.event.EventHandler"/>
+   </service>
+   <reference cardinality="1..1" field="configService" interface="ch.elexis.core.services.IConfigService" name="configService"/>
+   <reference cardinality="0..1" field="eventAdmin" interface="org.osgi.service.event.EventAdmin" name="eventAdmin" policy="dynamic"/>
+   <reference cardinality="1..1" field="modelService" interface="ch.elexis.core.services.IModelService" name="modelService" target="(service.model.name=ch.elexis.core.model)"/>
+   <reference cardinality="1..1" field="tokens" interface="ch.elexis.core.mail.internal.oauth.OAuth2TokenCache" name="tokens"/>
+   <implementation class="ch.elexis.core.mail.internal.connection.MailboxConnectionManager"/>
+</scr:component>

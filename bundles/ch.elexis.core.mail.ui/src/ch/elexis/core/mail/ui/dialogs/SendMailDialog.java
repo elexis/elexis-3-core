@@ -58,6 +58,8 @@ import ch.elexis.core.mail.MailMessage;
 import ch.elexis.core.mail.MailTextTemplate;
 import ch.elexis.core.mail.PreferenceConstants;
 import ch.elexis.core.mail.TaskUtil;
+import ch.elexis.core.mail.service.IMailboxAccountService;
+import ch.elexis.core.mail.ui.client.MailAccountLabelProvider;
 import ch.elexis.core.mail.ui.client.MailClientComponent;
 import ch.elexis.core.mail.ui.handlers.OutboxUtil;
 import ch.elexis.core.mail.ui.preference.SerializableFile;
@@ -86,6 +88,9 @@ public class SendMailDialog extends TitleAreaDialog {
 	@Inject
 	private ITextReplacementService textReplacement;
 
+	@Inject
+	private IMailboxAccountService mailboxAccounts;
+
 	private ComboViewer accountsViewer;
 	private MailAccount account;
 	private Text toText;
@@ -95,6 +100,7 @@ public class SendMailDialog extends TitleAreaDialog {
 	private Text subjectText;
 	private String subjectString = StringUtils.EMPTY;
 	private String defaultSubject = StringUtils.EMPTY;
+	private String automaticSubject = StringUtils.EMPTY;
 	private Text textText;
 	private String textString = StringUtils.EMPTY;
 	private AttachmentsComposite attachments;
@@ -135,7 +141,7 @@ public class SendMailDialog extends TitleAreaDialog {
 			lbl.setText("Von");
 			accountsViewer = new ComboViewer(container);
 			accountsViewer.setContentProvider(ArrayContentProvider.getInstance());
-			accountsViewer.setLabelProvider(new LabelProvider());
+			accountsViewer.setLabelProvider(new MailAccountLabelProvider());
 			accountsViewer.setInput(getSendMailAccounts());
 			accountsViewer.getControl().setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 			if (accountId != null) {
@@ -282,6 +288,7 @@ public class SendMailDialog extends TitleAreaDialog {
 			lbl.setText("Betreff");
 			subjectText = new Text(container, SWT.BORDER);
 			subjectText.setText(subjectString);
+			automaticSubject = subjectString;
 			subjectText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 
 			lbl = new Label(container, SWT.NONE);
@@ -324,13 +331,16 @@ public class SendMailDialog extends TitleAreaDialog {
 
 						textText.setText(textReplacement.performReplacement(ContextServiceHolder.get().getRootContext(),
 								selectedTemplate.getTemplate()));
-						if (selectedTemplate.getExtInfo(MailConstants.TEXTTEMPLATE_SUBJECT) instanceof String subjTpl
-								&& StringUtils.isNotBlank(subjTpl)) {
-							String ctx = textReplacement.performReplacement(ContextServiceHolder.get().getRootContext(),
-									subjTpl);
-							subjectText.setText(ctx);
-						} else {
-							subjectText.setText(defaultSubject);
+						if (subjectText.getText().equals(automaticSubject)) {
+							if (selectedTemplate.getExtInfo(MailConstants.TEXTTEMPLATE_SUBJECT) instanceof String subjTpl
+									&& StringUtils.isNotBlank(subjTpl)) {
+								String ctx = textReplacement.performReplacement(ContextServiceHolder.get().getRootContext(),
+										subjTpl);
+								subjectText.setText(ctx);
+							} else {
+								subjectText.setText(defaultSubject);
+							}
+							automaticSubject = subjectText.getText();
 						}
 					} else {
 						textText.setText(StringUtils.EMPTY);
@@ -401,20 +411,10 @@ public class SendMailDialog extends TitleAreaDialog {
 				// set selected account for mandant
 				IMandator selectedMandant = ContextServiceHolder.get().getActiveMandator().orElse(null);
 				if (selectedMandant != null) {
-					List<String> accounts = MailClientComponent.getMailClient().getAccountsLocal();
-					Optional<String> mandantAccount = accounts.stream()
-							.filter(aid -> MailClientComponent.getMailClient().getAccount(aid).isPresent())
+					Optional<String> mandantAccount = getSendMailAccounts().stream()
 							.filter(aid -> MailClientComponent.getMailClient().getAccount(aid).get()
 									.isForMandant(selectedMandant.getId()))
-							.findFirst();
-					if (!mandantAccount.isPresent()) {
-						accounts = MailClientComponent.getMailClient().getAccounts();
-						mandantAccount = accounts.stream()
-								.filter(aid -> MailClientComponent.getMailClient().getAccount(aid).isPresent())
-								.filter(aid -> MailClientComponent.getMailClient().getAccount(aid).get()
-										.isForMandant(selectedMandant.getId()))
 								.findFirst();
-					}
 					if (mandantAccount.isPresent()) {
 						accountsViewer.setSelection(new StructuredSelection(mandantAccount.get()));
 					}
@@ -490,7 +490,9 @@ public class SendMailDialog extends TitleAreaDialog {
 				.filter(aid -> MailClientComponent.getMailClient().getAccount(aid).get().getType() == TYPE.SMTP)
 				.collect(Collectors.toList()));
 		accounts = MailClientComponent.getMailClient().getAccounts();
-		ret.addAll(accounts.stream().filter(aid -> MailClientComponent.getMailClient().getAccount(aid).isPresent())
+		List<String> visible = mailboxAccounts.getVisibleAccounts(
+				ContextServiceHolder.get().getActiveUser().orElse(null)).stream().map(value -> value.id()).toList();
+		ret.addAll(accounts.stream().filter(visible::contains).filter(aid -> MailClientComponent.getMailClient().getAccount(aid).isPresent())
 				.filter(aid -> MailClientComponent.getMailClient().getAccount(aid).get().getType() == TYPE.SMTP)
 				.collect(Collectors.toList()));
 		return ret;
@@ -594,7 +596,7 @@ public class SendMailDialog extends TitleAreaDialog {
 		String replacedSubject = textReplacement.performReplacement(ContextServiceHolder.get().getRootContext(),
 				rawSubject);
 		boolean finalConfidential = templateConfidential || checkboxConfidential;
-		subjectString = finalConfidential ? replacedSubject + MailConstants.CONFIDENTIAL_STRING : replacedSubject;
+		subjectString = finalConfidential ? replacedSubject + " " + MailConstants.CONFIDENTIAL_STRING : replacedSubject;
 
 		StructuredSelection accountSelection = (StructuredSelection) accountsViewer.getSelection();
 		if (accountSelection == null || accountSelection.isEmpty()) {
