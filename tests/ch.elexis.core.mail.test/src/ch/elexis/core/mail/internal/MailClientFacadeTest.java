@@ -6,13 +6,13 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.assertTrue;
 
-import java.util.List;
 import java.nio.file.Files;
+import java.util.List;
 
+import org.eclipse.angus.mail.imap.IMAPStore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
-import org.eclipse.angus.mail.imap.IMAPStore;
 
 import com.google.gson.Gson;
 import com.icegreen.greenmail.junit4.GreenMailRule;
@@ -22,13 +22,12 @@ import ch.elexis.core.mail.IMailClient.ErrorTyp;
 import ch.elexis.core.mail.MailAccount;
 import ch.elexis.core.mail.MailClientConfig;
 import ch.elexis.core.mail.MailMessage;
-import ch.elexis.core.mail.internal.legacy.MailLegacyAccountConverter;
+import ch.elexis.core.mail.internal.connection.MailSessionFactory;
+import ch.elexis.core.mail.model.MailSecurity;
 import ch.elexis.core.mail.model.MailboxAccount;
 import ch.elexis.core.mail.model.MailboxScope;
-import ch.elexis.core.mail.model.ServerEndpoint;
-import ch.elexis.core.mail.model.MailSecurity;
 import ch.elexis.core.mail.model.SentCopyMode;
-import ch.elexis.core.mail.internal.connection.MailSessionFactory;
+import ch.elexis.core.mail.model.ServerEndpoint;
 import jakarta.mail.Folder;
 import jakarta.mail.Multipart;
 
@@ -43,9 +42,12 @@ public class MailClientFacadeTest extends MailLegacyTestSupport {
 	@Rule
 	public final TemporaryFolder temporary = new TemporaryFolder();
 
-	/** Lists shared accounts in configuration order and excludes personal accounts. */
+	/**
+	 * Lists all stored accounts in configuration order, including personal
+	 * accounts.
+	 */
 	@Test
-	public void listsSharedAccountsInOrder() {
+	public void listsAccountsInOrderIncludingPersonal() {
 		client.saveAccount(legacy("first", MailAccount.TYPE.SMTP));
 		client.saveAccount(legacy("second", MailAccount.TYPE.IMAP));
 		MailboxAccount a = accounts.getAccount("first").orElseThrow();
@@ -54,9 +56,8 @@ public class MailClientFacadeTest extends MailLegacyTestSupport {
 				a.authMode(), false, "", a.sentCopyMode(), 2, 120);
 		global.put(MailClientConfig.account("personal"), new Gson().toJson(personal));
 		global.put(MailClientConfig.ACCOUNTS, "second,personal,first");
-		assertEquals(List.of("second", "first"), client.getAccounts());
-		assertFalse(client.sendMail(MailLegacyAccountConverter.toLegacy(personal, List.of()), new MailMessage()));
-		assertEquals(ErrorTyp.CONFIGTYP, client.getLastError().orElseThrow());
+		assertEquals(List.of("second", "personal", "first"), client.getAccounts());
+		assertEquals(MailAccount.TYPE.SMTP, client.getAccount("personal").orElseThrow().getType());
 	}
 
 	/** Shared views expose sender settings and mandators without exposing a password. */

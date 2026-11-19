@@ -28,8 +28,8 @@ import ch.elexis.core.mail.IMAPMailMessage;
 import ch.elexis.core.mail.IMailClient;
 import ch.elexis.core.mail.MailAccount;
 import ch.elexis.core.mail.MailAccount.TYPE;
-import ch.elexis.core.mail.MailMessage;
 import ch.elexis.core.mail.MailClientConfig;
+import ch.elexis.core.mail.MailMessage;
 import ch.elexis.core.mail.internal.account.CredentialCipher;
 import ch.elexis.core.mail.internal.account.MailCredentialProvider;
 import ch.elexis.core.mail.internal.account.PasswordCredentialProvider;
@@ -42,7 +42,6 @@ import ch.elexis.core.mail.internal.send.MailSystemSender;
 import ch.elexis.core.mail.internal.send.SendSmtpTransport;
 import ch.elexis.core.mail.model.MailSecurity;
 import ch.elexis.core.mail.model.MailboxAccount;
-import ch.elexis.core.mail.model.MailboxScope;
 import ch.elexis.core.mail.service.IMailboxAccountService;
 import ch.elexis.core.model.IContact;
 import ch.elexis.core.model.IUser;
@@ -133,8 +132,7 @@ public class MailClient implements IMailClient {
 	@Override
 	public List<String> getAccounts() {
 		return Arrays.stream(configService.get(MailClientConfig.ACCOUNTS, "").split(ACCOUNTS_SEPARATOR))
-				.filter(id -> !id.isBlank()).filter(id -> accountService.getAccount(id)
-						.map(account -> account.scope() == MailboxScope.SHARED).orElse(false)).toList();
+				.filter(id -> !id.isBlank()).filter(id -> accountService.getAccount(id).isPresent()).toList();
 	}
 
 	@Override
@@ -410,9 +408,6 @@ public class MailClient implements IMailClient {
 		}
 		Optional<MailboxAccount> saved = accountService.getAccount(account.getId());
 		if (saved.isPresent()) {
-			if (saved.get().scope() != MailboxScope.SHARED) {
-				throw new IllegalArgumentException("Shared mail account required");
-			}
 			return new Resolved(saved.get(), null, accountService.isLegacy(account.getId()));
 		}
 		return new Resolved(MailLegacyAccountConverter.toMailbox(account),

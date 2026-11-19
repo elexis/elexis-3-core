@@ -1,8 +1,8 @@
 package ch.elexis.core.mail.internal.send;
 
 import java.io.File;
-import java.util.Set;
 import java.util.Objects;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 import org.eclipse.angus.mail.imap.IMAPFolder;
@@ -45,8 +45,10 @@ public final class MailSystemSender {
 	private final MailCredentialProvider credentials;
 
 	/**
-	 * Creates the internal sender; callers enforce shared or local legacy scope.
-	 * @param config the installation configuration
+	 * Creates the internal sender; callers enforce account visibility, scope is no
+	 * longer restricted.
+	 * 
+	 * @param config      the installation configuration
 	 * @param credentials the core password and OAuth provider
 	 */
 	public MailSystemSender(IConfigService config, MailCredentialProvider credentials) {
@@ -56,8 +58,9 @@ public final class MailSystemSender {
 
 	/**
 	 * Sends the legacy MIME structure on a mail worker and handles the sent copy.
-	 * @param account the resolved shared or local legacy account
-	 * @param source the compatibility message
+	 * 
+	 * @param account  the resolved shared, personal, or local legacy account
+	 * @param source   the compatibility message
 	 * @param supplied the optional local legacy password
 	 * @param sessions the core session factory with the account's security policy
 	 * @throws MessagingException if SMTP delivery fails
