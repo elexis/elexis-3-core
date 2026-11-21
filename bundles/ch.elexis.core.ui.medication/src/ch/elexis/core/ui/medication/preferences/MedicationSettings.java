@@ -31,6 +31,7 @@ public class MedicationSettings extends FieldEditorPreferencePage implements IWo
 		setPreferenceStore(new ConfigServicePreferenceStore(Scope.USER));
 		getPreferenceStore().setDefault(Preferences.MEDICATION_SETTINGS_EMEDIPLAN_HEADER_COMMENT,
 				Messages.Medication_headerComment);
+		getPreferenceStore().setDefault(Preferences.MEDICATION_SETTINGS_EMEDIPLAN_ASK_REMARK, true);
 	}
 
 	@Override
@@ -65,6 +66,8 @@ public class MedicationSettings extends FieldEditorPreferencePage implements IWo
 				getPreferenceStore().getBoolean(Preferences.MEDICATION_SETTINGS_DEFAULT_SYMPTOMS),
 				getFieldEditorParent());
 		addField(symptomDurationFieldEditor);
+		addField(new BooleanFieldEditor(Preferences.MEDICATION_SETTINGS_EMEDIPLAN_ASK_REMARK,
+				ch.elexis.core.l10n.Messages.MedicationSettings_AskForRemarkOnEMediplan, getFieldEditorParent()));
 		addField(new MultilineFieldEditor(Preferences.MEDICATION_SETTINGS_EMEDIPLAN_HEADER_COMMENT,
 				ch.elexis.core.l10n.Messages.MedicationSettings_ShowCommentOnEMediplan, getFieldEditorParent()));
 	}
