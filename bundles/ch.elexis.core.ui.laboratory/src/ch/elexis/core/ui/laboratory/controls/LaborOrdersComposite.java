@@ -3,10 +3,17 @@ package ch.elexis.core.ui.laboratory.controls;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.ISchedulingRule;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
@@ -35,6 +42,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.ColorDialog;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.forms.widgets.Form;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 
@@ -48,6 +56,7 @@ import ch.elexis.core.services.IQuery.COMPARATOR;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
 import ch.elexis.core.services.holder.ContextServiceHolder;
 import ch.elexis.core.services.holder.CoreModelServiceHolder;
+import ch.elexis.core.ui.laboratory.Activator;
 import ch.elexis.core.ui.UiDesk;
 import ch.elexis.core.ui.e4.util.CoreUiUtil;
 import ch.elexis.core.ui.icons.Images;
@@ -73,6 +82,21 @@ public class LaborOrdersComposite extends Composite {
 	private boolean reloadPending;
 
 	private boolean includeDone;
+	private Map<String, IOutputLog> orderLogEntries = Collections.emptyMap();
+	private Button btnHistory;
+	private Job reloadJob;
+	private long reloadGeneration;
+	private final ISchedulingRule reloadRule = new ISchedulingRule() {
+		@Override
+		public boolean contains(ISchedulingRule rule) {
+			return rule == this;
+		}
+
+		@Override
+		public boolean isConflicting(ISchedulingRule rule) {
+			return rule == this;
+		}
+	};
 
 	private Patient actPatient;
 	private Composite toolComposite;
@@ -156,7 +180,7 @@ public class LaborOrdersComposite extends Composite {
 			}
 		});
 
-		Button btnHistory = tk.createButton(toolComposite, Messages.LaborOrdersComposite_actionTooltipShowHistory,
+		btnHistory = tk.createButton(toolComposite, Messages.LaborOrdersComposite_actionTooltipShowHistory,
 				SWT.CHECK);
 		btnHistory.setSelection(includeDone);
 		btnHistory.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
@@ -236,14 +260,9 @@ public class LaborOrdersComposite extends Composite {
 			@Override
 			public Image getImage(Object element) {
 				if (element instanceof LaborOrderViewerItem item) {
-
-					ILabOrder order = CoreModelServiceHolder.get().load(item.getLabOrder().getId(), ILabOrder.class)
-							.orElse(null);
-					if (order != null) {
-						IOutputLog log = getOrderLogEntry(order);
-						if (log != null && OUTPUTLOG_EXTERNES_LABOR.equals(log.getOutputterStatus())) {
-							return Images.IMG_BLOOD_TEST.getImage();
-						}
+					IOutputLog log = orderLogEntries.get(item.getLabOrder().getId());
+					if (log != null && OUTPUTLOG_EXTERNES_LABOR.equals(log.getOutputterStatus())) {
+						return Images.IMG_BLOOD_TEST.getImage();
 					}
 				}
 				return null;
@@ -443,17 +462,24 @@ public class LaborOrdersComposite extends Composite {
 
 	public void selectPatient(Patient patient) {
 		setRedraw(false);
-		if (patient != null) {
-			if (!patient.equals(actPatient)) {
-				actPatient = patient;
-				form.setText(actPatient.getLabel());
-				reload();
+		try {
+			if (patient != null) {
+				if (!patient.equals(actPatient)) {
+					actPatient = patient;
+					form.setText(actPatient.getLabel());
+					reload();
+				}
+			} else {
+				actPatient = null;
+				form.setText(Messages.Core_No_patient_selected);
+				invalidateReload();
+				orderLogEntries = Collections.emptyMap();
+				viewer.setInput(Collections.emptyList());
+				setLoading(false);
 			}
-		} else {
-			actPatient = patient;
-			form.setText(Messages.Core_No_patient_selected);
+		} finally {
+			setRedraw(true);
 		}
-		setRedraw(true);
 	}
 
 	public void setIncludeDone(boolean value) {
@@ -467,16 +493,26 @@ public class LaborOrdersComposite extends Composite {
 	 * If visible full reload from database
 	 */
 	public void reload() {
+		long generation = ++reloadGeneration;
+		cancelReloadJob();
 		if (!isVisible()) {
 			reloadPending = true;
 			return;
 		}
-		setRedraw(false);
 		reloadPending = false;
-		if (actPatient != null) {
-			viewer.setInput(getOrders());
+		if (actPatient == null) {
+			orderLogEntries = Collections.emptyMap();
+			viewer.setInput(Collections.emptyList());
+			setLoading(false);
+			return;
 		}
-		setRedraw(true);
+
+		boolean mandatorOnly = ConfigServiceHolder
+				.getUser(Preferences.LABSETTINGS_CFG_SHOW_MANDANT_ORDERS_ONLY, false);
+		String mandatorId = mandatorOnly ? ContextServiceHolder.getActiveMandatorOrNull().getId() : null;
+		LoadRequest request = new LoadRequest(generation, actPatient.getId(), mandatorId, includeDone);
+		beginLoading();
+		scheduleReload(request);
 	}
 
 	@Override
@@ -487,35 +523,161 @@ public class LaborOrdersComposite extends Composite {
 		return super.setFocus();
 	}
 
-	private List<LaborOrderViewerItem> getOrders() {
-		if (actPatient != null) {
-			List<LabOrder> orders = null;
-			if (ConfigServiceHolder.getUser(Preferences.LABSETTINGS_CFG_SHOW_MANDANT_ORDERS_ONLY, false)) {
-				orders = LabOrder.getLabOrders(actPatient.getId(),
-						ContextServiceHolder.getActiveMandatorOrNull().getId(), null, null, null, null,
-						includeDone ? null : State.ORDERED);
-			} else {
-				orders = LabOrder.getLabOrders(actPatient, null, null, null, null, null,
-						includeDone ? null : State.ORDERED);
-			}
-			// Sorting by priority of labItem
-			if (orders != null) {
-				List<LaborOrderViewerItem> viewerItems = new ArrayList<>();
-				orders.forEach(order -> viewerItems.add(new LaborOrderViewerItem(viewer, order)));
-
-				Collections.sort(viewerItems, new Comparator<LaborOrderViewerItem>() {
-
-					@Override
-					public int compare(LaborOrderViewerItem lo1, LaborOrderViewerItem lo2) {
-						String prio1 = lo1.getLabItemPrio().orElse(StringUtils.EMPTY);
-						String prio2 = lo2.getLabItemPrio().orElse(StringUtils.EMPTY);
-						return prio1.compareTo(prio2);
+	private void scheduleReload(LoadRequest request) {
+		Display display = getDisplay();
+		reloadJob = new Job(Messages.Core_loading) {
+			@Override
+			protected IStatus run(IProgressMonitor monitor) {
+				try {
+					LoadResult result = loadOrders(request, monitor);
+					if (result == null || monitor.isCanceled()) {
+						return Status.CANCEL_STATUS;
 					}
-				});
-				return viewerItems;
+					if (!display.isDisposed()) {
+						display.asyncExec(() -> applyLoadResult(request, result));
+					}
+					return Status.OK_STATUS;
+				} catch (Exception exception) {
+					if (monitor.isCanceled()) {
+						return Status.CANCEL_STATUS;
+					}
+					if (!display.isDisposed()) {
+						display.asyncExec(() -> applyLoadFailure(request));
+					}
+					return new Status(IStatus.ERROR, Activator.PLUGIN_ID, "Could not load laboratory orders", //$NON-NLS-1$
+							exception);
+				}
 			}
+		};
+		reloadJob.setPriority(Job.SHORT);
+		reloadJob.setUser(false);
+		reloadJob.setRule(reloadRule);
+		reloadJob.schedule();
+	}
+
+	private LoadResult loadOrders(LoadRequest request, IProgressMonitor monitor) {
+		List<LabOrder> orders = LabOrder.getLabOrders(request.patientId(), request.mandatorId(), null, null, null, null,
+				request.includeDone() ? null : State.ORDERED);
+		if (monitor.isCanceled()) {
+			return null;
 		}
-		return Collections.emptyList();
+		List<LaborOrderViewerItem> viewerItems = new ArrayList<>();
+		for (LabOrder order : orders) {
+			if (monitor.isCanceled()) {
+				return null;
+			}
+			viewerItems.add(new LaborOrderViewerItem(viewer, order));
+		}
+		Map<String, IOutputLog> loadedLogEntries = loadOrderLogEntries(viewerItems);
+		if (monitor.isCanceled()) {
+			return null;
+		}
+		viewerItems.sort(new Comparator<LaborOrderViewerItem>() {
+			@Override
+			public int compare(LaborOrderViewerItem lo1, LaborOrderViewerItem lo2) {
+				String prio1 = lo1.getLabItemPrio().orElse(StringUtils.EMPTY);
+				String prio2 = lo2.getLabItemPrio().orElse(StringUtils.EMPTY);
+				return prio1.compareTo(prio2);
+			}
+		});
+		return new LoadResult(viewerItems, loadedLogEntries);
+	}
+
+	private Map<String, IOutputLog> loadOrderLogEntries(List<LaborOrderViewerItem> viewerItems) {
+		if (viewerItems.isEmpty()) {
+			return Collections.emptyMap();
+		}
+		List<String> orderIds = viewerItems.stream().map(item -> item.getLabOrder().getId()).toList();
+		IQuery<IOutputLog> query = CoreModelServiceHolder.get().getQuery(IOutputLog.class);
+		query.and(ModelPackage.Literals.IOUTPUT_LOG__OBJECT_ID, COMPARATOR.IN, orderIds);
+		Map<String, IOutputLog> loadedEntries = new HashMap<>();
+		for (IOutputLog entry : query.execute()) {
+			loadedEntries.putIfAbsent(entry.getObjectId(), entry);
+		}
+		return loadedEntries;
+	}
+
+	private void beginLoading() {
+		setRedraw(false);
+		try {
+			orderLogEntries = Collections.emptyMap();
+			viewer.setInput(Collections.emptyList());
+			setLoading(true);
+		} finally {
+			setRedraw(true);
+		}
+	}
+
+	private void applyLoadResult(LoadRequest request, LoadResult result) {
+		if (!isCurrent(request)) {
+			return;
+		}
+		reloadJob = null;
+		if (!isVisible()) {
+			reloadPending = true;
+			++reloadGeneration;
+			setLoading(false);
+			return;
+		}
+		setRedraw(false);
+		try {
+			orderLogEntries = result.logEntries();
+			viewer.setInput(result.viewerItems());
+			setLoading(false);
+		} finally {
+			setRedraw(true);
+		}
+	}
+
+	private void applyLoadFailure(LoadRequest request) {
+		if (!isCurrent(request)) {
+			return;
+		}
+		reloadJob = null;
+		orderLogEntries = Collections.emptyMap();
+		viewer.setInput(Collections.emptyList());
+		setLoading(false);
+	}
+
+	private boolean isCurrent(LoadRequest request) {
+		return !isDisposed() && viewer != null && !viewer.getControl().isDisposed()
+				&& request.generation() == reloadGeneration && actPatient != null
+				&& request.patientId().equals(actPatient.getId()) && request.includeDone() == includeDone;
+	}
+
+	private void setLoading(boolean loading) {
+		if (viewer == null || viewer.getControl().isDisposed()) {
+			return;
+		}
+		viewer.getControl().setEnabled(!loading);
+		viewer.getControl().setCursor(loading ? getDisplay().getSystemCursor(SWT.CURSOR_WAIT) : null);
+		if (btnHistory != null && !btnHistory.isDisposed()) {
+			btnHistory.setEnabled(!loading);
+		}
+	}
+
+	private void invalidateReload() {
+		++reloadGeneration;
+		cancelReloadJob();
+	}
+
+	private void cancelReloadJob() {
+		if (reloadJob != null) {
+			reloadJob.cancel();
+			reloadJob = null;
+		}
+	}
+
+	@Override
+	public void dispose() {
+		invalidateReload();
+		super.dispose();
+	}
+
+	private record LoadRequest(long generation, String patientId, String mandatorId, boolean includeDone) {
+	}
+
+	private record LoadResult(List<LaborOrderViewerItem> viewerItems, Map<String, IOutputLog> logEntries) {
 	}
 
 	public StructuredViewer getViewer() {
