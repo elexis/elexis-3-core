@@ -35,6 +35,7 @@ import org.eclipse.e4.ui.services.EMenuService;
 import org.eclipse.e4.ui.workbench.modeling.EPartService;
 import org.eclipse.e4.ui.workbench.modeling.ESelectionService;
 import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.TableColumnLayout;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.CellEditor;
@@ -89,6 +90,7 @@ import com.google.i18n.phonenumbers.PhoneNumberUtil;
 import com.google.i18n.phonenumbers.Phonenumber;
 
 import ch.elexis.core.common.ElexisEventTopics;
+import ch.elexis.core.constants.OrderLabelPrintConstants;
 import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.mediorder.MediorderBilling;
 import ch.elexis.core.mediorder.MediorderBlobId;
@@ -130,11 +132,14 @@ import ch.elexis.core.ui.icons.Images;
 import ch.elexis.core.ui.mediorder.internal.MediorderHistoryBuilder;
 import ch.elexis.core.ui.mediorder.internal.MediorderHistoryLinkListener;
 import ch.elexis.core.ui.mediorder.internal.MediorderHistoryRenderer;
+import ch.elexis.core.ui.util.OrderEntryLabelPrinter;
 import ch.elexis.core.ui.views.contribution.IViewContribution;
 import jakarta.annotation.PostConstruct;
 import jakarta.inject.Inject;
 
 public class MediorderPart implements IRefreshablePart {
+
+	public static final String PART_ID = "ch.elexis.core.ui.mediorder.partdescriptor.mediorderView"; //$NON-NLS-1$
 
 	@Inject
 	private EPartService partService;
@@ -216,6 +221,12 @@ public class MediorderPart implements IRefreshablePart {
 	private MediorderHistoryFilter orderHistoryFilter;
 	private WritableValue<IStock> selectedDetailStock;
 	private IPatient actPatient;
+	/**
+	 * patient and order shown in the history after opening a billed order from
+	 * the encounter, until another patient is selected
+	 */
+	private IPatient historyFocusPatient;
+	private String historyFocusBlobId;
 
 	public Map<IStock, Integer> imageStockStates = new HashMap<IStock, Integer>();
 	private List<IStock> filteredStocks = new ArrayList<>();
@@ -526,7 +537,7 @@ public class MediorderPart implements IRefreshablePart {
 			IStock stock = (IStock) selection.getFirstElement();
 			selectedDetailStock.setValue(stock);
 
-			if (activePatient) {
+			if (activePatient && stock != null) {
 				contextService.setActivePatient(stock.getOwner().asIPatient());
 			}
 		});
@@ -1648,7 +1659,54 @@ public class MediorderPart implements IRefreshablePart {
 		if (historyBrowser == null || historyBrowser.isDisposed() || historyRenderer == null) {
 			return;
 		}
-		historyBrowser.setText(historyRenderer.renderSections(historyBuilder.buildSections(stock)));
+		IPatient stockPatient = stock != null && stock.getOwner() != null ? stock.getOwner().asIPatient() : null;
+		if (historyFocusPatient != null && stock != null
+				&& (stockPatient == null || !historyFocusPatient.getId().equals(stockPatient.getId()))) {
+			historyFocusPatient = null;
+			historyFocusBlobId = null;
+		}
+		IPatient patient = historyFocusPatient != null ? historyFocusPatient : stockPatient;
+		historyBrowser.setText(
+				historyRenderer.renderSections(historyBuilder.buildSections(patient, stock, historyFocusBlobId)));
+	}
+
+	/**
+	 * Select the patient and show the order history, with the section of the
+	 * order expanded. Used to open a billed order from the encounter.
+	 *
+	 * @param patient the patient the order belongs to
+	 * @param blobId  id of the online order to expand, or <code>null</code> for the
+	 *                newest order
+	 */
+	public void showHistory(IPatient patient, String blobId) {
+		if (patient == null || tableViewer == null || tableViewer.getControl().isDisposed()) {
+			return;
+		}
+		if (btnError.getSelection()) {
+			showImportErrorView(false);
+		}
+		IStock stock = stockService.getPatientStock(patient).orElse(null);
+		if (stock != null && tableViewer.testFindItem(stock) == null && isStockFilterApplied()) {
+			filterButtons.forEach(button -> button.setSelection(false));
+			updateFilter(List.of(), false);
+			refreshStockTable();
+		}
+		historyFocusPatient = patient;
+		historyFocusBlobId = blobId;
+		actPatient = patient;
+		if (stock != null && tableViewer.testFindItem(stock) != null) {
+			tableViewer.setSelection(new StructuredSelection(stock), true);
+		} else {
+			// e.g. no stock any more, show the history without a selected stock
+			tableViewer.setSelection(StructuredSelection.EMPTY);
+		}
+		updateHistoryTimeline(selectedDetailStock.getValue());
+		for (CTabItem item : detailTabFolder.getItems()) {
+			if (item.getControl() == cHistory_timeline) {
+				detailTabFolder.setSelection(item);
+				break;
+			}
+		}
 	}
 
 	private TextCellEditor createTextCellEditor() {
@@ -1866,11 +1924,13 @@ public class MediorderPart implements IRefreshablePart {
 
 	public void takeFromStock(List<IStockEntry> entries) {
 		Map<IPatient, Map<IArticle, Integer>> takenByPatient = new LinkedHashMap<>();
+		Map<IStockEntry, Integer> takenEntries = new LinkedHashMap<>();
 		for (IStockEntry entry : entries) {
 			int previous = entry.getCurrentStock();
 			int taken = MediorderPartUtil.takeFromStock(entry, stockService, coreModelService, contextService,
 					orderService);
 			if (taken > 0) {
+				takenEntries.put(entry, taken);
 				logAmountChange(entry, Messages.Mediorder_from_stock, previous, entry.getCurrentStock());
 				MediorderPartUtil.updateStockImageState(imageStockStates, entry.getStock());
 				MediorderPartUtil.getPatient(entry)
@@ -1879,6 +1939,7 @@ public class MediorderPart implements IRefreshablePart {
 			}
 		}
 		billTakenFromStock(takenByPatient);
+		printTakenFromStockLabels(takenEntries);
 		tableViewerDetails.refresh();
 		tableViewer.refresh();
 		updateHistoryTimeline(selectedDetailStock.getValue());
@@ -1897,6 +1958,21 @@ public class MediorderPart implements IRefreshablePart {
 			status = Status.error(Messages.Mediorder_Billing_Failed, e);
 		}
 		StatusDialog.show(status, false);
+	}
+
+	/**
+	 * Print the mediorder labels of the articles taken from stock, like the labels
+	 * printed when a delivery is booked.
+	 */
+	private void printTakenFromStockLabels(Map<IStockEntry, Integer> takenEntries) {
+		if (takenEntries.isEmpty() || !OrderEntryLabelPrinter.isAutoPrintEnabled()) {
+			return;
+		}
+		Map<String, Integer> result = OrderEntryLabelPrinter.printTakenFromStock(takenEntries);
+		if (result.getOrDefault(OrderLabelPrintConstants.RESULT_SKIPPED_NO_PRINTER, 0) > 0) {
+			MessageDialog.openWarning(tableViewer.getControl().getShell(), Messages.Core_Print,
+					OrderEntryLabelPrinter.buildStatusMessage(result));
+		}
 	}
 
 	private void logAmountChange(IStockEntry entry, String amountLabel, int oldValue, int newValue) {

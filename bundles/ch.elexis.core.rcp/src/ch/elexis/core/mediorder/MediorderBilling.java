@@ -29,6 +29,7 @@ import ch.elexis.core.model.OrderEntryState;
 import ch.elexis.core.model.builder.ICoverageBuilder;
 import ch.elexis.core.model.builder.IEncounterBuilder;
 import ch.elexis.core.model.ch.BillingLaw;
+import ch.elexis.core.model.verrechnet.Constants;
 import ch.elexis.core.services.IBillingService;
 import ch.elexis.core.services.IContextService;
 import ch.elexis.core.services.ICoverageService;
@@ -147,9 +148,22 @@ public class MediorderBilling {
 			if (!result.isOK()) {
 				return Status.error(result.getCombinedMessages());
 			}
+			linkStockEntry(result.get(), patient, amount.getKey());
 		}
 		MediorderUtil.removeMailSticker(patient, coreModelService, stickerService, stockService);
 		return Status.OK_STATUS;
+	}
+
+	private void linkStockEntry(IBilled billed, IPatient patient, IArticle article) {
+		if (billed == null) {
+			return;
+		}
+		stockService.getPatientStock(patient)
+				.map(stock -> stockService.findStockEntryForArticleInStock(stock, article))
+				.ifPresent(stockEntry -> {
+					billed.setExtInfo(Constants.FLD_EXT_MEDIORDER_STOCKENTRY_ID, stockEntry.getId());
+					coreModelService.save(billed);
+				});
 	}
 
 	private Optional<ICoverage> getOrCreateCoverage(IPatient patient, BillingLaw law) {

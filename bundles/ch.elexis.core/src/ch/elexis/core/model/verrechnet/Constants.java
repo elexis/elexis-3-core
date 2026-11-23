@@ -20,6 +20,8 @@ public class Constants {
 	public static final String FLD_EXT_REALTION = "Bezug";
 	public static final String FLD_EXT_REALTION_ID = "BezugId";
 
+	public static final String FLD_EXT_MEDIORDER_STOCKENTRY_ID = "mediorderStockEntryId";
+
 	public static final String FLD_EXT_SIDE = "Seite";
 	public static final String SIDE_L = "l";
 	public static final String SIDE_R = "r";
