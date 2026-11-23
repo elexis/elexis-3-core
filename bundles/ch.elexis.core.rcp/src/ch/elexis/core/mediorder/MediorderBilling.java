@@ -1,7 +1,9 @@
 package ch.elexis.core.mediorder;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,12 +17,14 @@ import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Status;
 
 import ch.elexis.core.common.ElexisEventTopics;
+import ch.elexis.core.constants.Preferences;
 import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.model.IArticle;
 import ch.elexis.core.model.IBilled;
 import ch.elexis.core.model.IBlob;
 import ch.elexis.core.model.ICoverage;
 import ch.elexis.core.model.IEncounter;
+import ch.elexis.core.model.IMandator;
 import ch.elexis.core.model.IOrderEntry;
 import ch.elexis.core.model.IPatient;
 import ch.elexis.core.model.IPerson;
@@ -29,7 +33,9 @@ import ch.elexis.core.model.OrderEntryState;
 import ch.elexis.core.model.builder.ICoverageBuilder;
 import ch.elexis.core.model.builder.IEncounterBuilder;
 import ch.elexis.core.model.ch.BillingLaw;
+import ch.elexis.core.rcp.utils.OsgiServiceUtil;
 import ch.elexis.core.services.IBillingService;
+import ch.elexis.core.services.IConfigService;
 import ch.elexis.core.services.IContextService;
 import ch.elexis.core.services.ICoverageService;
 import ch.elexis.core.services.IModelService;
@@ -104,12 +110,31 @@ public class MediorderBilling {
 		return multiStatus.isOK() ? Status.OK_STATUS : multiStatus;
 	}
 
+	/**
+	 * Bills the articles on one encounter per coverage and day. If
+	 * {@link Preferences#LEISTUNGSCODES_OBLIGATION} is set, obligatory articles
+	 * are billed on a KVG coverage and non obligatory articles on an ORG or privat
+	 * coverage. Otherwise all articles are billed on a KVG coverage. An editable
+	 * mediorder encounter of today on the coverage is reused, so articles billed
+	 * on the same day, e.g. taken from stock one after another, share the
+	 * encounter. Otherwise a new encounter is created.
+	 *
+	 * @param patient
+	 * @param amounts
+	 * @return
+	 */
 	public IStatus bill(IPatient patient, Map<IArticle, Integer> amounts) {
-		Map<Boolean, Map<IArticle, Integer>> amountsByObligation = amounts.entrySet().stream()
-				.collect(Collectors.partitioningBy(entry -> entry.getKey().isObligation(),
-						Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (a, b) -> a, LinkedHashMap::new)));
+		Map<Boolean, Map<IArticle, Integer>> amountsByObligation;
+		if (isSeparateObligation()) {
+			amountsByObligation = amounts.entrySet().stream()
+					.collect(Collectors.partitioningBy(entry -> entry.getKey().isObligation(), Collectors
+							.toMap(Map.Entry::getKey, Map.Entry::getValue, (a, b) -> a, LinkedHashMap::new)));
+		} else {
+			amountsByObligation = Map.of(Boolean.TRUE, amounts);
+		}
+		Map<String, IEncounter> encountersByCoverageId = new HashMap<>();
 		for (Map.Entry<Boolean, Map<IArticle, Integer>> entry : amountsByObligation.entrySet()) {
-			IStatus status = processArticles(entry.getValue(), patient, entry.getKey());
+			IStatus status = processArticles(entry.getValue(), patient, entry.getKey(), encountersByCoverageId);
 			if (!status.isOK()) {
 				return status;
 			}
@@ -117,7 +142,8 @@ public class MediorderBilling {
 		return Status.OK_STATUS;
 	}
 
-	private IStatus processArticles(Map<IArticle, Integer> amounts, IPatient patient, boolean isObligatory) {
+	private IStatus processArticles(Map<IArticle, Integer> amounts, IPatient patient, boolean isObligatory,
+			Map<String, IEncounter> encountersByCoverageId) {
 		if (amounts.isEmpty()) {
 			return Status.OK_STATUS;
 		}
@@ -134,22 +160,57 @@ public class MediorderBilling {
 			}
 		}
 
-		Optional<IEncounter> encounter = coverageService.getLatestEncounter(coverage.get())
-				.filter(e -> billingService.isEditable(e).isOK());
-		if (encounter.isEmpty()) {
-			encounter = Optional.of(
-					new IEncounterBuilder(coreModelService, coverage.get(), contextService.getActiveMandator().get())
-							.buildAndSave());
-		}
-		setBillingText(encounter.get(), patient);
+		ICoverage billingCoverage = coverage.get();
+		IMandator mandator = contextService.getActiveMandator().get();
+		IEncounter encounter = encountersByCoverageId.computeIfAbsent(billingCoverage.getId(),
+				id -> findTodaysMediorderEncounter(billingCoverage, mandator).orElseGet(
+						() -> new IEncounterBuilder(coreModelService, billingCoverage, mandator).buildAndSave()));
+		setBillingText(encounter, patient);
 		for (Map.Entry<IArticle, Integer> amount : amounts.entrySet()) {
-			Result<IBilled> result = billingService.bill(amount.getKey(), encounter.get(), amount.getValue(), false);
+			Result<IBilled> result = billingService.bill(amount.getKey(), encounter, amount.getValue(), false);
 			if (!result.isOK()) {
 				return Status.error(result.getCombinedMessages());
 			}
 		}
 		MediorderUtil.removeMailSticker(patient, coreModelService, stickerService, stockService);
 		return Status.OK_STATUS;
+	}
+
+	/**
+	 * An editable encounter of today on the coverage and of the mandator, which
+	 * already contains the mediorder billing text. Regular encounters of the day
+	 * are not used, so the billed mediorder articles stay separate.
+	 */
+	private Optional<IEncounter> findTodaysMediorderEncounter(ICoverage coverage, IMandator mandator) {
+		LocalDate today = LocalDate.now();
+		return coverage.getEncounters().stream()
+				.filter(encounter -> !encounter.isDeleted() && today.equals(encounter.getDate()))
+				.filter(encounter -> mandator.equals(encounter.getMandator()))
+				.filter(this::hasMediorderBillingText)
+				.filter(encounter -> billingService.isEditable(encounter).isOK())
+				.max(Comparator.comparing(IEncounter::getTimeStamp,
+						Comparator.nullsFirst(Comparator.naturalOrder())));
+	}
+
+	private boolean hasMediorderBillingText(IEncounter encounter) {
+		VersionedResource resource = encounter.getVersionedEntry();
+		if (resource == null || StringUtils.isBlank(resource.getHead())) {
+			return false;
+		}
+		return new Samdas(resource.getHead()).getRecord().getXrefs().stream()
+				.anyMatch(xref -> XRefExtensionConstants.providerMediorderID.equals(xref.getProvider()));
+	}
+
+	private boolean isSeparateObligation() {
+		Optional<IConfigService> configService = OsgiServiceUtil.getService(IConfigService.class);
+		if (configService.isEmpty()) {
+			return false;
+		}
+		try {
+			return configService.get().getActiveUserContact(Preferences.LEISTUNGSCODES_OBLIGATION, false);
+		} finally {
+			OsgiServiceUtil.ungetService(configService.get());
+		}
 	}
 
 	private Optional<ICoverage> getOrCreateCoverage(IPatient patient, BillingLaw law) {
