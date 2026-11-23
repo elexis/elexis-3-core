@@ -133,24 +133,17 @@ public class MediorderHistoryBuilder {
 	}
 
 	/**
-	 * Build the history of a patient.
+	 * Build the complete history of a patient.
 	 *
-	 * @param patient the patient whose history is built
-	 * @param stock   the patient stock, may be <code>null</code>
-	 * @param blobId  id of the online order to restrict the history to, or
-	 *                <code>null</code> for the complete history. If the order is no
-	 *                longer available, the complete history is built instead.
+	 * @param patient      the patient whose history is built
+	 * @param stock        the patient stock, may be <code>null</code>
+	 * @param expandBlobId id of the online order whose section is expanded, or
+	 *                     <code>null</code> to expand the newest section. If the
+	 *                     order is not part of the history, the newest section is
+	 *                     expanded instead.
 	 * @return the sections to render
 	 */
-	public List<Map<String, Object>> buildSections(IPatient patient, IStock stock, String blobId) {
-		List<Map<String, Object>> sections = collectSections(patient, stock, blobId);
-		if (sections.isEmpty() && blobId != null) {
-			sections = collectSections(patient, stock, null);
-		}
-		return sections;
-	}
-
-	private List<Map<String, Object>> collectSections(IPatient patient, IStock stock, String blobId) {
+	public List<Map<String, Object>> buildSections(IPatient patient, IStock stock, String expandBlobId) {
 		historyJsonRefs.clear();
 		if (patient == null) {
 			return List.of();
@@ -159,19 +152,26 @@ public class MediorderHistoryBuilder {
 		if (rounds.isEmpty()) {
 			rounds = List.of(new OrderRound(null, null, List.of()));
 		}
+		String blobToExpand = expandBlobId != null && rounds.stream()
+				.anyMatch(round -> round.blob() != null && Objects.equals(expandBlobId, round.blob().getId()))
+						? expandBlobId
+						: null;
 		int newest = rounds.size() - 1;
 		List<Map<String, Object>> sections = new ArrayList<>();
 		for (int i = newest; i >= 0; i--) {
 			OrderRound round = rounds.get(i);
-			if (blobId != null && (round.blob() == null || !blobId.equals(round.blob().getId()))) {
-				continue;
-			}
 			boolean isOpenRound = i == newest && !isClosed(round.events());
 			List<TimelineEntry> collected = collectRoundEntries(patient, stock, round, isOpenRound);
 			if (collected.isEmpty()) {
 				continue;
 			}
-			sections.add(createSectionModel(i + 1, round, isOpenRound, sections.isEmpty(), collected));
+			boolean expanded = blobToExpand != null
+					? round.blob() != null && blobToExpand.equals(round.blob().getId())
+					: sections.isEmpty();
+			sections.add(createSectionModel(i + 1, round, isOpenRound, expanded, collected));
+		}
+		if (!sections.isEmpty() && sections.stream().noneMatch(section -> Boolean.TRUE.equals(section.get("expanded")))) { //$NON-NLS-1$
+			sections.get(0).put("expanded", true); //$NON-NLS-1$
 		}
 		return sections;
 	}
@@ -437,14 +437,19 @@ public class MediorderHistoryBuilder {
 	}
 
 	private Map<String, Integer> readOrderedArticles(IBlob blob) {
+		String json = blob.getStringContent();
+		if (StringUtils.isBlank(json)) {
+			return Map.of();
+		}
 		try {
-			JsonObject root = JsonParser.parseString(blob.getStringContent()).getAsJsonObject();
+			JsonObject root = JsonParser.parseString(json).getAsJsonObject();
 			JsonArray items = root.getAsJsonArray("item");
 			if (items == null || items.size() <= 2) {
 				return Map.of();
 			}
 			return MediorderPartUtil.extractMedications(items);
-		} catch (JsonParseException | IllegalStateException e) {
+		} catch (JsonParseException | IllegalStateException | ClassCastException | UnsupportedOperationException
+				| NumberFormatException e) {
 			LoggerFactory.getLogger(getClass()).warn("Failed to read the order JSON.", e);
 			return Map.of();
 		}
@@ -647,8 +652,12 @@ public class MediorderHistoryBuilder {
 			return List.of();
 		}
 		try {
+			JsonArray groups = JsonParser.parseString(json).getAsJsonObject().getAsJsonArray("item");
+			if (groups == null) {
+				return List.of();
+			}
 			List<MedicationOrderEntry> entries = new ArrayList<>();
-			for (JsonElement group : JsonParser.parseString(json).getAsJsonObject().getAsJsonArray("item")) {
+			for (JsonElement group : groups) {
 				JsonArray children = group.getAsJsonObject().getAsJsonArray("item");
 				if (children == null) {
 					continue;
@@ -661,7 +670,8 @@ public class MediorderHistoryBuilder {
 				}
 			}
 			return entries;
-		} catch (JsonParseException | IllegalStateException e) {
+		} catch (JsonParseException | IllegalStateException | ClassCastException | UnsupportedOperationException
+				| NumberFormatException e) {
 			LoggerFactory.getLogger(getClass()).warn("Failed to read the medication list.", e);
 			return List.of();
 		}
@@ -701,11 +711,12 @@ public class MediorderHistoryBuilder {
 	}
 
 	private String prettyJson(IBlob blob) {
-		if (StringUtils.isBlank(blob.getStringContent())) {
+		String json = blob.getStringContent();
+		if (StringUtils.isBlank(json)) {
 			return null;
 		}
 		try {
-			JsonObject root = JsonParser.parseString(blob.getStringContent()).getAsJsonObject();
+			JsonObject root = JsonParser.parseString(json).getAsJsonObject();
 			return new GsonBuilder().setPrettyPrinting().create().toJson(root);
 		} catch (JsonSyntaxException | IllegalStateException e) {
 			LoggerFactory.getLogger(getClass()).error("Error parsing JSON of blob {}", blob.getId(), e);

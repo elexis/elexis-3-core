@@ -19,6 +19,13 @@ public class OrderLabelPrintConstants {
 	 */
 	public static final String PARAM_ENTRIES = "orderentry_label_entries"; //$NON-NLS-1$
 
+	/**
+	 * Command parameter containing the patient stock entries and label amounts of
+	 * articles taken from stock, formatted as
+	 * <code>&lt;stockEntryId&gt;:&lt;amount&gt;;&lt;stockEntryId&gt;:&lt;amount&gt;</code>.
+	 */
+	public static final String PARAM_STOCK_ENTRIES = "stockentry_label_entries"; //$NON-NLS-1$
+
 	public static final String ENTRY_SEPARATOR = ";"; //$NON-NLS-1$
 	public static final String AMOUNT_SEPARATOR = ":"; //$NON-NLS-1$
 

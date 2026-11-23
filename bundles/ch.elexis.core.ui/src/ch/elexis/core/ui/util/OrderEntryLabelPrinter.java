@@ -21,6 +21,7 @@ import ch.elexis.core.l10n.Messages;
 import ch.elexis.core.model.IOrderEntry;
 import ch.elexis.core.model.IPerson;
 import ch.elexis.core.model.IStock;
+import ch.elexis.core.model.IStockEntry;
 import ch.elexis.core.services.holder.ConfigServiceHolder;
 
 public class OrderEntryLabelPrinter {
@@ -36,10 +37,10 @@ public class OrderEntryLabelPrinter {
 	}
 
 	public static boolean isPatientStockEntry(IOrderEntry entry) {
-		if (entry == null) {
-			return false;
-		}
-		IStock stock = entry.getStock();
+		return entry != null && isPatientStock(entry.getStock());
+	}
+
+	public static boolean isPatientStock(IStock stock) {
 		IPerson owner = stock != null ? stock.getOwner() : null;
 		return owner != null && owner.isPatient();
 	}
@@ -79,8 +80,32 @@ public class OrderEntryLabelPrinter {
 		}
 	}
 
+	public static String buildStockEntriesParameter(Map<IStockEntry, Integer> takenEntries) {
+		StringJoiner joiner = new StringJoiner(OrderLabelPrintConstants.ENTRY_SEPARATOR);
+		takenEntries.forEach((entry, amount) -> {
+			if (amount != null && amount > 0 && entry != null && isPatientStock(entry.getStock())) {
+				joiner.add(entry.getId() + OrderLabelPrintConstants.AMOUNT_SEPARATOR + amount);
+			}
+		});
+		return joiner.toString();
+	}
+
 	public static Map<String, Integer> print(Map<IOrderEntry, Integer> deliveredEntries) {
-		String entriesParameter = buildEntriesParameter(deliveredEntries);
+		return execute(OrderLabelPrintConstants.PARAM_ENTRIES, buildEntriesParameter(deliveredEntries));
+	}
+
+	/**
+	 * Print the labels of articles taken from stock into patient stock entries.
+	 *
+	 * @param takenEntries the patient stock entries with the taken amount
+	 * @return the result of the label print command, see
+	 *         {@link OrderLabelPrintConstants#RESULT_PRINTED}
+	 */
+	public static Map<String, Integer> printTakenFromStock(Map<IStockEntry, Integer> takenEntries) {
+		return execute(OrderLabelPrintConstants.PARAM_STOCK_ENTRIES, buildStockEntriesParameter(takenEntries));
+	}
+
+	private static Map<String, Integer> execute(String parameterId, String entriesParameter) {
 		if (entriesParameter.isEmpty()) {
 			return Collections.emptyMap();
 		}
@@ -93,12 +118,12 @@ public class OrderEntryLabelPrinter {
 				return Collections.emptyMap();
 			}
 			Map<String, String> params = new HashMap<>();
-			params.put(OrderLabelPrintConstants.PARAM_ENTRIES, entriesParameter);
+			params.put(parameterId, entriesParameter);
 			Object result = handlerService
 					.executeCommand(ParameterizedCommand.generateCommand(command, params), null);
 			return toResultMap(result);
 		} catch (Exception e) {
-			logger.error("Error printing labels for order entries [{}]", entriesParameter, e); //$NON-NLS-1$
+			logger.error("Error printing labels [{}={}]", parameterId, entriesParameter, e); //$NON-NLS-1$
 			return Collections.emptyMap();
 		}
 	}
