@@ -217,14 +217,8 @@ public class RezeptBlatt extends ViewPart implements ICallback, IActivationListe
 			Prescription p = lines.get(i);
 			fields[i] = new String[3];
 			fields[i][0] = p.get(Messages.Core_Count); // $NON-NLS-1$
-			String bem = p.getBemerkung();
-			if (StringTool.isNothing(bem)) {
-				fields[i][1] = p.getSimpleLabel();
-			} else {
-				fields[i][1] = p.getSimpleLabel() + "\t\r" + bem; //$NON-NLS-1$
-			}
-			fields[i][2] = p.getDosis();
-
+			fields[i][1] = StringUtils.defaultString(getPrescriptionLabel(p, true));
+			fields[i][2] = StringUtils.defaultString(p.getDosis());
 		}
 		return fields;
 	}
@@ -272,7 +266,7 @@ public class RezeptBlatt extends ViewPart implements ICallback, IActivationListe
 			} else {
 				fields[i][0] = StringUtils.EMPTY;
 			}
-			fields[i][1] = StringUtils.defaultString(getPrescriptionLabel(p));
+			fields[i][1] = StringUtils.defaultString(getPrescriptionLabel(p, false));
 			fields[i][2] = StringUtils.defaultString(p.getDosis());
 			fields[i][3] = StringUtils.defaultString(p.getBeginDate());
 			fields[i][4] = StringUtils.defaultString(p.getBemerkung());
@@ -281,9 +275,12 @@ public class RezeptBlatt extends ViewPart implements ICallback, IActivationListe
 		return fields;
 	}
 
-	private String getPrescriptionLabel(Prescription prescription) {
+	private String getPrescriptionLabel(Prescription prescription, boolean addRemark) {
 		if (prescription != null) {
 			String ret = prescription.getSimpleLabel();
+			if (addRemark && StringUtils.isNotBlank(prescription.getBemerkung())) {
+				ret = ret + ", " + prescription.getBemerkung();
+			}
 			if (prescription.getExtInfoStoredObjectByKey(Constants.FLD_EXT_INDICATIONCODE) instanceof String) {
 				ret = ret + "\nSLIndication="
 						+ prescription.getExtInfoStoredObjectByKey(Constants.FLD_EXT_INDICATIONCODE);
